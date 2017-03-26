@@ -2,10 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAction>
+#include <QToolBar>
+#include "ui-showwidget.h"
 
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +16,30 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+
+    ShowWidgetUI *showWidget;
+
+  //  QMenu *fileMenu;                           		//各项菜单栏
+
+    QToolBar *toolBar;                          	//工具栏
+    //QToolBar *zone02;
+
+    QAction *importCertiAction;                     	//文件菜单项
+    QAction *newCertiAction;
+    QAction *newAesKeyAction;
+   // QAction *digitalSignature;
+   // QAction *authentication;
+   // QAction *changePortAction;
+
+    QAction *fileTransAction;
+
+    QAction *encryAction;
+    QAction *decryAction;
+
+
+    QAction *exitAction;
+
+
 };
 
 #endif // MAINWINDOW_H

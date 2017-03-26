@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../lfversion-2 -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../lfversion-2 -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -49,10 +49,16 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../lfversion-2/main.cpp \
-		../lfversion-2/mainwindow.cpp moc_mainwindow.cpp
+		../lfversion-2/mainwindow.cpp \
+		../lfversion-2/ui-showwidget.cpp qrc_icon.cpp \
+		moc_mainwindow.cpp \
+		moc_ui-showwidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
-		moc_mainwindow.o
+		ui-showwidget.o \
+		qrc_icon.o \
+		moc_mainwindow.o \
+		moc_ui-showwidget.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -110,8 +116,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../lfversion-2/lfversion-2.pro ../lfversion-2/mainwindow.h ../lfversion-2/main.cpp \
-		../lfversion-2/mainwindow.cpp
+		../lfversion-2/lfversion-2.pro ../lfversion-2/mainwindow.h \
+		../lfversion-2/util.h \
+		../lfversion-2/ui-showwidget.h ../lfversion-2/main.cpp \
+		../lfversion-2/mainwindow.cpp \
+		../lfversion-2/ui-showwidget.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -139,7 +148,7 @@ first: all
 
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h $(OBJECTS)  
+$(TARGET):  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -200,6 +209,7 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../lfversion-2/lfversion-2.pro \
+		../lfversion-2/icon.qrc \
 		/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Gui.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Core.prl
@@ -262,6 +272,7 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf:
 ../lfversion-2/lfversion-2.pro:
+../lfversion-2/icon.qrc:
 /usr/lib/x86_64-linux-gnu/libQt5Widgets.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Gui.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Core.prl:
@@ -279,9 +290,9 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -302,41 +313,64 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: qrc_icon.cpp
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+	-$(DEL_FILE) qrc_icon.cpp
+qrc_icon.cpp: ../lfversion-2/icon.qrc \
+		../lfversion-2/image/identity.jpg \
+		../lfversion-2/image/filetransition.jpg \
+		../lfversion-2/image/Icon.jpg \
+		../lfversion-2/image/import.jpg \
+		../lfversion-2/image/decrypt.jpg \
+		../lfversion-2/image/newFile.jpg \
+		../lfversion-2/image/digtialsignature.jpg \
+		../lfversion-2/image/encrypt.jpg
+	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name icon ../lfversion-2/icon.qrc -o qrc_icon.cpp
+
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
-moc_mainwindow.cpp: ../lfversion-2/mainwindow.h
+	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp
+moc_mainwindow.cpp: ../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
+
+moc_ui-showwidget.cpp: ../lfversion-2/ui-showwidget.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-showwidget.h -o moc_ui-showwidget.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all:
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
-ui_mainwindow.h: ../lfversion-2/mainwindow.ui
-	/usr/lib/x86_64-linux-gnu/qt5/bin/uic ../lfversion-2/mainwindow.ui -o ui_mainwindow.h
-
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_header_clean compiler_uic_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_header_clean 
 
 ####### Compile
 
-main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h
+main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
+		../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lfversion-2/main.cpp
 
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
-		ui_mainwindow.h
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
+
+ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-showwidget.o ../lfversion-2/ui-showwidget.cpp
+
+qrc_icon.o: qrc_icon.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_ui-showwidget.o: moc_ui-showwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-showwidget.o moc_ui-showwidget.cpp
 
 ####### Install
 

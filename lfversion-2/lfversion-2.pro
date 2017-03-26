@@ -13,10 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    ui-showwidget.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    util.h \
+    ui-showwidget.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 CONFIG += c++11
+
+RESOURCES += \
+    icon.qrc

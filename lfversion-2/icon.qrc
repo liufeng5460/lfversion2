@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/decrypt.jpg</file>
+        <file>image/digtialsignature.jpg</file>
+        <file>image/encrypt.jpg</file>
+        <file>image/filetransition.jpg</file>
+        <file>image/Icon.jpg</file>
+        <file>image/identity.jpg</file>
+        <file>image/import.jpg</file>
+        <file>image/newFile.jpg</file>
+    </qresource>
+</RCC>

@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QStandardItemModel>
 #include <QTableView>
+#include <QFile>
 
 class ShowWidgetUI : public QFrame
 {
@@ -17,6 +18,9 @@ signals:
 public slots:
 
 private:
+
+    void extractData(QStandardItemModel* model, QString fileName,int count);
+
     QString *name;
     QString *mail;
     QString *validFrom;

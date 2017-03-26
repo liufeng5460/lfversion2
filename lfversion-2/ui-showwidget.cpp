@@ -3,9 +3,11 @@
 #include <QStack>
 #include <QString>
 #include <QStringList>
-#include <QCoreApplication>
+#include <QApplication>
 #include <QMessageBox>
 #include <QLabel>
+#include <QTextCodec>
+#include <QTextStream>
 ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 {
 
@@ -60,7 +62,32 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
     mainLayout->addWidget(tableView02);
 
 
-
+    extractData(model01,"Key/mykey",5);
+    extractData(model02,"Key/pubkey",6);
 
 }
 
+void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int count)
+{
+    QFile *file01=new QFile(QApplication::applicationDirPath()+"/"+fileName);
+   // QTextCodec *code = QTextCodec::codecForName("utf8");
+    file01->open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream stream01(file01);
+  //  stream01.setCodec(code);
+
+    QString line;
+    int linenum=0;
+    do{
+        line =QString(stream01.readLine());
+        if(line.isEmpty() || line.isNull()) break;
+        QStringList temp  = line.split(";") ;
+        QList<QString>::Iterator it = temp.begin(),itend = temp.end();
+          int iter = 0;
+          for (;it != itend && iter<=count; it++,iter++){
+              model->setItem(linenum, iter, new QStandardItem(temp[iter]));
+           }
+          linenum++;
+    } while (!line.isNull() && !line.isEmpty());
+     file01->close();
+
+}

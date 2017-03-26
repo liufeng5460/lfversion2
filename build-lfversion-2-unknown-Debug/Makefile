@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../lfversion-2 -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../lfversion-2 -I. -isystem /usr/include/cryptopp -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = lfversion-21.0.0
 DISTDIR = /home/ydu/code/qt/lfversion2/build-lfversion-2-unknown-Debug/.tmp/lfversion-21.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/lib/ -lcryptopp -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -50,15 +50,33 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
-		../lfversion-2/ui-showwidget.cpp qrc_icon.cpp \
+		../lfversion-2/ui-showwidget.cpp \
+		../lfversion-2/ui-createcertiwindow.cpp \
+		../lfversion-2/ui-createkeywindow.cpp \
+		../lfversion-2/ui-decryptfilewindow.cpp \
+		../lfversion-2/ui-encryptfilewindow.cpp \
+		../lfversion-2/util.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
-		moc_ui-showwidget.cpp
+		moc_ui-showwidget.cpp \
+		moc_ui-createcertiwindow.cpp \
+		moc_ui-createkeywindow.cpp \
+		moc_ui-decryptfilewindow.cpp \
+		moc_ui-encryptfilewindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		ui-showwidget.o \
+		ui-createcertiwindow.o \
+		ui-createkeywindow.o \
+		ui-decryptfilewindow.o \
+		ui-encryptfilewindow.o \
+		util.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
-		moc_ui-showwidget.o
+		moc_ui-showwidget.o \
+		moc_ui-createcertiwindow.o \
+		moc_ui-createkeywindow.o \
+		moc_ui-decryptfilewindow.o \
+		moc_ui-encryptfilewindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -118,9 +136,19 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../lfversion-2/lfversion-2.pro ../lfversion-2/mainwindow.h \
 		../lfversion-2/util.h \
-		../lfversion-2/ui-showwidget.h ../lfversion-2/main.cpp \
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/ui-createcertiwindow.h \
+		../lfversion-2/ui-createkeywindow.h \
+		../lfversion-2/ui-decryptfilewindow.h \
+		../lfversion-2/ui-encryptfilewindow.h \
+		../lfversion-2/aeshandler.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
-		../lfversion-2/ui-showwidget.cpp
+		../lfversion-2/ui-showwidget.cpp \
+		../lfversion-2/ui-createcertiwindow.cpp \
+		../lfversion-2/ui-createkeywindow.cpp \
+		../lfversion-2/ui-decryptfilewindow.cpp \
+		../lfversion-2/ui-encryptfilewindow.cpp \
+		../lfversion-2/util.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -291,8 +319,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/aeshandler.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -327,15 +355,27 @@ qrc_icon.cpp: ../lfversion-2/icon.qrc \
 		../lfversion-2/image/encrypt.jpg
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name icon ../lfversion-2/icon.qrc -o qrc_icon.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp
 moc_mainwindow.cpp: ../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
 
 moc_ui-showwidget.cpp: ../lfversion-2/ui-showwidget.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-showwidget.h -o moc_ui-showwidget.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-showwidget.h -o moc_ui-showwidget.cpp
+
+moc_ui-createcertiwindow.cpp: ../lfversion-2/ui-createcertiwindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createcertiwindow.h -o moc_ui-createcertiwindow.cpp
+
+moc_ui-createkeywindow.cpp: ../lfversion-2/ui-createkeywindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createkeywindow.h -o moc_ui-createkeywindow.cpp
+
+moc_ui-decryptfilewindow.cpp: ../lfversion-2/ui-decryptfilewindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-decryptfilewindow.h -o moc_ui-decryptfilewindow.cpp
+
+moc_ui-encryptfilewindow.cpp: ../lfversion-2/ui-encryptfilewindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-encryptfilewindow.h -o moc_ui-encryptfilewindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -357,11 +397,32 @@ main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
 
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/util.h
+		../lfversion-2/util.h \
+		../lfversion-2/ui-createcertiwindow.h \
+		../lfversion-2/ui-createkeywindow.h \
+		../lfversion-2/ui-encryptfilewindow.h \
+		../lfversion-2/ui-decryptfilewindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
 
 ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-showwidget.o ../lfversion-2/ui-showwidget.cpp
+
+ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createcertiwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createcertiwindow.o ../lfversion-2/ui-createcertiwindow.cpp
+
+ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-createkeywindow.h \
+		../lfversion-2/aeshandler.h \
+		../lfversion-2/util.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createkeywindow.o ../lfversion-2/ui-createkeywindow.cpp
+
+ui-decryptfilewindow.o: ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-decryptfilewindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-decryptfilewindow.o ../lfversion-2/ui-decryptfilewindow.cpp
+
+ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-encryptfilewindow.o ../lfversion-2/ui-encryptfilewindow.cpp
+
+util.o: ../lfversion-2/util.cpp ../lfversion-2/util.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o util.o ../lfversion-2/util.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp
@@ -371,6 +432,18 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_ui-showwidget.o: moc_ui-showwidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-showwidget.o moc_ui-showwidget.cpp
+
+moc_ui-createcertiwindow.o: moc_ui-createcertiwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-createcertiwindow.o moc_ui-createcertiwindow.cpp
+
+moc_ui-createkeywindow.o: moc_ui-createkeywindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-createkeywindow.o moc_ui-createkeywindow.cpp
+
+moc_ui-decryptfilewindow.o: moc_ui-decryptfilewindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-decryptfilewindow.o moc_ui-decryptfilewindow.cpp
+
+moc_ui-encryptfilewindow.o: moc_ui-encryptfilewindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-encryptfilewindow.o moc_ui-encryptfilewindow.cpp
 
 ####### Install
 

@@ -33,13 +33,18 @@ private:
 
     QAction *fileTransAction;
 
-    QAction *encryAction;
-    QAction *decryAction;
+    QAction *encryptAction;
+    QAction *decryptAction;
 
 
     QAction *exitAction;
 
-
+private slots:
+    void createCerti();
+    void selectCerti();
+    void createKey();
+    void encrytFile();
+    void decrytFile();
 };
 
 #endif // MAINWINDOW_H

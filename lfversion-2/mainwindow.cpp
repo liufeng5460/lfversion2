@@ -2,7 +2,10 @@
 #include <QMenuBar>
 #include "mainwindow.h"
 #include "util.h"
-
+#include "ui-createcertiwindow.h"
+#include "ui-createkeywindow.h"
+#include "ui-encryptfilewindow.h"
+#include "ui-decryptfilewindow.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -15,19 +18,28 @@ MainWindow::MainWindow(QWidget *parent) :
     importCertiAction =new QAction(QIcon(":/image/import.jpg"),tr("引入证书"),this);
     importCertiAction->setShortcut(tr("Ctrl+O"));
     importCertiAction->setStatusTip(tr("添加一个证书"));
+    connect(importCertiAction,SIGNAL(triggered()),this,SLOT(selectCerti()));
+
 
     newCertiAction =new QAction(QIcon(":/image/newFile"),tr("新建证书"),this);
     newCertiAction->setShortcut(tr("Ctrl+N"));
     newCertiAction->setStatusTip(tr("新建一个证书"));
+    connect(newCertiAction,SIGNAL(triggered()),this,SLOT(createCerti()));
+
 
     newAesKeyAction =new QAction(QIcon(":/image/newFile"),tr("新建Aes密钥"),this);
     newAesKeyAction->setStatusTip(tr("新建Aes密钥"));
+    connect(newAesKeyAction,SIGNAL(triggered()),this,SLOT(createKey()));
 
-    encryAction =new QAction(QIcon(":/image/encrypt"),tr("加密文件"),this);
-    encryAction->setStatusTip(tr("打开加密窗口"));
+    encryptAction =new QAction(QIcon(":/image/encrypt"),tr("加密文件"),this);
+    encryptAction->setStatusTip(tr("打开加密窗口"));
+    connect(encryptAction,SIGNAL(triggered()),this,SLOT(encrytFile()));
 
-    decryAction =new QAction(QIcon(":/image/decrypt"),tr("解密文件"),this);
-    decryAction->setStatusTip(tr("打开解密窗口"));
+
+    decryptAction =new QAction(QIcon(":/image/decrypt"),tr("解密文件"),this);
+    decryptAction->setStatusTip(tr("打开解密窗口"));
+    connect(decryptAction,SIGNAL(triggered()),this,SLOT(decrytFile()));
+
 
     fileTransAction=new QAction(QIcon(":/image/filetransition"),tr("文件传输"),this);
     fileTransAction->setStatusTip(tr("文件传输"));
@@ -36,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     exitAction =new QAction(tr("退出"),this);
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("退出程序"));
-
+    connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 
 
 
@@ -52,8 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(exitAction);
 
     menu =menuBar()->addMenu(tr("操作"));
-    menu->addAction(encryAction);
-    menu->addAction(decryAction);
+    menu->addAction(encryptAction);
+    menu->addAction(decryptAction);
     menu->addAction(fileTransAction);
 
 
@@ -63,18 +75,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //zone02
     //zone02 =addToolBar("Tool");
-    toolBar->addAction(encryAction);
-    toolBar->addAction(decryAction);
+    toolBar->addAction(encryptAction);
+    toolBar->addAction(decryptAction);
     // toolBar->addAction(digitalSignature);
     //  toolBar->addAction(authentication);
     toolBar->addAction(fileTransAction);
-
     toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     //zone02->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-
-    // connect signals
-    connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 
     util::centerize(this);
     showWidget =new ShowWidgetUI(this);
@@ -87,4 +95,29 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 
+}
+
+
+void MainWindow::createCerti(){
+    util::windowSetup(new CreateCertiWindow);
+}
+
+void MainWindow::selectCerti()
+{
+    showWidget->addCerti();
+}
+
+void MainWindow::createKey()
+{
+    util::windowSetup(new CreateKeyWindow);
+}
+
+void MainWindow::encrytFile()
+{
+    util::windowSetup(new EncrytFileWindow);
+}
+
+void MainWindow::decrytFile()
+{
+    util::windowSetup(new DecryptFileWindow);
 }

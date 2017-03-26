@@ -1,14 +1,17 @@
 #ifndef UTIL
 #define UTIL
+
 #include <QDesktopWidget>
 #include <QApplication>
+#include <QTextStream>
+#include <QFile>
 namespace util{
 
-void centerize(QWidget* window)
-{
-    QDesktopWidget* d = QApplication::desktop();
-    window->move((d->width()-window->width())/2, (d->height()-window->height())/2);
-}
+void centerize(QWidget* window);
+void windowSetup(QWidget* window);
+bool contains(QString newKeyName, QString KeyInfoFileName);
+void deleteOneline(int RowNum, QString &fileContent);
+void deleteOnelineInFile(int RowNum, QString filename);
 
 }
 

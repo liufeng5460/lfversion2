@@ -7,7 +7,9 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QTextCodec>
+#include <QFileDialog>
 #include <QTextStream>
+#include <QDebug>
 ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 {
 
@@ -65,6 +67,13 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
     extractData(model01,"Key/mykey",5);
     extractData(model02,"Key/pubkey",6);
 
+    connect(tableView01, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(showMenu01(QPoint)));
+    connect(tableView02, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(showMenu02(QPoint)));
+
+    createMenu();
+
 }
 
 void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int count)
@@ -90,4 +99,80 @@ void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int c
     } while (!line.isNull() && !line.isEmpty());
      file01->close();
 
+}
+
+void ShowWidgetUI::showMenu01(QPoint pos){
+        menu01->clear(); //清除原有菜单
+        menu01->addAction(deletePubAndPrivKey);
+        menu01->addAction(showPubAndPrivKeyMess);
+        //菜单出现的位置为当前鼠标的位置
+        menu01->exec(QCursor::pos());
+}
+
+void ShowWidgetUI::showMenu02(QPoint pos){
+    menu02->clear(); //清除原有菜单
+    menu02->addAction(deletePubKey);
+    menu02->addAction(showPubKeyMess);
+    //菜单出现的位置为当前鼠标的位置
+    menu02->exec(QCursor::pos());
+}
+
+void ShowWidgetUI::createMenu(){
+    menu01=new QMenu(tableView01);
+    menu02=new QMenu(tableView02);
+
+    tableView01->setContextMenuPolicy(Qt::CustomContextMenu);
+    tableView02->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    deletePubKey=new QAction(this);
+    deletePubKey->setText(QString(tr("删除该证书")));
+    deletePubAndPrivKey=new QAction(this);
+    deletePubAndPrivKey->setText(QString(tr("删除该证书")));
+    showPubKeyMess=new QAction(this);
+    showPubKeyMess->setText(QString(tr("查看证书信息")));
+    showPubAndPrivKeyMess=new QAction(this);
+    showPubAndPrivKeyMess->setText(QString(tr("查看证书信息")));
+
+ //   connect(deletePubKey, SIGNAL(triggered(bool)), this, SLOT(deletePubKeyFun()));
+  //  connect(deletePubAndPrivKey, SIGNAL(triggered(bool)), this, SLOT(deletePubAndPrivKeyFun()));
+  //  connect(showPubKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubKeyMessFun()));
+//    connect(showPubAndPrivKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubAndPrivKeyMessFun()));
+
+}
+
+
+void ShowWidgetUI::addCerti()
+{
+    QString filePlace = QFileDialog::getOpenFileName(this,"打开文件","/","all files(*)");
+    QFile *file=new QFile(filePlace);
+    file->open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream stream(file);
+  //  QTextCodec *code = QTextCodec::codecForName("ANSI");
+ //   stream.setCodec(code);
+    QString data;
+    QString info="";
+    int i=0;
+    int currentIndex=tableView02->model()->rowCount();
+    qDebug() << currentIndex;
+
+    while (!stream.atEnd() && i<=5)
+    {
+        data=QString(stream.readLine());
+        info=info+data+";";
+        model02->setItem(currentIndex, i, new QStandardItem(data));
+        i=i+1;
+    }
+    file->close();
+
+    qDebug() << info;
+
+    QFile filein(QCoreApplication::applicationDirPath()+"/Key/pubkey");
+    if( filein.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
+        QTextStream in(&filein);
+       in<<  info << "\n";
+    } else {
+        qDebug() <<  filein.error();
+        qDebug() <<  filein.errorString();
+    }
+    filein.close();
 }

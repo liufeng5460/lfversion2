@@ -24,8 +24,11 @@ private:
     QString privFileName;
     QPushButton *submitBtn;
 signals:
+   // void toShowWidget(QStack<QString>);
 
-public slots:
+private slots:
+    void pushShowWidget(QString );
+    void genKey();
 };
 
 #endif // CREATECERTIWINDOW_H

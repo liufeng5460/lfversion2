@@ -23,6 +23,7 @@ EncrytFileWindow::EncrytFileWindow(QWidget *parent) : QWidget(parent)
    QString line;
    do{
       line =QString(stream.readLine());
+      if(line.isNull()) break;
        chooseKey->addItem(line);
    } while (!line.isNull());
     file->close();

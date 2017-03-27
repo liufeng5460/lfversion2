@@ -1,6 +1,7 @@
 #include "ui-showwidget.h"
 #include <QVBoxLayout>
 #include <QStack>
+#include <QList>
 #include <QString>
 #include <QStringList>
 #include <QApplication>
@@ -10,6 +11,9 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QDebug>
+
+#include <iostream>
+using namespace std;
 ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 {
 
@@ -65,7 +69,7 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 
 
     extractData(model01,"Key/mykey",5);
-    extractData(model02,"Key/pubkey",6);
+    extractData(model02,"Key/pubkey",4);
 
     connect(tableView01, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(showMenu01(QPoint)));
@@ -128,13 +132,13 @@ void ShowWidgetUI::createMenu(){
     deletePubKey->setText(QString(tr("删除该证书")));
     deletePubAndPrivKey=new QAction(this);
     deletePubAndPrivKey->setText(QString(tr("删除该证书")));
-    showPubKeyMess=new QAction(this);
-    showPubKeyMess->setText(QString(tr("查看证书信息")));
-    showPubAndPrivKeyMess=new QAction(this);
-    showPubAndPrivKeyMess->setText(QString(tr("查看证书信息")));
+//    showPubKeyMess=new QAction(this);
+//    showPubKeyMess->setText(QString(tr("查看证书信息")));
+//    showPubAndPrivKeyMess=new QAction(this);
+//    showPubAndPrivKeyMess->setText(QString(tr("查看证书信息")));
 
- //   connect(deletePubKey, SIGNAL(triggered(bool)), this, SLOT(deletePubKeyFun()));
-  //  connect(deletePubAndPrivKey, SIGNAL(triggered(bool)), this, SLOT(deletePubAndPrivKeyFun()));
+   // connect(deletePubKey, SIGNAL(triggered(bool)), this, SLOT(deletePubKeyFun()));
+      connect(deletePubAndPrivKey, SIGNAL(triggered(bool)), this, SLOT(deletePubAndPrivKeyFun()));
   //  connect(showPubKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubKeyMessFun()));
 //    connect(showPubAndPrivKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubAndPrivKeyMessFun()));
 
@@ -175,4 +179,52 @@ void ShowWidgetUI::addCerti()
         qDebug() <<  filein.errorString();
     }
     filein.close();
+}
+
+void ShowWidgetUI::deletePubAndPrivKeyFun()
+{
+
+    QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
+    if (message.exec()==QMessageBox::No){
+        return;
+    }
+
+    int currentRow = tableView01->currentIndex().row();
+    QString workingDir = QCoreApplication::applicationDirPath() + "/";
+    QString pubkeyroot=workingDir  + (model01->data(model01->index(currentRow,4))).toString();
+    QString privkeyroot= workingDir+ (model01->data(model01->index(currentRow,5))).toString();
+    QString certiRoot = workingDir+"Key/Certi/"+model01->data(model01->index(currentRow,0)).toString()+".cer";
+
+    QFile::remove(pubkeyroot);
+    QFile::remove(privkeyroot);
+    QFile::remove(certiRoot);
+
+     //   fileOperation.deleteOnelineInFile(currentRow,QString(QCoreApplication::applicationDirPath()+"/Key/mykey"));
+
+        QList<QString> lines;
+        QFile pubkeyFile(workingDir+"Key/mykey");
+        pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
+        QTextStream pubkeyStream(&pubkeyFile);
+        QString line;
+        while(!pubkeyStream.atEnd())
+        {
+            line = pubkeyStream.readLine().trimmed();
+            if(line=="") continue;
+            if(line.startsWith(model01->data(model01->index(currentRow,0)).toString()))
+            {
+                //qDebug()<<model01->data(model01->index(currentRow,0)).toString();
+                continue;
+            }
+            lines.append(line);
+        }
+        pubkeyFile.close();
+
+        pubkeyFile.open(QIODevice::WriteOnly|QIODevice::Text);
+        for(int i=0; i<lines.length();i++)
+        {
+            pubkeyStream<<lines[i]<<"\n";
+        }
+        pubkeyFile.close();
+
+        tableView01->model()->removeRow(currentRow);
 }

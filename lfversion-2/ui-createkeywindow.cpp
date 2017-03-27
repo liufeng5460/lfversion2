@@ -1,5 +1,5 @@
 #include "ui-createkeywindow.h"
-#include "aeshandler.h"
+#include "myaes.h"
 #include "util.h"
 #include <QGridLayout>
 #include <QMessageBox>
@@ -59,8 +59,9 @@ void CreateKeyWindow::genAesKey(){
     QString mess;
     try{
 
-        AESHandler::generateKey(length);//生成16 byte AES秘钥
-        AESHandler::saveKey(keyroot.toStdString().c_str());
+        MyAES aes;
+        aes.GenerateKey(length);//生成16 byte AES秘钥
+        aes.SaveKey(keyroot.toStdString().c_str());
         mess="已生成密钥！";
 
         QFile filein(QCoreApplication::applicationDirPath()+"/Key/AESkey");

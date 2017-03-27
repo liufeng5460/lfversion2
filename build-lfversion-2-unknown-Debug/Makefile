@@ -55,7 +55,9 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/ui-createkeywindow.cpp \
 		../lfversion-2/ui-decryptfilewindow.cpp \
 		../lfversion-2/ui-encryptfilewindow.cpp \
-		../lfversion-2/util.cpp qrc_icon.cpp \
+		../lfversion-2/util.cpp \
+		../lfversion-2/myaes.cpp \
+		../lfversion-2/myrsa.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
@@ -70,6 +72,8 @@ OBJECTS       = main.o \
 		ui-decryptfilewindow.o \
 		ui-encryptfilewindow.o \
 		util.o \
+		myaes.o \
+		myrsa.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
@@ -141,14 +145,17 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/ui-createkeywindow.h \
 		../lfversion-2/ui-decryptfilewindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
-		../lfversion-2/aeshandler.h ../lfversion-2/main.cpp \
+		../lfversion-2/myaes.h \
+		../lfversion-2/myrsa.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
 		../lfversion-2/ui-createkeywindow.cpp \
 		../lfversion-2/ui-decryptfilewindow.cpp \
 		../lfversion-2/ui-encryptfilewindow.cpp \
-		../lfversion-2/util.cpp
+		../lfversion-2/util.cpp \
+		../lfversion-2/myaes.cpp \
+		../lfversion-2/myrsa.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -319,8 +326,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/aeshandler.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -407,11 +414,13 @@ mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-showwidget.o ../lfversion-2/ui-showwidget.cpp
 
-ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createcertiwindow.h
+ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createcertiwindow.h \
+		../lfversion-2/util.h \
+		../lfversion-2/myrsa.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createcertiwindow.o ../lfversion-2/ui-createcertiwindow.cpp
 
 ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-createkeywindow.h \
-		../lfversion-2/aeshandler.h \
+		../lfversion-2/myaes.h \
 		../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createkeywindow.o ../lfversion-2/ui-createkeywindow.cpp
 
@@ -423,6 +432,12 @@ ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/u
 
 util.o: ../lfversion-2/util.cpp ../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o util.o ../lfversion-2/util.cpp
+
+myaes.o: ../lfversion-2/myaes.cpp ../lfversion-2/myaes.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myaes.o ../lfversion-2/myaes.cpp
+
+myrsa.o: ../lfversion-2/myrsa.cpp ../lfversion-2/myrsa.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myrsa.o ../lfversion-2/myrsa.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp

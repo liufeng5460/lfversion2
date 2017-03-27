@@ -21,6 +21,8 @@ public slots:
 
     void showMenu01(QPoint);
     void showMenu02(QPoint);
+
+    void deletePubAndPrivKeyFun();
 private:
 
     QMenu *menu01;

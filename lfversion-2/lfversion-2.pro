@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     ui-createkeywindow.cpp \
     ui-decryptfilewindow.cpp \
     ui-encryptfilewindow.cpp \
-    util.cpp
+    util.cpp \
+    myaes.cpp \
+    myrsa.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -28,7 +30,8 @@ HEADERS  += mainwindow.h \
     ui-createkeywindow.h \
     ui-decryptfilewindow.h \
     ui-encryptfilewindow.h \
-    aeshandler.h
+    myaes.h \
+    myrsa.h
 
 FORMS    +=
 

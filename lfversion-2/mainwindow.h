@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QAction>
+#include <QLabel>
 #include <QToolBar>
 #include "ui-showwidget.h"
 
@@ -16,6 +17,9 @@ public:
     ~MainWindow();
 
 private:
+
+    QLabel* portInfoLabel = nullptr;
+    void updateStatusBar(QString port);
 
     ShowWidgetUI *showWidget;
 
@@ -45,6 +49,7 @@ private slots:
     void createKey();
     void encrytFile();
     void decrytFile();
+    void sendFile();
 };
 
 #endif // MAINWINDOW_H

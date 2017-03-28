@@ -57,13 +57,15 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/ui-encryptfilewindow.cpp \
 		../lfversion-2/util.cpp \
 		../lfversion-2/myaes.cpp \
-		../lfversion-2/myrsa.cpp qrc_icon.cpp \
+		../lfversion-2/myrsa.cpp \
+		../lfversion-2/ui-sendfilewindow.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
 		moc_ui-createkeywindow.cpp \
 		moc_ui-decryptfilewindow.cpp \
-		moc_ui-encryptfilewindow.cpp
+		moc_ui-encryptfilewindow.cpp \
+		moc_ui-sendfilewindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		ui-showwidget.o \
@@ -74,13 +76,15 @@ OBJECTS       = main.o \
 		util.o \
 		myaes.o \
 		myrsa.o \
+		ui-sendfilewindow.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
 		moc_ui-createcertiwindow.o \
 		moc_ui-createkeywindow.o \
 		moc_ui-decryptfilewindow.o \
-		moc_ui-encryptfilewindow.o
+		moc_ui-encryptfilewindow.o \
+		moc_ui-sendfilewindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -146,7 +150,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/ui-decryptfilewindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
 		../lfversion-2/myaes.h \
-		../lfversion-2/myrsa.h ../lfversion-2/main.cpp \
+		../lfversion-2/myrsa.h \
+		../lfversion-2/ui-sendfilewindow.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
@@ -155,7 +160,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/ui-encryptfilewindow.cpp \
 		../lfversion-2/util.cpp \
 		../lfversion-2/myaes.cpp \
-		../lfversion-2/myrsa.cpp
+		../lfversion-2/myrsa.cpp \
+		../lfversion-2/ui-sendfilewindow.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -326,8 +332,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -362,9 +368,9 @@ qrc_icon.cpp: ../lfversion-2/icon.qrc \
 		../lfversion-2/image/encrypt.jpg
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name icon ../lfversion-2/icon.qrc -o qrc_icon.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp
 moc_mainwindow.cpp: ../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
@@ -383,6 +389,9 @@ moc_ui-decryptfilewindow.cpp: ../lfversion-2/ui-decryptfilewindow.h
 
 moc_ui-encryptfilewindow.cpp: ../lfversion-2/ui-encryptfilewindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-encryptfilewindow.h -o moc_ui-encryptfilewindow.cpp
+
+moc_ui-sendfilewindow.cpp: ../lfversion-2/ui-sendfilewindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-sendfilewindow.h -o moc_ui-sendfilewindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -408,7 +417,8 @@ mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-createcertiwindow.h \
 		../lfversion-2/ui-createkeywindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
-		../lfversion-2/ui-decryptfilewindow.h
+		../lfversion-2/ui-decryptfilewindow.h \
+		../lfversion-2/ui-sendfilewindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
 
 ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h
@@ -439,6 +449,9 @@ myaes.o: ../lfversion-2/myaes.cpp ../lfversion-2/myaes.h
 myrsa.o: ../lfversion-2/myrsa.cpp ../lfversion-2/myrsa.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myrsa.o ../lfversion-2/myrsa.cpp
 
+ui-sendfilewindow.o: ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/ui-sendfilewindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-sendfilewindow.o ../lfversion-2/ui-sendfilewindow.cpp
+
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp
 
@@ -459,6 +472,9 @@ moc_ui-decryptfilewindow.o: moc_ui-decryptfilewindow.cpp
 
 moc_ui-encryptfilewindow.o: moc_ui-encryptfilewindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-encryptfilewindow.o moc_ui-encryptfilewindow.cpp
+
+moc_ui-sendfilewindow.o: moc_ui-sendfilewindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-sendfilewindow.o moc_ui-sendfilewindow.cpp
 
 ####### Install
 

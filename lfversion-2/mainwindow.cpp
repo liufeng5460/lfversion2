@@ -1,11 +1,14 @@
 #include <QMenu>
 #include <QMenuBar>
+#include <QStatusBar>
 #include "mainwindow.h"
 #include "util.h"
 #include "ui-createcertiwindow.h"
 #include "ui-createkeywindow.h"
 #include "ui-encryptfilewindow.h"
 #include "ui-decryptfilewindow.h"
+#include "ui-sendfilewindow.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -43,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     fileTransAction=new QAction(QIcon(":/image/filetransition"),tr("文件传输"),this);
     fileTransAction->setStatusTip(tr("文件传输"));
+    connect(fileTransAction, SIGNAL(triggered()),this,SLOT(sendFile()));
 
 
     exitAction =new QAction(tr("退出"),this);
@@ -88,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     showWidget =new ShowWidgetUI(this);
     setCentralWidget(showWidget);
 
+    updateStatusBar("0");
 
 
 }
@@ -97,6 +102,20 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::updateStatusBar(QString port)
+{
+    QString portInfo = tr("正在监听端口: ")+port;
+    if(portInfoLabel == nullptr){
+        portInfoLabel = new QLabel(portInfo);
+        statusBar()->addWidget(portInfoLabel);
+    }else{
+        statusBar()->removeWidget(portInfoLabel);
+        delete portInfoLabel;
+        portInfoLabel = new QLabel(portInfo);
+        statusBar()->addWidget(portInfoLabel);
+        statusBar()->show();
+    }
+}
 
 void MainWindow::createCerti(){
     util::windowSetup(new CreateCertiWindow);
@@ -120,4 +139,9 @@ void MainWindow::encrytFile()
 void MainWindow::decrytFile()
 {
     util::windowSetup(new DecryptFileWindow);
+}
+
+void MainWindow::sendFile()
+{
+    util::windowSetup(new SendFileWindow);
 }

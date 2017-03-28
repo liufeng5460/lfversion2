@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     ui-encryptfilewindow.cpp \
     util.cpp \
     myaes.cpp \
-    myrsa.cpp
+    myrsa.cpp \
+    ui-sendfilewindow.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     ui-decryptfilewindow.h \
     ui-encryptfilewindow.h \
     myaes.h \
-    myrsa.h
+    myrsa.h \
+    ui-sendfilewindow.h
 
 FORMS    +=
 

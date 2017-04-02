@@ -15,7 +15,7 @@ signals:
 
 public slots:
     void selectFile();
-
+    void doSend();
 private:
     QLabel* ipAddressLabel;
     QLabel* portLabel;

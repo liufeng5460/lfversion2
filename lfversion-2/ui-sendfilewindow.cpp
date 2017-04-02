@@ -1,8 +1,12 @@
+
 #include "ui-sendfilewindow.h"
+#include "netaction.h"
+
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFileDialog>
+#include <QHostAddress>
 SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 {
 
@@ -42,15 +46,23 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addLayout(buttonLayout);
 
     connect(selectFileButton, SIGNAL(clicked(bool)), this,SLOT(selectFile()));
+    connect(sendButton,SIGNAL(clicked(bool)),this,SLOT(doSend()));
     ipAddressEdit->setText(tr("127.0.0.1"));
-    portEdit->setText(tr("546"));
+    portEdit->setText(tr("5460"));
 }
 
 void SendFileWindow::selectFile()
 {
     fileName = QFileDialog::getOpenFileName(this,"选择文件","/","All files(*)");
-    if(fileName == NULL) return;
+    if(fileName == nullptr) return;
     fileEdit->setText(fileName);
+}
 
+void SendFileWindow::doSend()
+{
+    QString ip = ipAddressEdit->text().trimmed();
+    int port = portEdit->text().trimmed().toInt();
+    QHostAddress ipAddress(ip);
+    NetAction::sendMessage(ipAddress);
 }
 

@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     util.cpp \
     myaes.cpp \
     myrsa.cpp \
-    ui-sendfilewindow.cpp
+    ui-sendfilewindow.cpp \
+    netaction.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     ui-encryptfilewindow.h \
     myaes.h \
     myrsa.h \
-    ui-sendfilewindow.h
+    ui-sendfilewindow.h \
+    netaction.h
 
 FORMS    +=
 

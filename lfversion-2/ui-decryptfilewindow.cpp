@@ -77,10 +77,10 @@ DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addLayout(Layout03);
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
 
-    connect(choseFileBtn,SIGNAL(clicked()),this,SLOT(choseFile()));
-    connect(choseOutputRoot,SIGNAL(clicked()),this,SLOT(changeRoot()));
-    connect(decrptionFileBtn,SIGNAL(clicked()),this,SLOT(doDecryptionFile()));
-    connect(decrptionStrBtn,SIGNAL(clicked()),this,SLOT(doDecryptionString()));
+    //connect(choseFileBtn,SIGNAL(clicked()),this,SLOT(choseFile()));
+   // connect(choseOutputRoot,SIGNAL(clicked()),this,SLOT(changeRoot()));
+  //  connect(decrptionFileBtn,SIGNAL(clicked()),this,SLOT(doDecryptionFile()));
+  //  connect(decrptionStrBtn,SIGNAL(clicked()),this,SLOT(doDecryptionString()));
 //    connect(saveToLocal,SIGNAL(clicked()),this,SLOT(saveToLocalFun()));
 }
 

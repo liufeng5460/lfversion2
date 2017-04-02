@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+//#include "netserver.h"
 #include <QApplication>
 #include <QDir>
 void createDirs();
+void netSetup(quint16 port, QWidget* ctx);
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -10,7 +12,7 @@ int main(int argc, char *argv[])
 
 
     createDirs();
-
+    netSetup(5460,&w);
 
     return a.exec();
 }
@@ -34,18 +36,11 @@ void createDirs()
         exist = checkDir->exists(dir+d);
         if(!exist) checkDir->mkdir(dir+d);
     }
+}
 
-//    exist = checkDir->exists(dir+"/Key");
-//    if(!exist) checkDir->mkdir(dir+"/Key");
-
-//    exist = checkDir->exists(dir+"/Tmp");
-//    if(!exist) checkDir->mkdir(dir+"/Tmp");
-
-//    exist = checkDir->exists(dir+"/Key/AES");
-//    if(!exist) checkDir->mkdir(dir+"/Key/AES");
-
-//    exist = checkDir->exists(dir+"/Key/RSA");
-//    if(!exist) checkDir->mkdir(dir+"/Key/RSA");
-
+void netSetup(quint16 port,QWidget* ctx)
+{
+    //NetServer* server = new NetServer(port,ctx);
+    //server->start();
 
 }

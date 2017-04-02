@@ -20,6 +20,20 @@ void util::windowSetup(QWidget* window)
     window->show();
 }
 
+
+void util::writeMessageToFile(QString message, QString fileName, bool currentDir)
+{
+    if(currentDir) fileName = QApplication::applicationDirPath()+"/"+fileName;
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+    QTextStream out(&file);
+    out<<message;
+    out.flush();
+    file.close();;
+
+
+}
+
 bool util::contains(QString newKeyName, QString KeyInfoFileName){
     QFile *keyInfo=new QFile(QCoreApplication::applicationDirPath()+"/Key/"+KeyInfoFileName);
     keyInfo->open(QIODevice::ReadOnly | QIODevice::Text);

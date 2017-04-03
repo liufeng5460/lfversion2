@@ -57,7 +57,7 @@ void NetAction::doRead()
 
     totalBytes = 0;
 
-    useData2();
+    useData();
 }
 
 
@@ -75,6 +75,7 @@ void NetAction::useData2()
                                  .arg(message));
 
     util::writeMessageToFile(message,"Tmp/tmp.txt");
+    cache.clear();
 }
 
 
@@ -97,24 +98,42 @@ void NetAction::useData()
                                  .arg(messageType)
                                  .arg(messageLength)
                                  .arg(message));
+        util::writeMessageToFile(message,"Tmp/tmp.txt");
     }
+    cache.clear();
 }
 
-void NetAction::sendMessage(QHostAddress& ip, quint16 port)
+void NetAction::sendMessage(QByteArray& dataBlock,QHostAddress& ip, quint16 port)
 {
     QTcpSocket* clientSocket = new QTcpSocket;
     clientSocket->connectToHost(ip,port);
-
-    QByteArray dataBlock;
-    QDataStream out(&dataBlock,QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_0);
-
-
-    QString message = QString::fromUtf8("但是值得思考的问题是");
-    out<<(int)(sizeof(int)+message.toUtf8().length());
-    out<<message.toUtf8().length()<<message;
-
     clientSocket->write(dataBlock);
     clientSocket->disconnectFromHost();
+}
+
+void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port)
+{
+
+     int messageType = 1;
+     QFile readFile(fileName);
+     readFile.open(QIODevice::ReadOnly|QIODevice::Text);
+     QString fileContent(readFile.readAll());
+
+     QByteArray dataBlock;
+     QDataStream out(&dataBlock,QIODevice::WriteOnly);
+     out.setVersion(QDataStream::Qt_5_0);
+
+     int contentBytes = fileContent.toUtf8().size();
+     dataBlock.resize(sizeof(int)*3+contentBytes);
+
+     out<<(int)(sizeof(int)*2+contentBytes);  // total size exclude self
+     out<<messageType;
+     out<<contentBytes;
+     out<<fileContent;
+
+
+     QMessageBox::information(nullptr, tr("file content"),fileContent);
+     sendMessage(dataBlock,ip);
+
 }
 

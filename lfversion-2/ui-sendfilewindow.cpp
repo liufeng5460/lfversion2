@@ -53,7 +53,7 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 
 void SendFileWindow::selectFile()
 {
-    fileName = QFileDialog::getOpenFileName(this,"选择文件","/","All files(*)");
+    fileName = QFileDialog::getOpenFileName(this,"选择文件","/home/ydu","All files(*)");
     if(fileName == nullptr) return;
     fileEdit->setText(fileName);
 }
@@ -63,6 +63,6 @@ void SendFileWindow::doSend()
     QString ip = ipAddressEdit->text().trimmed();
     int port = portEdit->text().trimmed().toInt();
     QHostAddress ipAddress(ip);
-    NetAction::sendMessage(ipAddress);
+    NetAction::sendFile(fileEdit->text(),ipAddress);
 }
 

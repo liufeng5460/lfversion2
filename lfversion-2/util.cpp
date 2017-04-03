@@ -131,7 +131,7 @@ void util::deleteOnelineInFile(int RowNum, QString filename)
     writefile.close();
 }
 
-void util::deleteRecords(QString& name, bool self)
+void util::deleteCerti(QString& name, bool self)
 {
     // remove rsa key files
     QDir RSADir(QApplication::applicationDirPath()+"/Key/RSA");

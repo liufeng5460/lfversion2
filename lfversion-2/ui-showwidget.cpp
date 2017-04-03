@@ -111,14 +111,14 @@ void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int c
 
 void ShowWidgetUI::showMenu01(QPoint pos){
         menu01->clear(); //清除原有菜单
-        menu01->addAction(deletePubAndPrivKey);
+        menu01->addAction(deleteOtherCertiAction);
         //菜单出现的位置为当前鼠标的位置
         menu01->exec(QCursor::pos());
 }
 
 void ShowWidgetUI::showMenu02(QPoint pos){
     menu02->clear(); //清除原有菜单
-    menu02->addAction(deletePubKey);
+    menu02->addAction(deleteSelfCertiAction);
     //菜单出现的位置为当前鼠标的位置
     menu02->exec(QCursor::pos());
 }
@@ -130,17 +130,17 @@ void ShowWidgetUI::createMenu(){
     tableView01->setContextMenuPolicy(Qt::CustomContextMenu);
     tableView02->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    deletePubKey=new QAction(this);
-    deletePubKey->setText(QString(tr("删除该证书")));
-    deletePubAndPrivKey=new QAction(this);
-    deletePubAndPrivKey->setText(QString(tr("删除该证书")));
+    deleteSelfCertiAction=new QAction(this);
+    deleteSelfCertiAction->setText(QString(tr("删除该证书")));
+    deleteOtherCertiAction=new QAction(this);
+    deleteOtherCertiAction->setText(QString(tr("删除该证书")));
 //    showPubKeyMess=new QAction(this);
 //    showPubKeyMess->setText(QString(tr("查看证书信息")));
 //    showPubAndPrivKeyMess=new QAction(this);
 //    showPubAndPrivKeyMess->setText(QString(tr("查看证书信息")));
 
-   // connect(deletePubKey, SIGNAL(triggered(bool)), this, SLOT(deletePubKeyFun()));
-      connect(deletePubAndPrivKey, SIGNAL(triggered(bool)), this, SLOT(deletePubAndPrivKeyFun()));
+      connect(deleteSelfCertiAction, SIGNAL(triggered(bool)), this, SLOT(deleteOtherCerti()));
+      connect(deleteOtherCertiAction, SIGNAL(triggered(bool)), this, SLOT(deleteSelfCerti()));
   //  connect(showPubKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubKeyMessFun()));
 //    connect(showPubAndPrivKeyMess, SIGNAL(triggered(bool)), this, SLOT(showPubAndPrivKeyMessFun()));
 
@@ -188,10 +188,10 @@ void ShowWidgetUI::addCerti()
     cerFile->close();
 }
 
-void ShowWidgetUI::deletePubAndPrivKeyFun()
+void ShowWidgetUI::deleteSelfCerti()
 {
     QString name = model01->item(tableView01->currentIndex().row(),0)->text();
-    util::deleteRecords(name);
+    util::deleteCerti(name);
     int currentRow = tableView01->currentIndex().row();
     /*
     QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
@@ -239,4 +239,13 @@ void ShowWidgetUI::deletePubAndPrivKeyFun()
 
       tableView01->model()->removeRow(currentRow);
 
+}
+
+void ShowWidgetUI::deleteOtherCerti()
+{
+
+    QString name = model02->item(tableView02->currentIndex().row(),0)->text();
+    util::deleteCerti(name,false);
+    int currentRow = tableView02->currentIndex().row();
+     tableView02->model()->removeRow(currentRow);
 }

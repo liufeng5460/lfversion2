@@ -22,13 +22,14 @@ public slots:
     void showMenu01(QPoint);
     void showMenu02(QPoint);
 
-    void deletePubAndPrivKeyFun();
+    void deleteSelfCerti();
+    void deleteOtherCerti();
 private:
 
     QMenu *menu01;
     QMenu *menu02;
-    QAction *deletePubKey;
-    QAction *deletePubAndPrivKey;
+    QAction *deleteSelfCertiAction;
+    QAction *deleteOtherCertiAction;
 
 
     void extractData(QStandardItemModel* model, QString fileName,int count);

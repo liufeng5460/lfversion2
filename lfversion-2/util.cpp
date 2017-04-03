@@ -33,8 +33,6 @@ void util::writeMessageToFile(QString message, QString fileName, bool currentDir
     out<<message;
     out.flush();
     file.close();;
-
-
 }
 
 void util::appendMessageToFile(QString message, QString fileName, bool newLine,bool currentDir)

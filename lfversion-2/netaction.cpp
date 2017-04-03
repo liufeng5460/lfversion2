@@ -3,6 +3,7 @@
 #include "status.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QFileInfo>
 
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
@@ -44,7 +45,7 @@ void NetAction::doRead()
         QDataStream in(socket);
         in.setVersion(QDataStream::Qt_5_0);
         in>>totalBytes;
-        cache.resize(totalBytes);
+       // cache.resize(totalBytes);
     }
     qDebug()<<"cache size = "<<totalBytes<<"\n";
     if(socket->bytesAvailable() < totalBytes)
@@ -89,20 +90,35 @@ void NetAction::useData()
     in>>messageType;
     if(messageType == 1)
     {
+
+
+        //char* fileContent = new char[messageLength];
+        //in.readRawData(fileContent,messageLength);
+
+        int fileNameBytes;
+        in>>fileNameBytes;
+
+
+        QString fileName;
+        in>>fileName;
+
+
         int messageLength;
         in>>messageLength;
 
         QString message;
         in>>message;
 
+       // QString message(fileContent);
+
         QMessageBox::information(nullptr,tr("Message received")
                                  ,tr("The message is:\n%1\n%2\n%3")
                                  .arg(messageType)
                                  .arg(messageLength)
                                  .arg(message));
-        util::writeMessageToFile(message,"Tmp/tmp.txt");
+        util::writeMessageToFile(message,"Tmp/"+fileName);
     }
-    cache.clear();
+   // cache.clear();
 }
 
 void NetAction::sendMessage(QByteArray& dataBlock,QHostAddress& ip, quint16 port)
@@ -118,21 +134,35 @@ void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port
 
      int messageType = 1;
      QFile readFile(fileName);
-     readFile.open(QIODevice::ReadOnly|QIODevice::Text);
-     QString fileContent(readFile.readAll());
+     readFile.open(QIODevice::ReadOnly);
 
      QByteArray dataBlock;
      QDataStream out(&dataBlock,QIODevice::WriteOnly);
      out.setVersion(QDataStream::Qt_5_0);
 
+   //  QString fileContent(readFile.readAll());
+     QString fileContent(readFile.readAll());
      int contentBytes = fileContent.toUtf8().size();
-     dataBlock.resize(sizeof(int)*3+contentBytes);
+    // int contentBytes = fileContent.size();
 
-     out<<(int)(sizeof(int)*2+contentBytes);  // total size exclude self
+
+
+     QFileInfo fileInfo(fileName);
+     QString realFileName = fileInfo.fileName();
+     qDebug()<<realFileName;
+     int fileNameBytes = realFileName.toUtf8().size();
+
+     dataBlock.resize(sizeof(int)*4+fileNameBytes+contentBytes);
+
+     out<<(int)(sizeof(int)*3+contentBytes);  // total size exclude self
      out<<messageType;
-     out<<contentBytes;
-     out<<fileContent;
 
+     out<<fileNameBytes;
+     out<<realFileName;
+
+     out<<contentBytes;
+      out<<fileContent;
+     //dataBlock.append(fileContent);
 
      QMessageBox::information(nullptr, tr("file content"),fileContent);
      sendMessage(dataBlock,ip);

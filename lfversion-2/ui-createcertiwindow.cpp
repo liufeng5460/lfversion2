@@ -1,6 +1,9 @@
+
 #include "ui-createcertiwindow.h"
 #include "util.h"
 #include "myrsa.h"
+#include "status.h"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -72,7 +75,7 @@ void CreateCertiWindow::genKey(){
     QString pubkeyInfo= nameEdit->text().toUtf8()+";" +mailEdit->text().toUtf8()+";" +validFromEdit->text().toUtf8()+";" +validUtilEdit->text().toUtf8();
     QString MyKeyinfo=pubkeyInfo+";"+pubFilename+";"+privFilename;
 
-    pushShowWidget(MyKeyinfo);
+    updateCertiInfo(MyKeyinfo);
 
 
     // create certi file
@@ -91,16 +94,9 @@ void CreateCertiWindow::genKey(){
 
 }
 
-void CreateCertiWindow::pushShowWidget(QString MyKeyinfo)
+void CreateCertiWindow::updateCertiInfo(QString MyKeyinfo)
 {
-    QStack<QString> inform;
-    inform.push(privFileName);
-    inform.push(pubFileName);
-    inform.push(validUtilEdit->text());
-    inform.push(validFromEdit->text());
-    inform.push(mailEdit->text());
-    inform.push(nameEdit->text());
-   // emit toShowWidget(inform);
+    Status::showWidget->addSelfRecords(MyKeyinfo.split(";"));
 
     QFile file01(QCoreApplication::applicationDirPath()+"/Key/mykey");
     if( file01.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
@@ -113,4 +109,5 @@ void CreateCertiWindow::pushShowWidget(QString MyKeyinfo)
     file01.close();
 
     this->close();
+
 }

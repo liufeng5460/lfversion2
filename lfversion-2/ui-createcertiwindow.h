@@ -27,7 +27,7 @@ signals:
    // void toShowWidget(QStack<QString>);
 
 private slots:
-    void pushShowWidget(QString );
+    void updateCertiInfo(QString );
     void genKey();
 };
 

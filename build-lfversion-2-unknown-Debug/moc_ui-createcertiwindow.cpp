@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_CreateCertiWindow_t {
     QByteArrayData data[4];
-    char stringdata0[41];
+    char stringdata0[42];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,12 +30,12 @@ struct qt_meta_stringdata_CreateCertiWindow_t {
 static const qt_meta_stringdata_CreateCertiWindow_t qt_meta_stringdata_CreateCertiWindow = {
     {
 QT_MOC_LITERAL(0, 0, 17), // "CreateCertiWindow"
-QT_MOC_LITERAL(1, 18, 14), // "pushShowWidget"
-QT_MOC_LITERAL(2, 33, 0), // ""
-QT_MOC_LITERAL(3, 34, 6) // "genKey"
+QT_MOC_LITERAL(1, 18, 15), // "updateCertiInfo"
+QT_MOC_LITERAL(2, 34, 0), // ""
+QT_MOC_LITERAL(3, 35, 6) // "genKey"
 
     },
-    "CreateCertiWindow\0pushShowWidget\0\0"
+    "CreateCertiWindow\0updateCertiInfo\0\0"
     "genKey"
 };
 #undef QT_MOC_LITERAL
@@ -70,7 +70,7 @@ void CreateCertiWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         CreateCertiWindow *_t = static_cast<CreateCertiWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->pushShowWidget((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 0: _t->updateCertiInfo((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 1: _t->genKey(); break;
         default: ;
         }

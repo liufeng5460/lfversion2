@@ -1,10 +1,12 @@
 #ifndef STATUS
 #define STATUS
+
+#include "ui-showwidget.h"
 namespace Status {
 
-bool listening = false;
-quint16 port = 5460;
-
+extern bool listening;
+extern quint16 port;
+extern ShowWidgetUI* showWidget;
 
 }
 

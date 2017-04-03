@@ -249,3 +249,13 @@ void ShowWidgetUI::deleteOtherCerti()
     int currentRow = tableView02->currentIndex().row();
      tableView02->model()->removeRow(currentRow);
 }
+void ShowWidgetUI::addSelfRecords(QStringList records)
+{
+    int nextRow=tableView01->model()->rowCount();
+    int i=0;
+    for(QString item : records)
+    {
+        model01->setItem(nextRow, i, new QStandardItem(item));
+        i++;
+    }
+}

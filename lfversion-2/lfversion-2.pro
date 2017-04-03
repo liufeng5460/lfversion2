@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     myaes.cpp \
     myrsa.cpp \
     ui-sendfilewindow.cpp \
-    netaction.cpp
+    netaction.cpp \
+    status.cpp
 
 HEADERS  += mainwindow.h \
     util.h \

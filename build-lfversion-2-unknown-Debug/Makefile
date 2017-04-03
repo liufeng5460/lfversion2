@@ -59,7 +59,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/myaes.cpp \
 		../lfversion-2/myrsa.cpp \
 		../lfversion-2/ui-sendfilewindow.cpp \
-		../lfversion-2/netaction.cpp qrc_icon.cpp \
+		../lfversion-2/netaction.cpp \
+		../lfversion-2/status.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
@@ -80,6 +81,7 @@ OBJECTS       = main.o \
 		myrsa.o \
 		ui-sendfilewindow.o \
 		netaction.o \
+		status.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
@@ -168,7 +170,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/myaes.cpp \
 		../lfversion-2/myrsa.cpp \
 		../lfversion-2/ui-sendfilewindow.cpp \
-		../lfversion-2/netaction.cpp
+		../lfversion-2/netaction.cpp \
+		../lfversion-2/status.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -342,7 +345,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -427,6 +430,7 @@ main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/util.h \
+		../lfversion-2/status.h \
 		../lfversion-2/ui-createcertiwindow.h \
 		../lfversion-2/ui-createkeywindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
@@ -434,12 +438,15 @@ mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-sendfilewindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
 
-ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h
+ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h \
+		../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-showwidget.o ../lfversion-2/ui-showwidget.cpp
 
 ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createcertiwindow.h \
 		../lfversion-2/util.h \
-		../lfversion-2/myrsa.h
+		../lfversion-2/myrsa.h \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createcertiwindow.o ../lfversion-2/ui-createcertiwindow.cpp
 
 ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-createkeywindow.h \
@@ -468,8 +475,13 @@ ui-sendfilewindow.o: ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/ui-send
 
 netaction.o: ../lfversion-2/netaction.cpp ../lfversion-2/netaction.h \
 		../lfversion-2/util.h \
-		../lfversion-2/status.h
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o netaction.o ../lfversion-2/netaction.cpp
+
+status.o: ../lfversion-2/status.cpp ../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o status.o ../lfversion-2/status.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp

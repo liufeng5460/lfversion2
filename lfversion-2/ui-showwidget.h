@@ -14,6 +14,7 @@ public:
     explicit ShowWidgetUI(QWidget *parent = 0);
 
     void addCerti();
+    void addSelfRecords(QStringList records);
 
 signals:
 

@@ -3,6 +3,7 @@
 #include <QStatusBar>
 #include "mainwindow.h"
 #include "util.h"
+#include "status.h"
 #include "ui-createcertiwindow.h"
 #include "ui-createkeywindow.h"
 #include "ui-encryptfilewindow.h"
@@ -93,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     util::centerize(this);
     showWidget =new ShowWidgetUI(this);
     setCentralWidget(showWidget);
+    Status::showWidget = showWidget;
 
    // updateStatusBar("0");
 

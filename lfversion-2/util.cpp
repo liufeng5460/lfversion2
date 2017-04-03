@@ -1,10 +1,13 @@
 
 
 #include "util.h"
+
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QTextStream>
 #include <QFile>
+#include <QDir>
+#include <QDebug>
 
 
 void util::centerize(QWidget* window)
@@ -128,7 +131,63 @@ void util::deleteOnelineInFile(int RowNum, QString filename)
     writefile.close();
 }
 
+void util::deleteRecords(QString& name, bool self)
+{
+    // remove rsa key files
+    QDir RSADir(QApplication::applicationDirPath()+"/Key/RSA");
+    QStringList fileNames = RSADir.entryList();
+    for(QString fileName:fileNames)
+    {
+        if(fileName.endsWith(name))
+        {
+         //   qDebug()<<fileName;
+            RSADir.remove(fileName);
+        }
 
+    }
+
+    // remove cer file
+    QDir cerDir(QApplication::applicationDirPath()+"/Key/Certi");
+    fileNames.clear();
+    fileNames = cerDir.entryList();
+    for(QString fileName:fileNames)
+    {
+        if(fileName.startsWith(name))
+        {
+           // qDebug()<<fileName;
+            cerDir.remove(fileName);
+        }
+    }
+
+
+    // remove record from metadata file
+
+    QString metaDataFileName=QApplication::applicationDirPath()+"/Key/";
+    if(self)
+    {
+        metaDataFileName += "mykey";
+    }
+    else
+    {
+        metaDataFileName += "pubkey";
+    }
+    QFile metaDataFile(metaDataFileName);
+    metaDataFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    QTextStream stream(&metaDataFile);
+    QStringList records;
+    while(!stream.atEnd())
+    {
+        records.append(stream.readLine());
+    }
+    metaDataFile.close();
+
+    metaDataFile.open(QIODevice::WriteOnly|QIODevice::Text);
+    for(QString record : records)
+    {
+        if(record.startsWith(name)) continue;
+        stream<<record<<"\n";
+    }
+}
 
 
 

@@ -112,7 +112,6 @@ void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int c
 void ShowWidgetUI::showMenu01(QPoint pos){
         menu01->clear(); //清除原有菜单
         menu01->addAction(deletePubAndPrivKey);
-        menu01->addAction(showPubAndPrivKeyMess);
         //菜单出现的位置为当前鼠标的位置
         menu01->exec(QCursor::pos());
 }
@@ -120,7 +119,6 @@ void ShowWidgetUI::showMenu01(QPoint pos){
 void ShowWidgetUI::showMenu02(QPoint pos){
     menu02->clear(); //清除原有菜单
     menu02->addAction(deletePubKey);
-    menu02->addAction(showPubKeyMess);
     //菜单出现的位置为当前鼠标的位置
     menu02->exec(QCursor::pos());
 }
@@ -169,7 +167,7 @@ void ShowWidgetUI::addCerti()
     QString pubFileName="Key/RSA/PubKey_"+itemList.at(0);
     util::writeMessageToFile(pubKey,pubFileName);
 
-    // create certification file
+    // create local certification file
     QString localCertiFileName = "Key/Certi/"+itemList.at(0)+".cer";
     util::writeMessageToFile(metaData+"\n"+pubKey,localCertiFileName);
 
@@ -192,13 +190,16 @@ void ShowWidgetUI::addCerti()
 
 void ShowWidgetUI::deletePubAndPrivKeyFun()
 {
-
+    QString name = model01->item(tableView01->currentIndex().row(),0)->text();
+    util::deleteRecords(name);
+    int currentRow = tableView01->currentIndex().row();
+    /*
     QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
     if (message.exec()==QMessageBox::No){
         return;
     }
 
-    int currentRow = tableView01->currentIndex().row();
+
     QString workingDir = QCoreApplication::applicationDirPath() + "/";
     QString pubkeyroot=workingDir  + (model01->data(model01->index(currentRow,4))).toString();
     QString privkeyroot= workingDir+ (model01->data(model01->index(currentRow,5))).toString();
@@ -234,6 +235,8 @@ void ShowWidgetUI::deletePubAndPrivKeyFun()
             pubkeyStream<<lines[i]<<"\n";
         }
         pubkeyFile.close();
+*/
 
-        tableView01->model()->removeRow(currentRow);
+      tableView01->model()->removeRow(currentRow);
+
 }

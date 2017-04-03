@@ -29,8 +29,7 @@ private:
     QMenu *menu02;
     QAction *deletePubKey;
     QAction *deletePubAndPrivKey;
-    QAction *showPubKeyMess;
-    QAction *showPubAndPrivKeyMess;
+
 
     void extractData(QStandardItemModel* model, QString fileName,int count);
     void createMenu();

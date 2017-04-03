@@ -156,7 +156,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/myaes.h \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/ui-sendfilewindow.h \
-		../lfversion-2/netaction.h ../lfversion-2/main.cpp \
+		../lfversion-2/netaction.h \
+		../lfversion-2/status.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
@@ -340,7 +341,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp $(DISTDIR)/
 
 
@@ -461,10 +462,13 @@ myaes.o: ../lfversion-2/myaes.cpp ../lfversion-2/myaes.h
 myrsa.o: ../lfversion-2/myrsa.cpp ../lfversion-2/myrsa.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myrsa.o ../lfversion-2/myrsa.cpp
 
-ui-sendfilewindow.o: ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/ui-sendfilewindow.h
+ui-sendfilewindow.o: ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/ui-sendfilewindow.h \
+		../lfversion-2/netaction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-sendfilewindow.o ../lfversion-2/ui-sendfilewindow.cpp
 
-netaction.o: ../lfversion-2/netaction.cpp ../lfversion-2/netaction.h
+netaction.o: ../lfversion-2/netaction.cpp ../lfversion-2/netaction.h \
+		../lfversion-2/util.h \
+		../lfversion-2/status.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o netaction.o ../lfversion-2/netaction.cpp
 
 qrc_icon.o: qrc_icon.cpp 

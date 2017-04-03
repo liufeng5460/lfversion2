@@ -5,7 +5,7 @@
 #include <QDir>
 
 void createDirs();
-void netSetup(quint16 port, QWidget* ctx);
+void netSetup(quint16 port);
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
 
     createDirs();
-    netSetup(5460,&w);
+    netSetup(5460);
 
     return a.exec();
 }
@@ -40,7 +40,7 @@ void createDirs()
     }
 }
 
-void netSetup(quint16 port,QWidget* ctx)
+void netSetup(quint16 port)
 {
     //NetServer* server = new NetServer(port,ctx);
     //server->start();

@@ -1,5 +1,6 @@
 #include "netaction.h"
 #include "util.h"
+#include "status.h"
 #include <QDebug>
 #include <QMessageBox>
 
@@ -12,12 +13,13 @@ NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port
                              ,tr("server start failed at port: %1").arg(port));
         return;
     }
-    else
-    {
-        QMessageBox::information(nullptr, tr("server notice"),
-                                 tr("server is running at port: %1").arg(port));
-    }
 
+       // QMessageBox::information(nullptr, tr("server notice"),
+         //                        tr("server is running at port: %1").arg(port));
+
+
+    Status::listening = true;
+    Status::port = port;
     cache="";
     totalBytes = 0;
 

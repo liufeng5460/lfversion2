@@ -1,4 +1,7 @@
+
 #include "ui-showwidget.h"
+#include "util.h"
+
 #include <QVBoxLayout>
 #include <QStack>
 #include <QList>
@@ -11,6 +14,7 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QDebug>
+#include <QFile>
 
 #include <iostream>
 using namespace std;
@@ -147,38 +151,43 @@ void ShowWidgetUI::createMenu(){
 
 void ShowWidgetUI::addCerti()
 {
-    QString filePlace = QFileDialog::getOpenFileName(this,"打开文件","/","all files(*)");
-    QFile *file=new QFile(filePlace);
-    file->open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream stream(file);
-  //  QTextCodec *code = QTextCodec::codecForName("ANSI");
- //   stream.setCodec(code);
-    QString data;
-    QString info="";
+    QString cerFileName=QFileDialog::getOpenFileName(this,"打开文件","/home/ydu","certification (*.cer)");
+    if(cerFileName == nullptr) return;
+
+    QFile *cerFile=new QFile(cerFileName);
+    cerFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream stream(cerFile);
+
+    QString metaData = stream.readLine();
+    QStringList itemList = metaData.split(";");
+    QString pubKey = stream.readLine();
+
+
+
+    // create pubkey file
+
+    QString pubFileName="Key/RSA/PubKey_"+itemList.at(0);
+    util::writeMessageToFile(pubKey,pubFileName);
+
+    // create certification file
+    QString localCertiFileName = "Key/Certi/"+itemList.at(0)+".cer";
+    util::writeMessageToFile(metaData+"\n"+pubKey,localCertiFileName);
+
+    // update table view
+
+    int nextRow=tableView02->model()->rowCount();
     int i=0;
-    int currentIndex=tableView02->model()->rowCount();
-    qDebug() << currentIndex;
-
-    while (!stream.atEnd() && i<=5)
+    for(QString item: itemList)
     {
-        data=QString(stream.readLine());
-        info=info+data+";";
-        model02->setItem(currentIndex, i, new QStandardItem(data));
-        i=i+1;
+        model02->setItem(nextRow, i, new QStandardItem(item));
+        i++;
     }
-    file->close();
+    model02->setItem(nextRow,i,new QStandardItem(pubFileName));
 
-    qDebug() << info;
-
-    QFile filein(QCoreApplication::applicationDirPath()+"/Key/pubkey");
-    if( filein.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
-        QTextStream in(&filein);
-       in<<  info << "\n";
-    } else {
-        qDebug() <<  filein.error();
-        qDebug() <<  filein.errorString();
-    }
-    filein.close();
+    // update pubkey file
+    QString totalMetaData = metaData+";"+pubFileName;
+    util::appendMessageToFile(totalMetaData,"Key/pubkey");
+    cerFile->close();
 }
 
 void ShowWidgetUI::deletePubAndPrivKeyFun()

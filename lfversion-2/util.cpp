@@ -34,6 +34,17 @@ void util::writeMessageToFile(QString message, QString fileName, bool currentDir
 
 }
 
+void util::appendMessageToFile(QString message, QString fileName, bool newLine,bool currentDir)
+{
+    if(currentDir) fileName = QApplication::applicationDirPath()+"/"+fileName;
+    QFile file(fileName);
+    file.open(QIODevice::Append|QIODevice::Text);
+    QTextStream out(&file);
+    out<<message<<"\n";
+    out.flush();
+    file.close();
+}
+
 bool util::contains(QString newKeyName, QString KeyInfoFileName){
     QFile *keyInfo=new QFile(QCoreApplication::applicationDirPath()+"/Key/"+KeyInfoFileName);
     keyInfo->open(QIODevice::ReadOnly | QIODevice::Text);

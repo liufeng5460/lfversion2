@@ -13,6 +13,7 @@ bool contains(QString newKeyName, QString KeyInfoFileName);
 void deleteOneline(int RowNum, QString &fileContent);
 void deleteOnelineInFile(int RowNum, QString filename);
 void writeMessageToFile(QString message, QString fileName,bool currentDir = true);
+void appendMessageToFile(QString message, QString fileName, bool newLine = true, bool currentDir = true);
 }
 
 

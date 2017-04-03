@@ -35,7 +35,8 @@ HEADERS  += mainwindow.h \
     myaes.h \
     myrsa.h \
     ui-sendfilewindow.h \
-    netaction.h
+    netaction.h \
+    status.h
 
 FORMS    +=
 

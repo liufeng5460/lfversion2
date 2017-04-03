@@ -73,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(fileTransAction);
 
 
+    menu = menuBar()->addMenu(tr("Setup"));
+
     //create tool bar
     toolBar =addToolBar("tool");
     toolBar->addAction(newCertiAction);
@@ -92,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     showWidget =new ShowWidgetUI(this);
     setCentralWidget(showWidget);
 
-    updateStatusBar("0");
+   // updateStatusBar("0");
 
 
 }

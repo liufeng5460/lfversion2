@@ -32,7 +32,7 @@ void util::writeMessageToFile(QString message, QString fileName, bool currentDir
     QTextStream out(&file);
     out<<message;
     out.flush();
-    file.close();;
+    file.close();
 }
 
 void util::appendMessageToFile(QString message, QString fileName, bool newLine,bool currentDir)

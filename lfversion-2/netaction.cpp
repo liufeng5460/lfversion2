@@ -152,9 +152,9 @@ void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port
      qDebug()<<realFileName;
      int fileNameBytes = realFileName.toUtf8().size();
 
-     dataBlock.resize(sizeof(int)*4+fileNameBytes+contentBytes);
+     dataBlock.resize(sizeof(int)*4+contentBytes);
 
-     out<<(int)(sizeof(int)*3+contentBytes);  // total size exclude self
+     out<<(int)(sizeof(int)*3+fileNameBytes+contentBytes);  // total size exclude self
      out<<messageType;
 
      out<<fileNameBytes;

@@ -60,7 +60,7 @@ void NetAction::doRead()
 
     totalBytes = 0;
 
-    useData();
+    useBData();
 }
 
 
@@ -121,6 +121,21 @@ void NetAction::useData()
    // cache.clear();
 }
 
+void NetAction::useBData()
+{
+    //QDataStream in(&cache, QIODevice::ReadOnly);
+    //n.setVersion(QDataStream::Qt_5_0);
+
+    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/binaryFile";
+    QFile outputFile(outputFileName);
+    outputFile.open(QIODevice::WriteOnly);
+
+    QDataStream out(&outputFile);
+    out.writeRawData(cache.constData(),cache.length());
+
+    outputFile.close();
+}
+
 void NetAction::sendMessage(QByteArray& dataBlock,QHostAddress& ip, quint16 port)
 {
     QTcpSocket* clientSocket = new QTcpSocket;
@@ -169,3 +184,55 @@ void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port
 
 }
 
+void NetAction::sendBFile(const QString &fileName, QHostAddress &ip, quint16 port)
+{
+    QTcpSocket* clientSocket = new QTcpSocket;
+    clientSocket->connectToHost(ip,port);
+   // clientSocket->write(dataBlock);
+
+    //int messageType = 1;
+    quint32 totalSize= 0;
+    QFile readFile(fileName);
+    readFile.open(QIODevice::ReadOnly);
+    QByteArray fileContent = readFile.readAll();
+
+    //QByteArray dataBlock;
+    QDataStream out(clientSocket);
+    out.setVersion(QDataStream::Qt_5_0);
+
+    totalSize += fileContent.length();
+
+
+
+    out<<totalSize;
+
+    out.writeRawData(fileContent.constData(),fileContent.length());
+  //  QString fileContent(readFile.readAll());
+  //  QString fileContent(readFile.readAll());
+//    int contentBytes = fileContent.toUtf8().size();
+   // int contentBytes = fileContent.size();
+
+
+
+//    QFileInfo fileInfo(fileName);
+//    QString realFileName = fileInfo.fileName();
+//    qDebug()<<realFileName;
+//    int fileNameBytes = realFileName.toUtf8().size();
+
+//    dataBlock.resize(sizeof(int)*4+contentBytes);
+
+//    out<<(int)(sizeof(int)*3+fileNameBytes+contentBytes);  // total size exclude self
+//    out<<messageType;
+
+//    out<<fileNameBytes;
+//    out<<realFileName;
+
+//    out<<contentBytes;
+//     out<<fileContent;
+//    //dataBlock.append(fileContent);
+
+    QMessageBox::information(nullptr, tr("file sended"),fileName);
+ //   sendMessage(dataBlock,ip);
+    clientSocket->disconnectFromHost();
+
+}

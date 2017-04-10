@@ -63,6 +63,6 @@ void SendFileWindow::doSend()
     QString ip = ipAddressEdit->text().trimmed();
     int port = portEdit->text().trimmed().toInt();
     QHostAddress ipAddress(ip);
-    NetAction::sendFile(fileEdit->text(),ipAddress);
+    NetAction::sendBFile(fileEdit->text(),ipAddress);
 }
 

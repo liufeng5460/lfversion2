@@ -125,13 +125,31 @@ void NetAction::useBData()
 {
     //QDataStream in(&cache, QIODevice::ReadOnly);
     //n.setVersion(QDataStream::Qt_5_0);
+    //QString fileName;
 
-    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/binaryFile";
+    QDataStream in(&cache,QIODevice::ReadOnly);
+    in.setVersion(QDataStream::Qt_5_0);
+
+    quint32 fileNameLength;
+    in>>fileNameLength;
+    char* fileNameBuffer = new char[fileNameLength];
+    in.readRawData(fileNameBuffer,fileNameLength);
+    QString fileName(fileNameBuffer);
+
+    quint32 fileContentLength;
+    in>>fileContentLength;
+    char* fileContentBuffer = new char[fileContentLength];
+    in.readRawData(fileContentBuffer,fileContentLength);
+    QByteArray fileContentArray(fileContentBuffer,fileContentLength);
+
+
+    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/"+fileName;
     QFile outputFile(outputFileName);
     outputFile.open(QIODevice::WriteOnly);
 
     QDataStream out(&outputFile);
-    out.writeRawData(cache.constData(),cache.length());
+
+    out.writeRawData(fileContentArray.constData(),fileContentArray.length());
 
     outputFile.close();
 }
@@ -188,51 +206,32 @@ void NetAction::sendBFile(const QString &fileName, QHostAddress &ip, quint16 por
 {
     QTcpSocket* clientSocket = new QTcpSocket;
     clientSocket->connectToHost(ip,port);
-   // clientSocket->write(dataBlock);
 
-    //int messageType = 1;
     quint32 totalSize= 0;
     QFile readFile(fileName);
     readFile.open(QIODevice::ReadOnly);
     QByteArray fileContent = readFile.readAll();
 
-    //QByteArray dataBlock;
     QDataStream out(clientSocket);
     out.setVersion(QDataStream::Qt_5_0);
 
-    totalSize += fileContent.length();
+    QString realFileName = QFileInfo(readFile).fileName();
 
 
+    quint32 fileNameLength = realFileName.toUtf8().length();
+    quint32 fileContentLength = fileContent.length();
+
+    totalSize += fileNameLength+fileContentLength+sizeof(quint32)*2;
 
     out<<totalSize;
 
+    out<<fileNameLength;
+    out.writeRawData(realFileName.toUtf8(),fileNameLength);
+    out<<fileContentLength;
     out.writeRawData(fileContent.constData(),fileContent.length());
-  //  QString fileContent(readFile.readAll());
-  //  QString fileContent(readFile.readAll());
-//    int contentBytes = fileContent.toUtf8().size();
-   // int contentBytes = fileContent.size();
-
-
-
-//    QFileInfo fileInfo(fileName);
-//    QString realFileName = fileInfo.fileName();
-//    qDebug()<<realFileName;
-//    int fileNameBytes = realFileName.toUtf8().size();
-
-//    dataBlock.resize(sizeof(int)*4+contentBytes);
-
-//    out<<(int)(sizeof(int)*3+fileNameBytes+contentBytes);  // total size exclude self
-//    out<<messageType;
-
-//    out<<fileNameBytes;
-//    out<<realFileName;
-
-//    out<<contentBytes;
-//     out<<fileContent;
-//    //dataBlock.append(fileContent);
 
     QMessageBox::information(nullptr, tr("file sended"),fileName);
- //   sendMessage(dataBlock,ip);
+
     clientSocket->disconnectFromHost();
 
 }

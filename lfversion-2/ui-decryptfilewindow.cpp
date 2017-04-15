@@ -3,15 +3,16 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <QMessageBox>
-#include <QCoreApplication>
+#include <QApplication>
 #include <QFile>
+#include <QFileDialog>
 DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
 {
     this->setWindowTitle(tr("解密文件"));
     this->setWindowIcon(QIcon(":/image/decrypt"));
 
     /**** choose Aes Key ****/
-   choseKeyLabel=new QLabel(tr("请选择一个AES密钥"));
+   chooseKeyLabel=new QLabel(tr("请选择一个AES密钥"));
    chooseKey = new QComboBox();
 
    /*********read file content*********/
@@ -30,32 +31,32 @@ DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
 
     /**** Layout01 ****/
     fileInputLabel=new QLabel(tr("请选择需要解密的文本：（txt格式）"));
-    showChoseFile=new QLabel;
-    choseFileBtn=new QPushButton(tr("选择文件"));
+    showchooseFile=new QLabel;
+    chooseFileBtn=new QPushButton(tr("选择文件"));
     showOutputFile=new QLabel;
-    choseOutputRoot=new QPushButton(tr("更改保存路径"));
-    decrptionFileBtn=new QPushButton(tr("解密文件"));
+    chooseOutputRoot=new QPushButton(tr("更改保存路径"));
+    decryptFileBtn=new QPushButton(tr("解密文件"));
 
     Layout01=new QGridLayout();
-    Layout01->addWidget(choseKeyLabel,0,1);
+    Layout01->addWidget(chooseKeyLabel,0,1);
     Layout01->addWidget(chooseKey,0,0);
     Layout01->addWidget(fileInputLabel,1,0);
-    Layout01->addWidget(choseFileBtn,1,1);
-    Layout01->addWidget(showChoseFile,2,0);
+    Layout01->addWidget(chooseFileBtn,1,1);
+    Layout01->addWidget(showchooseFile,2,0);
     Layout01->addWidget(showOutputFile,3,0);
-    Layout01->addWidget(choseOutputRoot,3,1);
-    Layout01->addWidget(decrptionFileBtn,4,1);
+    Layout01->addWidget(chooseOutputRoot,3,1);
+    Layout01->addWidget(decryptFileBtn,4,1);
 
 
     /**** Layout02 ****/
     typingInputLabel=new QLabel(tr("或者输入您要解密的文本"));
     inputStrArea=new QTextEdit;
-    decrptionStrBtn=new QPushButton(tr("解密文本"));
+    decryptStrBtn=new QPushButton(tr("解密文本"));
 
     Layout02=new QGridLayout();
     Layout02->addWidget(typingInputLabel,0,0);
     Layout02->addWidget(inputStrArea,1,0);
-    Layout02->addWidget(decrptionStrBtn,1,1);
+    Layout02->addWidget(decryptStrBtn,1,1);
 
 
     /**** Layout03 ****/
@@ -77,10 +78,43 @@ DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addLayout(Layout03);
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
 
-    //connect(choseFileBtn,SIGNAL(clicked()),this,SLOT(choseFile()));
-   // connect(choseOutputRoot,SIGNAL(clicked()),this,SLOT(changeRoot()));
-  //  connect(decrptionFileBtn,SIGNAL(clicked()),this,SLOT(doDecryptionFile()));
-  //  connect(decrptionStrBtn,SIGNAL(clicked()),this,SLOT(doDecryptionString()));
+
+    QString keyName = chooseKey->currentText();
+    QString keyFileName = QApplication::applicationDirPath()+"/Key/AES/"+keyName;
+    aes.LoadKey(keyFileName.toStdString().c_str());
+    aes.getKey();
+
+     connect(chooseFileBtn,SIGNAL(clicked()),this,SLOT(chooseFile()));
+   // connect(chooseOutputRoot,SIGNAL(clicked()),this,SLOT(changeRoot()));
+     connect(decryptFileBtn,SIGNAL(clicked()),this,SLOT(decryptFile()));
+     connect(decryptStrBtn,SIGNAL(clicked()),this,SLOT(decryptStr()));
 //    connect(saveToLocal,SIGNAL(clicked()),this,SLOT(saveToLocalFun()));
 }
 
+void DecryptFileWindow::decryptStr()
+{
+    QString cipherText  = inputStrArea->toPlainText();
+    string plainText = aes.Decrypt(cipherText.toStdString());
+    outputArea->setPlainText(QString(plainText.c_str()));
+
+}
+void DecryptFileWindow::chooseFile()
+{
+     QString cipherFileName = QFileDialog::getOpenFileName(this,"选择文件",QApplication::applicationDirPath(),"All files(*)");
+     if(cipherFileName.isEmpty()) return;
+    showchooseFile->setText(cipherFileName);
+     /*
+     QFile cipherFile(cipherFileName);
+     cipherFile.open(QIODevice::ReadOnly);
+     string plainText =  aes.Decrypt(cipherFile.readAll().toStdString());
+     inputStrArea->setPlainText(QString(plainText.c_str()));
+     */
+}
+
+void DecryptFileWindow::decryptFile()
+{
+    QString cipherFileName = QFileDialog::getOpenFileName(this,"选择文件",QApplication::applicationDirPath(),"All files(*)");
+    if(cipherFileName.isEmpty()) return;
+    QString plainFileName = QApplication::applicationDirPath()+"/Tmp/plain";
+    aes.DecryptFile(cipherFileName.toStdString(),plainFileName.toStdString());
+}

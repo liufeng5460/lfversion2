@@ -7,37 +7,45 @@
 #include <QGridLayout>
 #include <QTextEdit>
 #include <QComboBox>
-class EncrytFileWindow : public QWidget
+
+#include "myaes.h"
+
+class EncryptFileWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EncrytFileWindow(QWidget *parent = 0);
+    explicit EncryptFileWindow(QWidget *parent = 0);
 
 signals:
 
 public slots:
-
+    void encryptStr();
+    void saveCipher();
+    void encryptFile();
 private:
     QGridLayout *Layout01;
     QLabel *fileInputLabel;
-    QLabel *showChoseFile;
+    QLabel *showChooseFile;
     QLabel *showOutputFile;
-    QPushButton *choseOutputRoot;
-    QPushButton *choseFileBtn;
-    QPushButton *encrptionFileBtn;
+    QPushButton *chooseOutputRoot;
+    QPushButton *chooseFileBtn;
+    QPushButton *encryptFileBtn;
 
      QGridLayout *Layout02;
      QLabel *typingInputLabel;
      QTextEdit *inputStrArea;
-     QPushButton *encrptionStrBtn;
+     QPushButton *encryptionStrBtn;
 
      QGridLayout *Layout03;
      QLabel *outputLabel;
      QTextEdit *outputArea;
      QPushButton *saveToLocal;
 
-     QLabel *choseKeyLabel;
+     QLabel *chooseKeyLabel;
      QComboBox *chooseKey;
+
+
+     MyAES aes;
 
 };
 

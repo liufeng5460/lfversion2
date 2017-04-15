@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QComboBox>
+
+#include "myaes.h"
 class DecryptFileWindow : public QWidget
 {
     Q_OBJECT
@@ -16,29 +18,33 @@ public:
 signals:
 
 public slots:
-
+    void decryptStr();
+    void chooseFile();
+    void decryptFile();
 private:
     QGridLayout *Layout01;
     QLabel *fileInputLabel;
-    QLabel *showChoseFile;
+    QLabel *showchooseFile;
     QLabel *showOutputFile;
-    QPushButton *choseOutputRoot;
-    QPushButton *choseFileBtn;
-    QPushButton *decrptionFileBtn;
+    QPushButton *chooseOutputRoot;
+    QPushButton *chooseFileBtn;
+    QPushButton *decryptFileBtn;
 
 
     QGridLayout *Layout02;
     QLabel *typingInputLabel;
     QTextEdit *inputStrArea;
-    QPushButton *decrptionStrBtn;
+    QPushButton *decryptStrBtn;
 
     QGridLayout *Layout03;
     QLabel *outputLabel;
     QTextEdit *outputArea;
     QPushButton *saveToLocal;
 
-    QLabel *choseKeyLabel;
+    QLabel *chooseKeyLabel;
     QComboBox *chooseKey;
+
+    MyAES aes;
 };
 
 #endif // DECRYFILEWINDOW_H

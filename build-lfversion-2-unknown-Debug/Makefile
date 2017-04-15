@@ -396,10 +396,12 @@ moc_ui-createcertiwindow.cpp: ../lfversion-2/ui-createcertiwindow.h
 moc_ui-createkeywindow.cpp: ../lfversion-2/ui-createkeywindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createkeywindow.h -o moc_ui-createkeywindow.cpp
 
-moc_ui-decryptfilewindow.cpp: ../lfversion-2/ui-decryptfilewindow.h
+moc_ui-decryptfilewindow.cpp: ../lfversion-2/myaes.h \
+		../lfversion-2/ui-decryptfilewindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-decryptfilewindow.h -o moc_ui-decryptfilewindow.cpp
 
-moc_ui-encryptfilewindow.cpp: ../lfversion-2/ui-encryptfilewindow.h
+moc_ui-encryptfilewindow.cpp: ../lfversion-2/myaes.h \
+		../lfversion-2/ui-encryptfilewindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include/cryptopp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-encryptfilewindow.h -o moc_ui-encryptfilewindow.cpp
 
 moc_ui-sendfilewindow.cpp: ../lfversion-2/ui-sendfilewindow.h
@@ -434,6 +436,7 @@ mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-createcertiwindow.h \
 		../lfversion-2/ui-createkeywindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
+		../lfversion-2/myaes.h \
 		../lfversion-2/ui-decryptfilewindow.h \
 		../lfversion-2/ui-sendfilewindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
@@ -454,10 +457,14 @@ ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-cr
 		../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createkeywindow.o ../lfversion-2/ui-createkeywindow.cpp
 
-ui-decryptfilewindow.o: ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-decryptfilewindow.h
+ui-decryptfilewindow.o: ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-decryptfilewindow.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-decryptfilewindow.o ../lfversion-2/ui-decryptfilewindow.cpp
 
-ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.h
+ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.h \
+		../lfversion-2/myaes.h \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-encryptfilewindow.o ../lfversion-2/ui-encryptfilewindow.cpp
 
 util.o: ../lfversion-2/util.cpp ../lfversion-2/util.h

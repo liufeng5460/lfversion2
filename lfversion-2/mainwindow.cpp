@@ -137,7 +137,7 @@ void MainWindow::createKey()
 
 void MainWindow::encrytFile()
 {
-    util::windowSetup(new EncrytFileWindow);
+    util::windowSetup(new EncryptFileWindow);
 }
 
 void MainWindow::decrytFile()

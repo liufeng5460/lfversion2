@@ -56,22 +56,20 @@ void CreateKeyWindow::genAesKey(){
 
 
     QString keyroot=QCoreApplication::applicationDirPath()+"/Key/AES/"+keyname;
-    QString mess;
+    QString message;
     try{
 
         MyAES aes;
         aes.GenerateKey(length);//生成16 byte AES秘钥
         aes.SaveKey(keyroot.toStdString().c_str());
-        mess="已生成密钥！";
+        message="已生成密钥！";
 
         QFile filein(QCoreApplication::applicationDirPath()+"/Key/AESkey");
         if( filein.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
             QTextStream in(&filein);
             in<<  keyname << "\n";
         } else {
-            //qDebug() <<  filein.error();
-//            qDebug() <<  filein.errorString();
-            mess=filein.errorString();
+            message=filein.errorString();
         }
         filein.close();
 
@@ -79,6 +77,6 @@ void CreateKeyWindow::genAesKey(){
         cout << e.GetWhat() << endl;
     }
 
-    QMessageBox::information(this,tr("提示"),mess);
+    QMessageBox::information(this,tr("提示"),message);
     this->close();
 }

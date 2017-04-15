@@ -24,6 +24,7 @@ public slots:
     void newConn();
     void doRead();
 private:
+
     QByteArray cache;
     quint16 port;
     QTcpServer* server;

@@ -4,5 +4,6 @@
 bool  Status::listening(false);
 quint16 Status::port(5460);
 ShowWidgetUI* Status::showWidget(nullptr);
-
+string Status::plainText("");
+string Status::cipherText("");
 

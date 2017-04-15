@@ -17,8 +17,8 @@ void MyAES::setKey(string key,string iv){
 
 void MyAES::getKey()
 {
-   cout<<"key is:"<<Key;
-   cout<<"Iv is"<<Iv;
+   cout<<"key is:"<<Key<<endl;
+   cout<<"Iv is"<<Iv<<endl;
 }
 
 bool MyAES::GenerateKey(int length)
@@ -56,17 +56,13 @@ bool MyAES::GenerateKey(int length)
 string MyAES::Encrypt(const string &plainText)
 {
     string cipher,key, iv;
-    StringSource ssk(Key, true /*pumpAll*/,
-    new HexDecoder(
-        new StringSink(key)
-    ) // HexDecoder
-); // StringSource
+    StringSource ssk(this->Key,
+                     true,
+                     new HexDecoder(new StringSink(key)));
 
-    StringSource ssv(Iv, true /*pumpAll*/,
-        new HexDecoder(
-            new StringSink(iv)
-        ) // HexDecoder
-    ); // StringSource
+    StringSource ssv(this->Iv,
+                     true,
+                     new HexDecoder( new StringSink(iv)));
     CBC_Mode<AES>::Encryption aesEncryptor;
 
     aesEncryptor.SetKeyWithIV((byte const*) key.data(), key.size(), (byte const*) iv.data());
@@ -173,7 +169,7 @@ void MyAES::LoadKey(const char * KeyFilename){
     string str;
     FileSource file(KeyFilename, true, new StringSink(str));
 
-    setKey(str.substr(0,str.size()/2),str.substr(str.size()/2,str.size()/2));
+    setKey(str.substr(0,str.size()/2),str.substr(str.size()/2,str.size()));
 }
 //保存秘钥，输入保存秘钥的名称（包含位置，绝对路径）
 void MyAES::SaveKey(const char * KeyFilename){

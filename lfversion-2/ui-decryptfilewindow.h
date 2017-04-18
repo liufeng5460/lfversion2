@@ -18,33 +18,23 @@ public:
 signals:
 
 public slots:
-    void decryptStr();
+
     void chooseFile();
+    void chooseOutputFile();
     void decryptFile();
 private:
-    QGridLayout *Layout01;
     QLabel *fileInputLabel;
-    QLabel *showchooseFile;
-    QLabel *showOutputFile;
+    QTextEdit *showChooseFile;
+    QTextEdit *showOutputFile;
     QPushButton *chooseOutputRoot;
     QPushButton *chooseFileBtn;
     QPushButton *decryptFileBtn;
-
-
-    QGridLayout *Layout02;
-    QLabel *typingInputLabel;
-    QTextEdit *inputStrArea;
-    QPushButton *decryptStrBtn;
-
-    QGridLayout *Layout03;
-    QLabel *outputLabel;
-    QTextEdit *outputArea;
-    QPushButton *saveToLocal;
 
     QLabel *chooseKeyLabel;
     QComboBox *chooseKey;
 
     MyAES aes;
+    void initComponents();
 };
 
 #endif // DECRYFILEWINDOW_H

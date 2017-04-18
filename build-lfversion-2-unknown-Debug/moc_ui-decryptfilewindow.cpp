@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_DecryptFileWindow_t {
     QByteArrayData data[5];
-    char stringdata0[53];
+    char stringdata0[59];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,14 +30,14 @@ struct qt_meta_stringdata_DecryptFileWindow_t {
 static const qt_meta_stringdata_DecryptFileWindow_t qt_meta_stringdata_DecryptFileWindow = {
     {
 QT_MOC_LITERAL(0, 0, 17), // "DecryptFileWindow"
-QT_MOC_LITERAL(1, 18, 10), // "decryptStr"
+QT_MOC_LITERAL(1, 18, 10), // "chooseFile"
 QT_MOC_LITERAL(2, 29, 0), // ""
-QT_MOC_LITERAL(3, 30, 10), // "chooseFile"
-QT_MOC_LITERAL(4, 41, 11) // "decryptFile"
+QT_MOC_LITERAL(3, 30, 16), // "chooseOutputFile"
+QT_MOC_LITERAL(4, 47, 11) // "decryptFile"
 
     },
-    "DecryptFileWindow\0decryptStr\0\0chooseFile\0"
-    "decryptFile"
+    "DecryptFileWindow\0chooseFile\0\0"
+    "chooseOutputFile\0decryptFile"
 };
 #undef QT_MOC_LITERAL
 
@@ -73,8 +73,8 @@ void DecryptFileWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         DecryptFileWindow *_t = static_cast<DecryptFileWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->decryptStr(); break;
-        case 1: _t->chooseFile(); break;
+        case 0: _t->chooseFile(); break;
+        case 1: _t->chooseOutputFile(); break;
         case 2: _t->decryptFile(); break;
         default: ;
         }

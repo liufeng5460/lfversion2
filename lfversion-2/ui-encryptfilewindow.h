@@ -8,6 +8,7 @@
 #include <QTextEdit>
 #include <QComboBox>
 
+
 #include "myaes.h"
 
 class EncryptFileWindow : public QWidget
@@ -22,11 +23,13 @@ public slots:
     void encryptStr();
     void saveCipher();
     void encryptFile();
+    void chooseFile();
+    void chooseOutput();
 private:
     QGridLayout *Layout01;
     QLabel *fileInputLabel;
-    QLabel *showChooseFile;
-    QLabel *showOutputFile;
+    QTextEdit *showChooseFile;
+    QTextEdit *showOutputFile;
     QPushButton *chooseOutputRoot;
     QPushButton *chooseFileBtn;
     QPushButton *encryptFileBtn;
@@ -34,7 +37,7 @@ private:
      QGridLayout *Layout02;
      QLabel *typingInputLabel;
      QTextEdit *inputStrArea;
-     QPushButton *encryptionStrBtn;
+     QPushButton *encryptStrBtn;
 
      QGridLayout *Layout03;
      QLabel *outputLabel;
@@ -46,6 +49,9 @@ private:
 
 
      MyAES aes;
+
+     QString outputFileName;
+     void initComponents();
 
 };
 

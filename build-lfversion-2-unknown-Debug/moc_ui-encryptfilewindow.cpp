@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_EncryptFileWindow_t {
-    QByteArrayData data[5];
-    char stringdata0[53];
+    QByteArrayData data[7];
+    char stringdata0[77];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,11 +33,13 @@ QT_MOC_LITERAL(0, 0, 17), // "EncryptFileWindow"
 QT_MOC_LITERAL(1, 18, 10), // "encryptStr"
 QT_MOC_LITERAL(2, 29, 0), // ""
 QT_MOC_LITERAL(3, 30, 10), // "saveCipher"
-QT_MOC_LITERAL(4, 41, 11) // "encryptFile"
+QT_MOC_LITERAL(4, 41, 11), // "encryptFile"
+QT_MOC_LITERAL(5, 53, 10), // "chooseFile"
+QT_MOC_LITERAL(6, 64, 12) // "chooseOutput"
 
     },
     "EncryptFileWindow\0encryptStr\0\0saveCipher\0"
-    "encryptFile"
+    "encryptFile\0chooseFile\0chooseOutput"
 };
 #undef QT_MOC_LITERAL
 
@@ -47,7 +49,7 @@ static const uint qt_meta_data_EncryptFileWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -55,11 +57,15 @@ static const uint qt_meta_data_EncryptFileWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   29,    2, 0x0a /* Public */,
-       3,    0,   30,    2, 0x0a /* Public */,
-       4,    0,   31,    2, 0x0a /* Public */,
+       1,    0,   39,    2, 0x0a /* Public */,
+       3,    0,   40,    2, 0x0a /* Public */,
+       4,    0,   41,    2, 0x0a /* Public */,
+       5,    0,   42,    2, 0x0a /* Public */,
+       6,    0,   43,    2, 0x0a /* Public */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -76,6 +82,8 @@ void EncryptFileWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         case 0: _t->encryptStr(); break;
         case 1: _t->saveCipher(); break;
         case 2: _t->encryptFile(); break;
+        case 3: _t->chooseFile(); break;
+        case 4: _t->chooseOutput(); break;
         default: ;
         }
     }
@@ -107,13 +115,13 @@ int EncryptFileWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 5)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }

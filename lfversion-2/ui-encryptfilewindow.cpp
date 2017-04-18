@@ -7,6 +7,8 @@
 #include <QTextStream>
 #include <string>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QGridLayout>
 using namespace std;
 EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
 {
@@ -14,88 +16,96 @@ EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
     this->setWindowTitle(tr("加密文件"));
     this->setWindowIcon(QIcon(":/image/encrypt"));
 
-    /**** choose Aes Key ****/
-   chooseKeyLabel=new QLabel(tr("请选择一个AES密钥"));
-   chooseKey = new QComboBox();
-
-   /*********read file content*********/
-  QFile *file=new QFile(QApplication::applicationDirPath()+"/Key/AESkey");
- // QTextCodec *code = QTextCodec::codecForName("utf8");
-  file->open(QIODevice::ReadOnly | QIODevice::Text);
-   QTextStream stream(file);
- //  stream.setCodec(code);
-   QString line;
-   do{
-      line =QString(stream.readLine());
-      if(line.isNull()) break;
-       chooseKey->addItem(line);
-   } while (!line.isNull());
-    file->close();
-   /**** choose Aes Key ****/
-
-    /**** Layout01 ****/
-    fileInputLabel=new QLabel(tr("请选择需要加密的文本：（txt格式）"));
-    showChooseFile=new QLabel;
-    chooseFileBtn=new QPushButton(tr("选择文件"));
-    showOutputFile=new QLabel;
-    chooseOutputRoot=new QPushButton(tr("更改保存路径"));
-    encryptFileBtn=new QPushButton(tr("加密文件"));
-
-    Layout01=new QGridLayout();
-
-    Layout01->addWidget(chooseKey,0,0);
-    Layout01->addWidget(chooseKeyLabel,0,1);
-    Layout01->addWidget(fileInputLabel,1,0);
-    Layout01->addWidget(chooseFileBtn,2,1);
-    Layout01->addWidget(showChooseFile,3,0);
-    Layout01->addWidget(showOutputFile,4,0);
-    Layout01->addWidget(chooseOutputRoot,4,1);
-    Layout01->addWidget(encryptFileBtn,5,1);
+    initComponents();
 
 
+    QTabWidget* mainWidget = new QTabWidget;
 
-    /**** Layout02 ****/
-    typingInputLabel=new QLabel(tr("或者输入您要加密的文本"));
-    inputStrArea=new QTextEdit;
-    encryptionStrBtn=new QPushButton(tr("加密文本"));
+    QWidget* fileWidget = new QWidget;
+    QVBoxLayout* mainLayout1 = new QVBoxLayout;
+    auto vBoxLayout = new QVBoxLayout;
+    vBoxLayout->addWidget(chooseFileBtn);
+    vBoxLayout->addWidget(showChooseFile);
+    vBoxLayout->addWidget(chooseOutputRoot);
+    vBoxLayout->addWidget(showOutputFile);
+    mainLayout1->addLayout(vBoxLayout);
+    mainLayout1->addWidget(encryptFileBtn,0,Qt::AlignCenter);
+    fileWidget->setLayout(mainLayout1);
+    mainWidget->addTab(fileWidget,"文件加密");
 
-    Layout02=new QGridLayout();
-    Layout02->addWidget(typingInputLabel,0,0);
-    Layout02->addWidget(inputStrArea,1,0);
-    Layout02->addWidget(encryptionStrBtn,1,1);
+    QWidget* textWidget = new QWidget;
+    auto mainLayout2 = new QGridLayout;
+    mainLayout2->addWidget(typingInputLabel,1,0);
+    mainLayout2->addWidget(outputLabel,1,1);
+    mainLayout2->addWidget(inputStrArea,2,0);
+    mainLayout2->addWidget(outputArea,2,1);
+    mainLayout2->addWidget(saveToLocal,3,0);
+    mainLayout2->addWidget(encryptStrBtn,3,1);
+
+    textWidget->setLayout(mainLayout2);
+    mainWidget->addTab(textWidget,"文本加密");
 
 
-    /**** Layout03 ****/
-    outputLabel=new QLabel(tr("生成的密文："));
-    outputArea=new QTextEdit;
-    saveToLocal=new QPushButton(tr("保存至本地"));
-
-    Layout03=new QGridLayout();
-    Layout03->addWidget(outputLabel,0,0);
-    Layout03->addWidget(outputArea,1,0);
-    Layout03->addWidget(saveToLocal,1,1);
-
-    /*************************************/
-    QVBoxLayout *mainLayout=new QVBoxLayout(this);
-    mainLayout->setMargin(10);
-    mainLayout->setSpacing(10);
-    mainLayout->addLayout(Layout01);
-    mainLayout->addLayout(Layout02);
-    mainLayout->addLayout(Layout03);
-
-    mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+    auto tempLayout = new QVBoxLayout;
+    auto chooseKeyLayout = new QHBoxLayout;
+    chooseKeyLayout->addWidget(chooseKeyLabel);
+    chooseKeyLayout->addWidget(chooseKey);
+    tempLayout->addLayout(chooseKeyLayout);
+    tempLayout->addWidget(mainWidget);
+    this->setLayout(tempLayout);
 
 
 
 
+    // initiate aes handler
     QString keyName = chooseKey->currentText();
     QString keyFileName = QApplication::applicationDirPath()+"/Key/AES/"+keyName;
     aes.LoadKey(keyFileName.toStdString().c_str());
     aes.getKey();
 
-    connect(encryptionStrBtn,SIGNAL(clicked(bool)),this,SLOT(encryptStr()));
+    connect(chooseFileBtn,SIGNAL(clicked(bool)),this,SLOT(chooseFile()));
+    connect(chooseOutputRoot,SIGNAL(clicked(bool)),this,SLOT(chooseOutput()));
+    connect(encryptStrBtn,SIGNAL(clicked(bool)),this,SLOT(encryptStr()));
     connect(saveToLocal,SIGNAL(clicked(bool)),this,SLOT(saveCipher()));
     connect(encryptFileBtn,SIGNAL(clicked(bool)),this,SLOT(encryptFile()));
+}
+
+void EncryptFileWindow::initComponents()
+{
+
+    // tab1
+    chooseKeyLabel=new QLabel(tr("选择AES密钥"));
+    chooseKey = new QComboBox();
+    QFile *file=new QFile(QApplication::applicationDirPath()+"/Key/AESkey");
+    file->open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream stream(file);
+    QString line;
+    while(true)
+    {
+        line =QString(stream.readLine());
+        if(line.isNull()) break;
+        chooseKey->addItem(line);
+    }
+    file->close();
+
+    fileInputLabel=new QLabel(tr("请选择需要加密的文本：（txt格式）"));
+    showChooseFile=new QTextEdit;
+    chooseFileBtn=new QPushButton(tr("选择文件"));
+    showOutputFile=new QTextEdit;
+    chooseOutputRoot=new QPushButton(tr("更改保存路径"));
+    encryptFileBtn=new QPushButton(tr("加密文件"));
+
+
+
+
+    // tab2
+    typingInputLabel=new QLabel(tr("或者输入您要加密的文本"));
+    inputStrArea=new QTextEdit;
+    encryptStrBtn=new QPushButton(tr("加密文本"));
+
+    outputLabel=new QLabel(tr("生成的密文："));
+    outputArea=new QTextEdit;
+    saveToLocal=new QPushButton(tr("保存至本地"));
 }
 
 void EncryptFileWindow::encryptStr()
@@ -114,8 +124,22 @@ void EncryptFileWindow::saveCipher()
 
 void EncryptFileWindow::encryptFile()
 {
-    QString plainFileName = QFileDialog::getOpenFileName(this,"选择文件",QApplication::applicationDirPath(),"All files(*)");
+    QString plainFileName = showChooseFile->toPlainText();
     if(plainFileName.isEmpty()) return;
-    QString cipherFileName = QApplication::applicationDirPath()+"/Tmp/cipher";
+    QString cipherFileName = outputFileName;
     aes.EncryptFile(plainFileName.toStdString(),cipherFileName.toStdString());
+    QMessageBox::information(this,"message","success");
+}
+
+void EncryptFileWindow::chooseFile()
+{
+    QString plainFileName = QFileDialog::getOpenFileName(this,"选择文件",QDir::homePath(),"All files(*)");
+    showChooseFile->setPlainText(plainFileName);
+}
+
+void EncryptFileWindow::chooseOutput()
+{
+    outputFileName = QFileDialog::getSaveFileName(this,"选择保存文件",QDir::homePath());
+    if(outputFileName.isEmpty()) return;
+    showOutputFile->setPlainText(outputFileName);
 }

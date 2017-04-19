@@ -7,8 +7,10 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QComboBox>
-
+#include <QRadioButton>
+#include <QButtonGroup>
 #include "myaes.h"
+#include "myrsa.h"
 class DecryptFileWindow : public QWidget
 {
     Q_OBJECT
@@ -31,9 +33,15 @@ private:
     QPushButton *decryptFileBtn;
 
     QLabel *chooseKeyLabel;
+    QLabel *chooseRSAKeyLabel;
+    QComboBox *choosePubkey;
     QComboBox *chooseKey;
+    QRadioButton *useAES;
+    QRadioButton *useRSA;
+    QButtonGroup *buttonGroup;
 
     MyAES aes;
+    MyRSA rsa;
     void initComponents();
 };
 

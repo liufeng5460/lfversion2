@@ -7,10 +7,11 @@
 #include <QGridLayout>
 #include <QTextEdit>
 #include <QComboBox>
-
+#include <QButtonGroup>
+#include <QRadioButton>
 
 #include "myaes.h"
-
+#include "myrsa.h"
 class EncryptFileWindow : public QWidget
 {
     Q_OBJECT
@@ -45,9 +46,17 @@ private:
      QPushButton *saveToLocal;
 
      QLabel *chooseKeyLabel;
+     QLabel *chooseRSAKeyLabel;
+     QComboBox *choosePubkey;
      QComboBox *chooseKey;
+     QRadioButton *useAES;
+     QRadioButton *useRSA;
+     QButtonGroup *buttonGroup;
 
 
+
+
+     MyRSA rsa;
      MyAES aes;
 
      QString outputFileName;

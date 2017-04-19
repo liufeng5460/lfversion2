@@ -95,6 +95,8 @@ string MyRSA::Encrypt(const char * pubFilename, const char * messageFile,const c
     sink.Put((byte const*) result.data(), result.size());
     return result;
 }
+
+
 /*
  *解密文件，输入私钥、密文文件名、明文文件名，生成明文文件，返回明文
  */

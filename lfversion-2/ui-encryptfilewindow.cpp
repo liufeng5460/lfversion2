@@ -47,9 +47,13 @@ EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
 
 
     auto tempLayout = new QVBoxLayout;
-    auto chooseKeyLayout = new QHBoxLayout;
-    chooseKeyLayout->addWidget(chooseKeyLabel);
-    chooseKeyLayout->addWidget(chooseKey);
+    auto chooseKeyLayout = new QGridLayout;
+    chooseKeyLayout->addWidget(chooseKeyLabel,0,0);
+    chooseKeyLayout->addWidget(chooseKey,0,1);
+    chooseKeyLayout->addWidget(chooseRSAKeyLabel,1,0);
+    chooseKeyLayout->addWidget(choosePubkey,1,1);
+    chooseKeyLayout->addWidget(useAES,0,2);
+    chooseKeyLayout->addWidget(useRSA,1,2);
     tempLayout->addLayout(chooseKeyLayout);
     tempLayout->addWidget(mainWidget);
     this->setLayout(tempLayout);
@@ -63,6 +67,8 @@ EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
     aes.LoadKey(keyFileName.toStdString().c_str());
     aes.getKey();
 
+
+
     connect(chooseFileBtn,SIGNAL(clicked(bool)),this,SLOT(chooseFile()));
     connect(chooseOutputRoot,SIGNAL(clicked(bool)),this,SLOT(chooseOutput()));
     connect(encryptStrBtn,SIGNAL(clicked(bool)),this,SLOT(encryptStr()));
@@ -72,8 +78,8 @@ EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
 
 void EncryptFileWindow::initComponents()
 {
+    // choose key
 
-    // tab1
     chooseKeyLabel=new QLabel(tr("选择AES密钥"));
     chooseKey = new QComboBox();
     QFile *file=new QFile(QApplication::applicationDirPath()+"/Key/AESkey");
@@ -88,6 +94,28 @@ void EncryptFileWindow::initComponents()
     }
     file->close();
 
+
+    chooseRSAKeyLabel = new QLabel(tr("选择RSA密钥"));
+    choosePubkey = new QComboBox();
+    QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/mykey");
+    pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    QTextStream pubkeyStream(&pubkeyFile);
+    while(true)
+    {
+        line = pubkeyStream.readLine();
+        if(line.isNull()) break;
+        choosePubkey->addItem(line.left(line.indexOf(";")));
+    }
+    file->close();
+
+    useAES = new QRadioButton("使用AES");
+    useRSA = new QRadioButton("使用RSA");
+    useAES->setChecked(true);
+    buttonGroup = new QButtonGroup(this);
+    buttonGroup->addButton(useAES);
+    buttonGroup->addButton((useRSA));
+
+     // tab1
     fileInputLabel=new QLabel(tr("请选择需要加密的文本：（txt格式）"));
     showChooseFile=new QTextEdit;
     chooseFileBtn=new QPushButton(tr("选择文件"));
@@ -127,7 +155,17 @@ void EncryptFileWindow::encryptFile()
     QString plainFileName = showChooseFile->toPlainText();
     if(plainFileName.isEmpty()) return;
     QString cipherFileName = outputFileName;
-    aes.EncryptFile(plainFileName.toStdString(),cipherFileName.toStdString());
+    if(useAES->isChecked())
+    {
+        aes.EncryptFile(plainFileName.toStdString(),cipherFileName.toStdString());
+    }
+    else if(useRSA->isChecked())
+    {
+        QString pubkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PubKey_"+choosePubkey->currentText();
+        rsa.Encrypt(pubkeyFileName.toStdString().c_str()
+                    ,plainFileName.toStdString().c_str()
+                    ,cipherFileName.toStdString().c_str());
+    }
     QMessageBox::information(this,"message","success");
 }
 

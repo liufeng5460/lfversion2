@@ -46,6 +46,18 @@ CONFIG += c++11
 RESOURCES += \
     icon.qrc
 
-LIBS+=-L/usr/lib/  -lcryptopp
+LIBS+=-L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lntl -lssl -lmpfr
+INCLUDEPATH += /usr/include/
+INCLUDEPATH += /usr/include/NTL
+INCLUDEPATH += /usr/include/openssl
+INCLUDEPATH += /usr/local/include/
 
-INCLUDEPATH += /usr/include/cryptopp
+
+LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lmpfr
+LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lgmpxx
+LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lgmp
+LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lcrypto
+LIBS +=-L/usr/lib/ -lntl
+
+
+INCLUDEPATH += /usr/include/cryptopp /usr/include/LWE /usr/include/BlissSig /usr/include/openssl

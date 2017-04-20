@@ -97,7 +97,7 @@ void EncryptFileWindow::initComponents()
 
     chooseRSAKeyLabel = new QLabel(tr("选择RSA密钥"));
     choosePubkey = new QComboBox();
-    QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/mykey");
+    QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/pubkey");
     pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
     QTextStream pubkeyStream(&pubkeyFile);
     while(true)

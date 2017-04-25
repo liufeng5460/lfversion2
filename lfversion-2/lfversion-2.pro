@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     myrsa.cpp \
     ui-sendfilewindow.cpp \
     netaction.cpp \
-    status.cpp
+    status.cpp \
+    ui-inputusernamedialog.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     myrsa.h \
     ui-sendfilewindow.h \
     netaction.h \
-    status.h
+    status.h \
+    ui-inputusernamedialog.h
 
 FORMS    +=
 
@@ -46,12 +48,13 @@ CONFIG += c++11
 RESOURCES += \
     icon.qrc
 
-LIBS+=-L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lntl -lssl -lmpfr
+LIBS+=-L/home/ydu/code/qt/lfversion2/lfversion-2/lib -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lntl -lssl -lmpfr
+INCLUDEPATH += /home/ydu/code/qt/lfversion2/lfversion-2/include
 INCLUDEPATH += /usr/include/
 INCLUDEPATH += /usr/include/NTL
 INCLUDEPATH += /usr/include/openssl
 INCLUDEPATH += /usr/local/include/
-
+INCLUDEPATH += /home/ydu/code/qt/lfversion2/lfversion-2/include
 
 LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lmpfr
 LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lgmpxx

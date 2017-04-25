@@ -13,7 +13,14 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    this->setWindowTitle(tr("集成加密软件"));
+    if(!Status::username.isEmpty())
+    {
+        this->setWindowTitle(Status::appName+"--当前用户: "+Status::username);
+    }
+    else
+    {
+        this->setWindowTitle(Status::appName);
+    }
     this->setWindowIcon(QIcon(":/image/Icon.jpg"));
     this->setMinimumSize(850,350);
 
@@ -95,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
     showWidget =new ShowWidgetUI(this);
     setCentralWidget(showWidget);
     Status::showWidget = showWidget;
+    Status::mainWindow = this;
 
    // updateStatusBar("0");
 

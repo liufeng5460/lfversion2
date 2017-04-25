@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../lfversion-2 -I. -isystem /usr/include -isystem /usr/include/NTL -isystem /usr/include/openssl -isystem /usr/local/include -isystem /usr/include/cryptopp -isystem /usr/include/LWE -isystem /usr/include/BlissSig -isystem /usr/include/openssl -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../lfversion-2 -I. -I../lfversion-2/include -isystem /usr/include -isystem /usr/include/NTL -isystem /usr/include/openssl -isystem /usr/local/include -I../lfversion-2/include -isystem /usr/include/cryptopp -isystem /usr/include/LWE -isystem /usr/include/BlissSig -isystem /usr/include/openssl -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = lfversion-21.0.0
 DISTDIR = /home/ydu/code/qt/lfversion2/build-lfversion-2-unknown-Debug/.tmp/lfversion-21.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lssl -L/usr/lib/x86_64-linux-gnu/ -lmpfr -lgmpxx -lgmp -lcrypto -lntl -lQt5Widgets -lQt5Gui -lQt5Network -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/home/ydu/code/qt/lfversion2/lfversion-2/lib -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lssl -L/usr/lib/x86_64-linux-gnu/ -lmpfr -lgmpxx -lgmp -lcrypto -lntl -lQt5Widgets -lQt5Gui -lQt5Network -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -60,7 +60,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/myrsa.cpp \
 		../lfversion-2/ui-sendfilewindow.cpp \
 		../lfversion-2/netaction.cpp \
-		../lfversion-2/status.cpp qrc_icon.cpp \
+		../lfversion-2/status.cpp \
+		../lfversion-2/ui-inputusernamedialog.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
@@ -68,7 +69,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		moc_ui-decryptfilewindow.cpp \
 		moc_ui-encryptfilewindow.cpp \
 		moc_ui-sendfilewindow.cpp \
-		moc_netaction.cpp
+		moc_netaction.cpp \
+		moc_ui-inputusernamedialog.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		ui-showwidget.o \
@@ -82,6 +84,7 @@ OBJECTS       = main.o \
 		ui-sendfilewindow.o \
 		netaction.o \
 		status.o \
+		ui-inputusernamedialog.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
@@ -90,7 +93,8 @@ OBJECTS       = main.o \
 		moc_ui-decryptfilewindow.o \
 		moc_ui-encryptfilewindow.o \
 		moc_ui-sendfilewindow.o \
-		moc_netaction.o
+		moc_netaction.o \
+		moc_ui-inputusernamedialog.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -107,9 +111,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_declarative.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_designer.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_eglfs_device_lib_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_help.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -119,10 +126,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uiplugin.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uitools.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
@@ -159,7 +172,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/ui-sendfilewindow.h \
 		../lfversion-2/netaction.h \
-		../lfversion-2/status.h ../lfversion-2/main.cpp \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-inputusernamedialog.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
@@ -171,7 +185,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/myrsa.cpp \
 		../lfversion-2/ui-sendfilewindow.cpp \
 		../lfversion-2/netaction.cpp \
-		../lfversion-2/status.cpp
+		../lfversion-2/status.cpp \
+		../lfversion-2/ui-inputusernamedialog.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -218,9 +233,12 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_declarative.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_designer.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_eglfs_device_lib_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_help.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -230,10 +248,16 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quickwidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uiplugin.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uitools.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
@@ -282,9 +306,12 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_dbus_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_declarative.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_designer.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_eglfs_device_lib_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_help.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri:
@@ -294,10 +321,16 @@ Makefile: ../lfversion-2/lfversion-2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/l
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quickwidgets.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uiplugin.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_uitools.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_widgets_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri:
@@ -344,8 +377,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h ../lfversion-2/ui-inputusernamedialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp ../lfversion-2/ui-inputusernamedialog.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -380,37 +413,40 @@ qrc_icon.cpp: ../lfversion-2/icon.qrc \
 		../lfversion-2/image/encrypt.jpg
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name icon ../lfversion-2/icon.qrc -o qrc_icon.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp
 moc_mainwindow.cpp: ../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
 
 moc_ui-showwidget.cpp: ../lfversion-2/ui-showwidget.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-showwidget.h -o moc_ui-showwidget.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-showwidget.h -o moc_ui-showwidget.cpp
 
 moc_ui-createcertiwindow.cpp: ../lfversion-2/ui-createcertiwindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createcertiwindow.h -o moc_ui-createcertiwindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createcertiwindow.h -o moc_ui-createcertiwindow.cpp
 
 moc_ui-createkeywindow.cpp: ../lfversion-2/ui-createkeywindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createkeywindow.h -o moc_ui-createkeywindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-createkeywindow.h -o moc_ui-createkeywindow.cpp
 
 moc_ui-decryptfilewindow.cpp: ../lfversion-2/myaes.h \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/ui-decryptfilewindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-decryptfilewindow.h -o moc_ui-decryptfilewindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-decryptfilewindow.h -o moc_ui-decryptfilewindow.cpp
 
 moc_ui-encryptfilewindow.cpp: ../lfversion-2/myaes.h \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/ui-encryptfilewindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-encryptfilewindow.h -o moc_ui-encryptfilewindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-encryptfilewindow.h -o moc_ui-encryptfilewindow.cpp
 
 moc_ui-sendfilewindow.cpp: ../lfversion-2/ui-sendfilewindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-sendfilewindow.h -o moc_ui-sendfilewindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-sendfilewindow.h -o moc_ui-sendfilewindow.cpp
 
 moc_netaction.cpp: ../lfversion-2/netaction.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/netaction.h -o moc_netaction.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/netaction.h -o moc_netaction.cpp
+
+moc_ui-inputusernamedialog.cpp: ../lfversion-2/ui-inputusernamedialog.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include -I/usr/include/NTL -I/usr/include/openssl -I/usr/local/include -I/home/ydu/code/qt/lfversion2/lfversion-2/include -I/usr/include/cryptopp -I/usr/include/LWE -I/usr/include/BlissSig -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui-inputusernamedialog.h -o moc_ui-inputusernamedialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -428,7 +464,10 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean
 
 main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/netaction.h
+		../lfversion-2/netaction.h \
+		../lfversion-2/status.h \
+		../lfversion-2/util.h \
+		../lfversion-2/ui-inputusernamedialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lfversion-2/main.cpp
 
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
@@ -452,7 +491,8 @@ ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/u
 		../lfversion-2/util.h \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/status.h \
-		../lfversion-2/ui-showwidget.h
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createcertiwindow.o ../lfversion-2/ui-createcertiwindow.cpp
 
 ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-createkeywindow.h \
@@ -469,7 +509,8 @@ ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/u
 		../lfversion-2/myaes.h \
 		../lfversion-2/myrsa.h \
 		../lfversion-2/status.h \
-		../lfversion-2/ui-showwidget.h
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-encryptfilewindow.o ../lfversion-2/ui-encryptfilewindow.cpp
 
 util.o: ../lfversion-2/util.cpp ../lfversion-2/util.h
@@ -488,12 +529,20 @@ ui-sendfilewindow.o: ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/ui-send
 netaction.o: ../lfversion-2/netaction.cpp ../lfversion-2/netaction.h \
 		../lfversion-2/util.h \
 		../lfversion-2/status.h \
-		../lfversion-2/ui-showwidget.h
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o netaction.o ../lfversion-2/netaction.cpp
 
 status.o: ../lfversion-2/status.cpp ../lfversion-2/status.h \
-		../lfversion-2/ui-showwidget.h
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o status.o ../lfversion-2/status.cpp
+
+ui-inputusernamedialog.o: ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/ui-inputusernamedialog.h \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-inputusernamedialog.o ../lfversion-2/ui-inputusernamedialog.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp
@@ -521,6 +570,9 @@ moc_ui-sendfilewindow.o: moc_ui-sendfilewindow.cpp
 
 moc_netaction.o: moc_netaction.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_netaction.o moc_netaction.cpp
+
+moc_ui-inputusernamedialog.o: moc_ui-inputusernamedialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ui-inputusernamedialog.o moc_ui-inputusernamedialog.cpp
 
 ####### Install
 

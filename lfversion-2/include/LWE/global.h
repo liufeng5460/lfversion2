@@ -1,0 +1,34 @@
+#ifndef __GLOBAL_H_
+#define __GLOBAL_H_
+
+#define LOW_MSB 22
+#define HAMMING_TABLE_SIZE 8
+#define PMAT_MAX_COL 109
+#define KN_DISTANCE1_MASK 7
+#define KN_DISTANCE2_MASK 15
+
+#define MODULUS 12289
+#define LWE_M 512
+#define UMOD_CONSTANT 0xAAA71C85
+#define QBY2 6144
+#define QBY4 3072
+#define QBY4_TIMES3 9216
+
+#define FWD_CONST1 5559
+#define FWD_CONST2 6843
+
+#define INVCONST1 3778
+#define INVCONST2 10810
+#define INVCONST3 9087
+#define SCALING 12265
+
+#define COEFFICIENT_ALL_ONES 0x3FFF//14 bits
+
+
+#define NEW_RND_BOTTOM 1
+#define NEW_RND_LARGE 32 - 9
+#define NEW_RND_MID 32 - 6
+
+
+
+#endif

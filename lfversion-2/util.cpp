@@ -19,8 +19,10 @@ void util::centerize(QWidget* window)
 void util::windowSetup(QWidget* window)
 {
     window->setAttribute(Qt::WA_DeleteOnClose);
-    centerize(window);
+    window->setWindowModality(Qt::WindowModality::ApplicationModal);
     window->show();
+    centerize(window);
+
 }
 
 

@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "netaction.h"
+#include "status.h"
+
+
 //#include "netserver.h"
 #include <QApplication>
 #include <QDir>
@@ -9,32 +12,29 @@
 #include <LWEEnc.h>
 #include <BlissSig.h>
 using namespace std;
-void createDirs();
-void netSetup(quint16 port);
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    Status::init();
     MainWindow w;
     w.show();
 
 
-    createDirs();
-    netSetup(5460);
 
 
-    uint16_t pubkey1[LWE_M],pubkey2[LWE_M], prikey[LWE_M];
-    LWEKeyGen(pubkey1,pubkey2,prikey);
-    for(int i=0; i<LWE_M;i++)
-    {
-        //qDebug()<<pubkey1[i]<<" ";
-    }
+    auto test = [](){
+        uint16_t pubkey1[LWE_M],pubkey2[LWE_M], prikey[LWE_M];
+        LWEKeyGen(pubkey1,pubkey2,prikey);
+        for(int i=0; i<LWE_M;i++)
+        {
+            //qDebug()<<pubkey1[i]<<" ";
+        }
+        pubkey4io pk;
+        seckey4io sk;
+        BlissKeyGen(&pk,&sk);
+        qDebug()<<"a2: "<<pk.a2;
 
-    pubkey4io pk;
-    seckey4io sk;
-    BlissKeyGen(&pk,&sk);
-    qDebug()<<"a2: "<<pk.a2;
-
-   // pubkey4io pk; seckey4io sk;
+       // pubkey4io pk; seckey4io sk;
         BlissKeyGen(&pk, &sk);
 
         string message = "Lorem ipsum dolor sit amet, consectetur adipiscing \
@@ -65,34 +65,12 @@ int main(int argc, char *argv[])
       //  BlissSigF(&pk, &sk, &sig, "test_file1.txt");
         //cout<< BlissVerifyF(&pk, &sig, "test_file2.txt") << endl;
 
-
+    };
     return a.exec();
 }
 
-void createDirs()
-{
-    //检查文件夹是否存在，不存在则创建
-    QDir *checkDir=new QDir();
-    bool exist;
-    QString workingDir=QApplication::applicationDirPath();
 
-    QString dirs[] = {
-        "/Key",
-        "/Tmp",
-        "/Key/AES",
-        "/Key/RSA",
-        "/Key/Certi"
-    };
-    for(QString d:dirs)
-    {
-        exist = checkDir->exists(workingDir+d);
-        if(!exist) checkDir->mkdir(workingDir+d);
-    }
-}
 
-void netSetup(quint16 port)
-{
-    //NetServer* server = new NetServer(port,ctx);
-    //server->start();
-    NetAction* netAction = new NetAction();
-}
+
+
+

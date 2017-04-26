@@ -16,12 +16,13 @@ void util::centerize(QWidget* window)
     window->move((d->width()-window->width())/2, (d->height()-window->height())/2);
 }
 
-void util::windowSetup(QWidget* window)
+void util::dialogSetup(QWidget* window)
 {
     window->setAttribute(Qt::WA_DeleteOnClose);
     window->setWindowModality(Qt::WindowModality::ApplicationModal);
     window->show();
     centerize(window);
+    window->setFixedSize(window->size());
 
 }
 

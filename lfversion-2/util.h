@@ -8,7 +8,7 @@
 namespace util{
 
 void centerize(QWidget* window);
-void windowSetup(QWidget* window);
+void dialogSetup(QWidget* window);
 bool contains(QString newKeyName, QString KeyInfoFileName);
 void deleteOneline(int RowNum, QString &fileContent);
 void deleteOnelineInFile(int RowNum, QString filename);

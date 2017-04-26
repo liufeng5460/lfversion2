@@ -19,6 +19,10 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    auto startServer = []{
+       NetAction* server = new NetAction;
+    };
+    startServer();
 
 
 

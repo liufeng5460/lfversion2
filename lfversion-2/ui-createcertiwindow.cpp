@@ -19,24 +19,24 @@ CreateCertiWindow::CreateCertiWindow(QWidget *parent) : QWidget(parent)
 {
     this->setWindowTitle(tr("新建证书"));
 
-    nameLabel=new QLabel(tr("姓名"));
+    purposeLabel=new QLabel(tr("用途"));
     mailLabel=new QLabel(tr("邮箱"));
     validFromLabel=new QLabel(tr("生效期"));
     validUtilLabel=new QLabel(tr("失效期"));
 
-    nameEdit=new QLineEdit;
+    purposeEdit=new QLineEdit;
     mailEdit=new QLineEdit;
     validFromEdit=new QLineEdit;
     validUtilEdit=new QLineEdit;
 
-    submitBtn=new QPushButton(tr("提交"));
+    submitBtn=new QPushButton(tr("生成"));
 
     QGridLayout *mainLayout =new QGridLayout(this);
-    mainLayout->setMargin(5);
-    mainLayout->setSpacing(5);
+    mainLayout->setMargin(20);
+    mainLayout->setSpacing(10);
 
-    mainLayout->addWidget(nameLabel,0,0);
-    mainLayout->addWidget(nameEdit,0,1);
+    mainLayout->addWidget(purposeLabel,0,0);
+    mainLayout->addWidget(purposeEdit,0,1);
     mainLayout->addWidget(mailLabel,1,0);
     mainLayout->addWidget(mailEdit,1,1);
     mainLayout->addWidget(validFromLabel,2,0);
@@ -45,13 +45,14 @@ CreateCertiWindow::CreateCertiWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(validUtilEdit,3,1);
     mainLayout->addWidget(submitBtn,4,1);
 
+
     connect(submitBtn,SIGNAL(clicked()),this,SLOT(genKey()));
 
 }
 
 void CreateCertiWindow::genKey(){
 
-    QString keyname=nameEdit->text();
+    QString keyname=purposeEdit->text();
      string name=keyname.toStdString();
 
 
@@ -72,14 +73,18 @@ void CreateCertiWindow::genKey(){
     MyRSA rsa;
     rsa.GenerateRSAKey(2048, privFilename, pubFilename);
 
-    QString pubkeyInfo= nameEdit->text().toUtf8()+";" +mailEdit->text().toUtf8()+";" +validFromEdit->text().toUtf8()+";" +validUtilEdit->text().toUtf8();
+    QString pubkeyInfo= Status::username.toUtf8()
+            +";" +purposeEdit->text().toUtf8()
+            +";" +mailEdit->text().toUtf8()
+            +";" +validFromEdit->text().toUtf8()
+            +";" +validUtilEdit->text().toUtf8();
     QString MyKeyinfo=pubkeyInfo+";"+pubFilename+";"+privFilename;
 
     updateCertiInfo(MyKeyinfo);
 
 
     // create certi file
-    QFile certiFile(QApplication::applicationDirPath()+"/Key/Certi/"+nameEdit->text()+".cer") ;
+    QFile certiFile(QApplication::applicationDirPath()+"/Key/Certi/"+purposeEdit->text()+".cer") ;
     certiFile.open(QIODevice::ReadWrite|QIODevice::Append|QIODevice::Text);
     QTextStream certiStream(&certiFile);
     certiStream<<pubkeyInfo<<"\n";
@@ -98,15 +103,15 @@ void CreateCertiWindow::updateCertiInfo(QString MyKeyinfo)
 {
     Status::showWidget->addSelfRecords(MyKeyinfo.split(";"));
 
-    QFile file01(QCoreApplication::applicationDirPath()+"/Key/mykey");
-    if( file01.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
-       QTextStream in01(&file01);
+    QFile mykeyFile(QCoreApplication::applicationDirPath()+"/Key/mykey");
+    if( mykeyFile.open(QIODevice::ReadWrite|QIODevice::Append | QIODevice::Text) ){
+       QTextStream in01(&mykeyFile);
        in01<<  MyKeyinfo << "\n";
     } else {
        // qDebug() <<  file01.error();
        // qDebug() <<  file01.errorString();
     }
-    file01.close();
+    mykeyFile.close();
 
     this->close();
 

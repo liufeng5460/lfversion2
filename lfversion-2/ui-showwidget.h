@@ -33,7 +33,7 @@ private:
     QAction *deleteOtherCertiAction;
 
 
-    void extractData(QStandardItemModel* model, QString fileName,int count);
+    void extractData(QStandardItemModel* model, QString fileName,bool self);
     void createMenu();
 
 

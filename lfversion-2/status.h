@@ -1,7 +1,7 @@
 #ifndef STATUS
 #define STATUS
 
-#define DEBUG 1
+
 
 #include "ui-showwidget.h"
 #include "mainwindow.h"

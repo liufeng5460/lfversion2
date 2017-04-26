@@ -9,6 +9,8 @@
 #include <QTextStream>
 #include <QDir>
 
+#define DEBUG 0
+
 
 // about info
 QString Status::appName("集成加密软件");
@@ -57,7 +59,7 @@ QString Status::aesDir("");
      }
      else
      {
-         util::windowSetup(new InputUsernameDialog);
+         util::dialogSetup(new InputUsernameDialog);
      }
  }
  void Status::checkDirs()
@@ -73,7 +75,8 @@ QString Status::aesDir("");
          "/Key/AES",
          "/Key/RSA",
          "/Key/Certi",
-         "/Config"
+         "/Config",
+         "/Log"
      };
      for(QString d:dirs)
      {

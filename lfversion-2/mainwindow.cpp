@@ -130,7 +130,7 @@ void MainWindow::updateStatusBar(QString port)
 }
 
 void MainWindow::createCerti(){
-    util::windowSetup(new CreateCertiWindow);
+    util::dialogSetup(new CreateCertiWindow);
 }
 
 void MainWindow::selectCerti()
@@ -140,20 +140,20 @@ void MainWindow::selectCerti()
 
 void MainWindow::createKey()
 {
-    util::windowSetup(new CreateKeyWindow);
+    util::dialogSetup(new CreateKeyWindow);
 }
 
 void MainWindow::encrytFile()
 {
-    util::windowSetup(new EncryptFileWindow);
+    util::dialogSetup(new EncryptFileWindow);
 }
 
 void MainWindow::decrytFile()
 {
-    util::windowSetup(new DecryptFileWindow);
+    util::dialogSetup(new DecryptFileWindow);
 }
 
 void MainWindow::sendFile()
 {
-    util::windowSetup(new SendFileWindow);
+    util::dialogSetup(new SendFileWindow);
 }

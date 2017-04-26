@@ -31,6 +31,8 @@ NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port
 
 void NetAction::newConn()
 {
+    //QMessageBox::information(nullptr,"reveiving file","Receiving file...\nPlease wait");
+    qDebug()<<"New Conn";
     socket = server->nextPendingConnection();
     connect(socket, SIGNAL(disconnected()),socket, SLOT(deleteLater()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(doRead()));
@@ -38,7 +40,7 @@ void NetAction::newConn()
 
 void NetAction::doRead()
 {
-    qDebug()<<"Do read start\n";
+//    qDebug()<<"Do read start\n";
     if(totalBytes == 0)
     {
         if(socket->bytesAvailable()<sizeof(int)) return;
@@ -47,16 +49,16 @@ void NetAction::doRead()
         in>>totalBytes;
        // cache.resize(totalBytes);
     }
-    qDebug()<<"cache size = "<<totalBytes<<"\n";
+//    qDebug()<<"cache size = "<<totalBytes<<"\n";
     if(socket->bytesAvailable() < totalBytes)
     {
-        qDebug()<<"bytesAvailable: "<<socket->bytesAvailable()<<" < totalBytes: "<<totalBytes<<"\n";
+//        qDebug()<<"bytesAvailable: "<<socket->bytesAvailable()<<" < totalBytes: "<<totalBytes<<"\n";
 
         return;
     }
 
     cache = socket->readAll();
-    qDebug()<<"read all";
+//    qDebug()<<"read all";
 
     totalBytes = 0;
 
@@ -121,6 +123,8 @@ void NetAction::useData()
    // cache.clear();
 }
 
+
+// in effect
 void NetAction::useBData()
 {
     //QDataStream in(&cache, QIODevice::ReadOnly);
@@ -132,9 +136,11 @@ void NetAction::useBData()
 
     quint32 fileNameLength;
     in>>fileNameLength;
-    char* fileNameBuffer = new char[fileNameLength];
+    char* fileNameBuffer = new char[fileNameLength+1];
     in.readRawData(fileNameBuffer,fileNameLength);
+    fileNameBuffer[fileNameLength] = '\0';
     QString fileName(fileNameBuffer);
+
 
     quint32 fileContentLength;
     in>>fileContentLength;
@@ -143,7 +149,7 @@ void NetAction::useBData()
     QByteArray fileContentArray(fileContentBuffer,fileContentLength);
 
 
-    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/"+fileName;
+    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/"+fileName.trimmed();
     QFile outputFile(outputFileName);
     outputFile.open(QIODevice::WriteOnly);
 
@@ -152,9 +158,10 @@ void NetAction::useBData()
     out.writeRawData(fileContentArray.constData(),fileContentArray.length());
 
     outputFile.close();
+    QMessageBox::information(Status::mainWindow,"info","just received a new file");
 }
 
-void NetAction::sendMessage(QByteArray& dataBlock,QHostAddress& ip, quint16 port)
+void NetAction::sendMessage(QByteArray& dataBlock,const QHostAddress& ip, quint16 port)
 {
     QTcpSocket* clientSocket = new QTcpSocket;
     clientSocket->connectToHost(ip,port);
@@ -162,8 +169,9 @@ void NetAction::sendMessage(QByteArray& dataBlock,QHostAddress& ip, quint16 port
     clientSocket->disconnectFromHost();
 }
 
-void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port)
+void NetAction::sendFile(const QString &fileName, const QHostAddress &ip, quint16 port)
 {
+    qDebug()<<"In NetAction:: sendFile";
 
      int messageType = 1;
      QFile readFile(fileName);
@@ -200,12 +208,16 @@ void NetAction::sendFile(const QString &fileName, QHostAddress &ip, quint16 port
      QMessageBox::information(nullptr, tr("file content"),fileContent);
      sendMessage(dataBlock,ip);
 
+     qDebug()<<"Out NetAction:: sendFile";
+
 }
 
-void NetAction::sendBFile(const QString &fileName, QHostAddress &ip, quint16 port)
+void NetAction::sendBFile(const QString &fileName,const QHostAddress &ip, quint16 port)
 {
+  //  qDebug()<<"In NetAction:: sendBFile";
     QTcpSocket* clientSocket = new QTcpSocket;
     clientSocket->connectToHost(ip,port);
+    clientSocket->waitForConnected();
 
     quint32 totalSize= 0;
     QFile readFile(fileName);
@@ -230,8 +242,10 @@ void NetAction::sendBFile(const QString &fileName, QHostAddress &ip, quint16 por
     out<<fileContentLength;
     out.writeRawData(fileContent.constData(),fileContent.length());
 
+
     QMessageBox::information(nullptr, tr("file sended"),fileName);
 
     clientSocket->disconnectFromHost();
+   //  qDebug()<<"Out NetAction:: sendBFile";
 
 }

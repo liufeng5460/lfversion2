@@ -23,7 +23,7 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 
     model01 = new QStandardItemModel();
     model01->setColumnCount(6);
-    model01->setHeaderData(0,Qt::Horizontal,QString::fromUtf8("姓名"));
+    model01->setHeaderData(0,Qt::Horizontal,QString::fromUtf8("用途"));
     model01->setHeaderData(1,Qt::Horizontal,QString::fromUtf8("邮箱"));
     model01->setHeaderData(2,Qt::Horizontal,QString::fromUtf8("生效期"));
     model01->setHeaderData(3,Qt::Horizontal,QString::fromUtf8("失效期"));
@@ -44,20 +44,22 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
     tableView01->setMouseTracking(true);
 
     model02 = new QStandardItemModel();
-    model02->setColumnCount(5);
+    model02->setColumnCount(6);
     model02->setHeaderData(0,Qt::Horizontal,QString::fromUtf8("姓名"));
-    model02->setHeaderData(1,Qt::Horizontal,QString::fromUtf8("邮箱"));
-    model02->setHeaderData(2,Qt::Horizontal,QString::fromUtf8("生效期"));
-    model02->setHeaderData(3,Qt::Horizontal,QString::fromUtf8("失效期"));
-    model02->setHeaderData(4,Qt::Horizontal,QString::fromUtf8("公钥"));
+    model02->setHeaderData(1,Qt::Horizontal,QString::fromUtf8("用途"));
+    model02->setHeaderData(2,Qt::Horizontal,QString::fromUtf8("邮箱"));
+    model02->setHeaderData(3,Qt::Horizontal,QString::fromUtf8("生效期"));
+    model02->setHeaderData(4,Qt::Horizontal,QString::fromUtf8("失效期"));
+    model02->setHeaderData(5,Qt::Horizontal,QString::fromUtf8("公钥"));
 
     tableView02=new QTableView;
     tableView02->setModel(model02);
-    tableView02->setColumnWidth(0,150);
-    tableView02->setColumnWidth(1,180);
-    tableView02->setColumnWidth(2,120);
-    tableView02->setColumnWidth(3,120);
-    tableView02->setColumnWidth(4,230);
+    tableView02->setColumnWidth(0,100);
+    tableView02->setColumnWidth(1,100);
+    tableView02->setColumnWidth(2,150);
+    tableView02->setColumnWidth(3,110);
+    tableView02->setColumnWidth(4,110);
+    tableView02->setColumnWidth(5,230);
     tableView02->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView02->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableView01->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -72,8 +74,8 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
     mainLayout->addWidget(tableView02);
 
 
-    extractData(model01,"Key/mykey",5);
-    extractData(model02,"Key/pubkey",4);
+    extractData(model01,"Key/mykey",true);
+    extractData(model02,"Key/pubkey",false);
 
     connect(tableView01, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(showMenu01(QPoint)));
@@ -84,7 +86,7 @@ ShowWidgetUI::ShowWidgetUI(QWidget *parent) : QFrame(parent)
 
 }
 
-void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int count)
+void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,bool self)
 {
     QFile *file01=new QFile(QApplication::applicationDirPath()+"/"+fileName);
    // QTextCodec *code = QTextCodec::codecForName("utf8");
@@ -94,16 +96,19 @@ void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,int c
 
     QString line;
     int linenum=0;
+    int count =self?7:6;
     do{
         line =QString(stream01.readLine());
         if(line.isEmpty() || line.isNull()) break;
         QStringList temp  = line.split(";") ;
-        QList<QString>::Iterator it = temp.begin(),itend = temp.end();
-          int iter = 0;
-          for (;it != itend && iter<=count; it++,iter++){
-              model->setItem(linenum, iter, new QStandardItem(temp[iter]));
-           }
-          linenum++;
+        int iter = 0;
+        int index = iter;
+        for (; iter<count;iter++)
+        {
+            index = self?iter-1:iter;
+            model->setItem(linenum, index, new QStandardItem(temp[iter]));
+        }
+        linenum++;
     } while (!line.isNull() && !line.isEmpty());
      file01->close();
 
@@ -164,11 +169,11 @@ void ShowWidgetUI::addCerti()
 
     // create pubkey file
 
-    QString pubFileName="Key/RSA/PubKey_"+itemList.at(0);
+    QString pubFileName="Key/RSA/PubKey_"+itemList[0]+"_"+itemList[1];
     util::writeMessageToFile(pubKey,pubFileName);
 
     // create local certification file
-    QString localCertiFileName = "Key/Certi/"+itemList.at(0)+".cer";
+    QString localCertiFileName = "Key/Certi/"+itemList[0]+"_"+itemList[1]+".cer";
     util::writeMessageToFile(metaData+"\n"+pubKey,localCertiFileName);
 
     // update table view
@@ -255,6 +260,11 @@ void ShowWidgetUI::addSelfRecords(QStringList records)
     int i=0;
     for(QString item : records)
     {
+        if(i==0)
+        {
+            i++;
+            continue;
+        }
         model01->setItem(nextRow, i, new QStandardItem(item));
         i++;
     }

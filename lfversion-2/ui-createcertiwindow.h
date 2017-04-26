@@ -12,11 +12,11 @@ public:
     explicit CreateCertiWindow(QWidget *parent = 0);
 
 private:
-    QLabel *nameLabel;
+    QLabel *purposeLabel;
     QLabel *mailLabel;
     QLabel *validFromLabel;
     QLabel *validUtilLabel;
-    QLineEdit *nameEdit;
+    QLineEdit *purposeEdit;
     QLineEdit *mailEdit;
     QLineEdit *validFromEdit;
     QLineEdit *validUtilEdit;

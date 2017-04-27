@@ -39,6 +39,8 @@ extern QString workingDir;
 extern QString tmpDir;
 extern QString aesDir;
 extern QString rsaDir;
+extern QString LWEDir;
+extern QString BlissDir;
 extern QString certiDir;
 extern QString logDir;
 

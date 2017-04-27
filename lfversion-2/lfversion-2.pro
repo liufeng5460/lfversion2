@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     ui-sendfilewindow.cpp \
     netaction.cpp \
     status.cpp \
-    ui-inputusernamedialog.cpp
+    ui-inputusernamedialog.cpp \
+    mylwe.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     ui-sendfilewindow.h \
     netaction.h \
     status.h \
-    ui-inputusernamedialog.h
+    ui-inputusernamedialog.h \
+    mylwe.h
 
 FORMS    +=
 

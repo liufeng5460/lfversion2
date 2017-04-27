@@ -33,6 +33,8 @@ string Status::cipherText("");
  QString Status::tmpDir("");
 QString Status::aesDir("");
  QString Status::rsaDir("");
+ QString Status::LWEDir("");
+ QString Status::BlissDir("");
  QString Status::certiDir("");
  QString Status::profile("");
  QString Status::logDir("");
@@ -74,6 +76,8 @@ QString Status::aesDir("");
          "/Tmp",
          "/Key/AES",
          "/Key/RSA",
+         "/Key/LWE",
+         "/Key/Bliss",
          "/Key/Certi",
          "/Config",
          "/Log"
@@ -95,6 +99,8 @@ void Status::updatePaths(QString appDir)
     tmpDir = workingDir+"/Tmp";
     aesDir = workingDir+"/Key/AES";
     rsaDir = workingDir+"/Key/RSA";
+    LWEDir = workingDir+"/Key/LWE";
+    BlissDir = workingDir+"/Key/Bliss";
     certiDir = workingDir+"/Key/Certi";
     profile = workingDir+"/Config/profile";
     logDir = workingDir+"/Log";

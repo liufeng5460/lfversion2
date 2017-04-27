@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "netaction.h"
 #include "status.h"
-
+#include "mylwe.h"
 
 //#include "netserver.h"
 #include <QApplication>
@@ -25,6 +25,17 @@ int main(int argc, char *argv[])
     startServer();
 
 
+    auto LWETest = []{
+        MyLWE lwe;
+        lwe.load("test2.lwe.pub","test2.lwe.pri");
+        QByteArray cipher;
+        lwe.encrypt(QByteArray("A"),cipher);
+        QByteArray message;
+        lwe.decrypt(cipher,message);
+        qDebug()<<QString(message);
+
+    };
+    LWETest();
 
     auto test = [](){
         uint16_t pubkey1[LWE_M],pubkey2[LWE_M], prikey[LWE_M];

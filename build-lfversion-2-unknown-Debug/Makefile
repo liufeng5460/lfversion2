@@ -61,7 +61,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/ui-sendfilewindow.cpp \
 		../lfversion-2/netaction.cpp \
 		../lfversion-2/status.cpp \
-		../lfversion-2/ui-inputusernamedialog.cpp qrc_icon.cpp \
+		../lfversion-2/ui-inputusernamedialog.cpp \
+		../lfversion-2/mylwe.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
@@ -85,6 +86,7 @@ OBJECTS       = main.o \
 		netaction.o \
 		status.o \
 		ui-inputusernamedialog.o \
+		mylwe.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
@@ -173,7 +175,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/ui-sendfilewindow.h \
 		../lfversion-2/netaction.h \
 		../lfversion-2/status.h \
-		../lfversion-2/ui-inputusernamedialog.h ../lfversion-2/main.cpp \
+		../lfversion-2/ui-inputusernamedialog.h \
+		../lfversion-2/mylwe.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
@@ -186,7 +189,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/ui-sendfilewindow.cpp \
 		../lfversion-2/netaction.cpp \
 		../lfversion-2/status.cpp \
-		../lfversion-2/ui-inputusernamedialog.cpp
+		../lfversion-2/ui-inputusernamedialog.cpp \
+		../lfversion-2/mylwe.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -377,8 +381,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h ../lfversion-2/ui-inputusernamedialog.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp ../lfversion-2/ui-inputusernamedialog.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h ../lfversion-2/ui-inputusernamedialog.h ../lfversion-2/mylwe.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/mylwe.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -466,8 +470,7 @@ main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/netaction.h \
 		../lfversion-2/status.h \
-		../lfversion-2/util.h \
-		../lfversion-2/ui-inputusernamedialog.h
+		../lfversion-2/mylwe.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lfversion-2/main.cpp
 
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
@@ -535,7 +538,9 @@ netaction.o: ../lfversion-2/netaction.cpp ../lfversion-2/netaction.h \
 
 status.o: ../lfversion-2/status.cpp ../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/util.h \
+		../lfversion-2/ui-inputusernamedialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o status.o ../lfversion-2/status.cpp
 
 ui-inputusernamedialog.o: ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/ui-inputusernamedialog.h \
@@ -543,6 +548,9 @@ ui-inputusernamedialog.o: ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-inputusernamedialog.o ../lfversion-2/ui-inputusernamedialog.cpp
+
+mylwe.o: ../lfversion-2/mylwe.cpp ../lfversion-2/mylwe.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mylwe.o ../lfversion-2/mylwe.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp

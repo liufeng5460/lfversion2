@@ -174,7 +174,7 @@ void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
         {
             int mask = 1;
             mask <<= i;
-            c |= i;
+            c |= mask;
         }
         if(value == 0)
         {

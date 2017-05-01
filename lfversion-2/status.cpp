@@ -95,15 +95,20 @@ void Status::updatePaths(QString appDir)
     {
         appDir = QApplication::applicationDirPath();
     }
-    workingDir = appDir;
-    tmpDir = workingDir+"/Tmp";
-    aesDir = workingDir+"/Key/AES";
-    rsaDir = workingDir+"/Key/RSA";
-    LWEDir = workingDir+"/Key/LWE";
-    BlissDir = workingDir+"/Key/Bliss";
-    certiDir = workingDir+"/Key/Certi";
+
+    // setup directories
+    workingDir = appDir+"/";
+    tmpDir = workingDir+"/Tmp/";
+    aesDir = workingDir+"/Key/AES/";
+    rsaDir = workingDir+"/Key/RSA/";
+    LWEDir = workingDir+"/Key/LWE/";
+    BlissDir = workingDir+"/Key/Bliss/";
+    certiDir = workingDir+"/Key/Certi/";
+    logDir = workingDir+"/Log/";
+
+
+    // setup files
     profile = workingDir+"/Config/profile";
-    logDir = workingDir+"/Log";
 
 #if DEBUG
     qDebug()<<workingDir;

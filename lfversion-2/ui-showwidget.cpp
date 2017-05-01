@@ -96,20 +96,17 @@ void ShowWidgetUI::extractData(QStandardItemModel *model, QString fileName,bool 
 
     QString line;
     int linenum=0;
-    int count =self?7:6;
-    do{
+    forever
+    {
         line =QString(stream01.readLine());
         if(line.isEmpty() || line.isNull()) break;
-        QStringList temp  = line.split(";") ;
-        int iter = 0;
-        int index = iter;
-        for (; iter<count;iter++)
+        QStringList items  = line.split(";") ;
+        for(int i=0; i<items.length(); i++)
         {
-            index = self?iter-1:iter;
-            model->setItem(linenum, index, new QStandardItem(temp[iter]));
+             model->setItem(linenum, i, new QStandardItem(items[i]));
         }
         linenum++;
-    } while (!line.isNull() && !line.isEmpty());
+    }
      file01->close();
 
 }
@@ -154,7 +151,7 @@ void ShowWidgetUI::createMenu(){
 
 void ShowWidgetUI::addCerti()
 {
-    QString cerFileName=QFileDialog::getOpenFileName(this,"打开文件","/home/ydu","certification (*.cer)");
+    QString cerFileName=QFileDialog::getOpenFileName(this,"打开文件",QDir::homePath(),"certification (*.cer)");
     if(cerFileName == nullptr) return;
 
     QFile *cerFile=new QFile(cerFileName);
@@ -242,7 +239,14 @@ void ShowWidgetUI::deleteSelfCerti()
         pubkeyFile.close();
 */
 
+    QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
+    if (message.exec()==QMessageBox::No){
+        return;
+    }
       tableView01->model()->removeRow(currentRow);
+
+      // delete info in mykey
+
 
 }
 
@@ -257,15 +261,8 @@ void ShowWidgetUI::deleteOtherCerti()
 void ShowWidgetUI::addSelfRecords(QStringList records)
 {
     int nextRow=tableView01->model()->rowCount();
-    int i=0;
-    for(QString item : records)
+    for(int i=0; i<records.length(); i++)
     {
-        if(i==0)
-        {
-            i++;
-            continue;
-        }
-        model01->setItem(nextRow, i, new QStandardItem(item));
-        i++;
+        model01->setItem(nextRow, i, new QStandardItem(records.at(i)));
     }
 }

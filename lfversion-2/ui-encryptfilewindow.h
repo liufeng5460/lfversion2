@@ -11,7 +11,7 @@
 #include <QRadioButton>
 
 #include "myaes.h"
-#include "myrsa.h"
+#include "mylwe.h"
 class EncryptFileWindow : public QWidget
 {
     Q_OBJECT
@@ -46,18 +46,19 @@ private:
      QPushButton *saveToLocal;
 
      QLabel *chooseKeyLabel;
-     QLabel *chooseRSAKeyLabel;
+     QLabel *choosePKLabel;
      QComboBox *choosePubkey;
      QComboBox *chooseKey;
      QRadioButton *useAES;
-     QRadioButton *useRSA;
+     QRadioButton *useLWE;
      QButtonGroup *buttonGroup;
 
 
 
 
-     MyRSA rsa;
+     //MyRSA rsa;
      MyAES aes;
+     MyLWE lwe;
 
      QString outputFileName;
      void initComponents();

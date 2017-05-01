@@ -1,5 +1,5 @@
 
-
+#include "status.h"
 #include "util.h"
 
 #include <QDesktopWidget>
@@ -134,26 +134,26 @@ void util::deleteOnelineInFile(int RowNum, QString filename)
 
 void util::deleteCerti(QString& name, bool self)
 {
-    // remove rsa key files
-    QDir RSADir(QApplication::applicationDirPath()+"/Key/RSA");
-    QStringList fileNames = RSADir.entryList();
-    for(QString fileName:fileNames)
+    // remove lwe key files
+    QDir lweDir(Status::LWEDir);
+    QStringList fileNames = lweDir.entryList();
+    for(QString fileName : fileNames)
     {
-        if(fileName.endsWith(name))
+        if(fileName.contains(name))
         {
          //   qDebug()<<fileName;
-            RSADir.remove(fileName);
+            lweDir.remove(fileName);
         }
 
     }
 
     // remove cer file
-    QDir cerDir(QApplication::applicationDirPath()+"/Key/Certi");
+    QDir cerDir(Status::certiDir);
     fileNames.clear();
     fileNames = cerDir.entryList();
     for(QString fileName:fileNames)
     {
-        if(fileName.startsWith(name))
+        if(fileName.contains(name))
         {
            // qDebug()<<fileName;
             cerDir.remove(fileName);
@@ -185,7 +185,7 @@ void util::deleteCerti(QString& name, bool self)
     metaDataFile.open(QIODevice::WriteOnly|QIODevice::Text);
     for(QString record : records)
     {
-        if(record.startsWith(name)) continue;
+        if(record.contains(name)) continue;
         stream<<record<<"\n";
     }
 }

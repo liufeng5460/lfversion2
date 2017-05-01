@@ -21,18 +21,18 @@ MyLWE::~MyLWE()
 void MyLWE::generateKey()
 {
     LWEKeyGen(pk1,pk2,sk);
-    auto test = [&]{
-        for(int i=0; i<LWE_M; i++){
-            qDebug()<<sk[i];
-        }
-    };
+//    auto test = [&]{
+//        for(int i=0; i<LWE_M; i++){
+//            qDebug()<<sk[i];
+//        }
+//    };
     //test();
 }
 
 void MyLWE::save(const QString & pkFileName, const QString & skFileName)
 {
-    QFile pkFile(Status::LWEDir+"/"+pkFileName);
-     QTextStream out;
+    QFile pkFile(Status::LWEDir+pkFileName);
+    QTextStream out;
     if(pkFile.open(QIODevice::WriteOnly |QIODevice::Text)){
         out.setDevice(&pkFile);
         for(int i=0; i<LWE_M; i++)
@@ -46,7 +46,7 @@ void MyLWE::save(const QString & pkFileName, const QString & skFileName)
     }
 
 
-    QFile skFile(Status::LWEDir+"/"+skFileName);
+    QFile skFile(Status::LWEDir+skFileName);
 
     if(skFile.open(QIODevice::WriteOnly|QIODevice::Text)){
         out.setDevice(&skFile);
@@ -62,7 +62,7 @@ void MyLWE::save(const QString & pkFileName, const QString & skFileName)
 
 void MyLWE::load(const QString &pkFileName, const QString &skFileName)
 {
-   QFile pkFile(Status::LWEDir+"/"+pkFileName);
+   QFile pkFile(Status::LWEDir+pkFileName);
    QTextStream in;
    if(pkFile.open(QIODevice::ReadOnly |QIODevice::Text))
    {
@@ -79,10 +79,10 @@ void MyLWE::load(const QString &pkFileName, const QString &skFileName)
    }
    else
    {
-       qDebug()<<"Can not open "<<pkFile.fileName();
+       qDebug()<<"Can not open "<<pkFile.fileName()<<" in MyLWE::load function!";
    }
 
-   QFile skFile(Status::LWEDir+"/"+skFileName);
+   QFile skFile(Status::LWEDir+skFileName);
    if(skFile.open(QIODevice::ReadOnly |QIODevice::Text))
    {
        in.setDevice(&skFile);
@@ -192,4 +192,18 @@ void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
         }
     }
     message = QByteArray(tmp);
+}
+
+void MyLWE::encryptFile(const QString &messageFileName, const QString &cipherFileName)
+{
+    QFile messageFile(messageFileName);
+    QFile cipherFile(cipherFileName);
+    messageFile.open(QIODevice::ReadOnly);
+    cipherFile.open(QIODevice::WriteOnly);
+    auto message = messageFile.readAll();
+    QByteArray cipher;
+    encrypt(message, cipher);
+    cipherFile.write(cipher);
+    messageFile.close();
+    cipherFile.close();
 }

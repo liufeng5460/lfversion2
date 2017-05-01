@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         MyLWE lwe;
         lwe.load("test2.lwe.pub","test2.lwe.pri");
         QByteArray cipher;
-        lwe.encrypt(QByteArray("klfjsdlfdsjlkfdslj"),cipher);
+        lwe.encrypt(QByteArray("hekklo gghf"),cipher);
         QByteArray message;
         lwe.decrypt(cipher,message);
         qDebug()<<QString(message);

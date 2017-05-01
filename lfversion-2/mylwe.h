@@ -14,9 +14,8 @@ public:
     void save(const QString& pkFileName, const QString& skFileName);
     void load(const QString& pkFileName, const QString& skFileName);
     void encrypt(const QByteArray& message,QByteArray& cipher);
+    void encryptFile(const QString& messageFileName, const QString& cipherFileName);
     void decrypt(QByteArray& cipher,QByteArray& message);
-
-private:
 
     uint16_t *pk1,*pk2,*sk;
 };

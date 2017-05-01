@@ -50,10 +50,10 @@ EncryptFileWindow::EncryptFileWindow(QWidget *parent) : QWidget(parent)
     auto chooseKeyLayout = new QGridLayout;
     chooseKeyLayout->addWidget(chooseKeyLabel,0,0);
     chooseKeyLayout->addWidget(chooseKey,0,1);
-    chooseKeyLayout->addWidget(chooseRSAKeyLabel,1,0);
+    chooseKeyLayout->addWidget(choosePKLabel,1,0);
     chooseKeyLayout->addWidget(choosePubkey,1,1);
     chooseKeyLayout->addWidget(useAES,0,2);
-    chooseKeyLayout->addWidget(useRSA,1,2);
+    chooseKeyLayout->addWidget(useLWE,1,2);
     tempLayout->addLayout(chooseKeyLayout);
     tempLayout->addWidget(mainWidget);
     this->setLayout(tempLayout);
@@ -95,7 +95,7 @@ void EncryptFileWindow::initComponents()
     file->close();
 
 
-    chooseRSAKeyLabel = new QLabel(tr("选择RSA密钥"));
+    choosePKLabel = new QLabel(tr("选择LWE密钥"));
     choosePubkey = new QComboBox();
     QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/pubkey");
     pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
@@ -109,11 +109,11 @@ void EncryptFileWindow::initComponents()
     file->close();
 
     useAES = new QRadioButton("使用AES");
-    useRSA = new QRadioButton("使用RSA");
+    useLWE = new QRadioButton("使用LWE");
     useAES->setChecked(true);
     buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(useAES);
-    buttonGroup->addButton((useRSA));
+    buttonGroup->addButton((useLWE));
 
      // tab1
     fileInputLabel=new QLabel(tr("请选择需要加密的文本：（txt格式）"));
@@ -159,12 +159,15 @@ void EncryptFileWindow::encryptFile()
     {
         aes.EncryptFile(plainFileName.toStdString(),cipherFileName.toStdString());
     }
-    else if(useRSA->isChecked())
+    else if(useLWE->isChecked())
     {
         QString pubkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PubKey_"+choosePubkey->currentText();
-        rsa.Encrypt(pubkeyFileName.toStdString().c_str()
-                    ,plainFileName.toStdString().c_str()
-                    ,cipherFileName.toStdString().c_str());
+        lwe.load("my_"+choosePubkey->currentText()+".pk"
+                 ,"my_"+choosePubkey->currentText()+".sk");
+        lwe.encryptFile(plainFileName,cipherFileName);
+
+
+
     }
     QMessageBox::information(this,"message","success");
 }

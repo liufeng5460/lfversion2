@@ -31,10 +31,10 @@ DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
     auto chooseKeyLayout = new QGridLayout;
     chooseKeyLayout->addWidget(chooseKeyLabel,0,0);
     chooseKeyLayout->addWidget(chooseKey,0,1);
-    chooseKeyLayout->addWidget(chooseRSAKeyLabel,1,0);
+    chooseKeyLayout->addWidget(chooseLWEKeyLabel,1,0);
     chooseKeyLayout->addWidget(choosePubkey,1,1);
     chooseKeyLayout->addWidget(useAES,0,2);
-    chooseKeyLayout->addWidget(useRSA,1,2);
+    chooseKeyLayout->addWidget(useLWE,1,2);
     tempLayout->addLayout(chooseKeyLayout);
     tempLayout->addWidget(mainWidget);
     this->setLayout(tempLayout);
@@ -70,7 +70,7 @@ void DecryptFileWindow::initComponents()
     file->close();
 
 
-    chooseRSAKeyLabel = new QLabel(tr("选择RSA密钥"));
+    chooseLWEKeyLabel = new QLabel(tr("选择LWE密钥"));
     choosePubkey = new QComboBox();
     QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/mykey");
     pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
@@ -84,11 +84,11 @@ void DecryptFileWindow::initComponents()
     file->close();
 
     useAES = new QRadioButton("使用AES");
-    useRSA = new QRadioButton("使用RSA");
+    useLWE = new QRadioButton("使用LWE");
     useAES->setChecked(true);
     buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(useAES);
-    buttonGroup->addButton((useRSA));
+    buttonGroup->addButton((useLWE));
 
      // tab1
     showChooseFile=new QTextEdit;
@@ -97,7 +97,7 @@ void DecryptFileWindow::initComponents()
     showOutputFile=new QTextEdit;
     chooseOutputRoot=new QPushButton(tr("更改保存路径"));
 
-    decryptFileBtn=new QPushButton(tr("jiemi文件"));
+    decryptFileBtn=new QPushButton(tr("解密文件"));
 
 }
 
@@ -123,12 +123,16 @@ void DecryptFileWindow::decryptFile()
     if(useAES->isChecked())
     {
         aes.DecryptFile(plainFileName.toStdString(),cipherFileName.toStdString());
-    }else if(useRSA->isChecked())
+    }
+    else if(useLWE->isChecked())
     {
-        QString privkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PrivKey_"+choosePubkey->currentText();
-        rsa.Decrypt(privkeyFileName.toStdString().c_str()
-                    ,cipherFileName.toStdString().c_str()
-                    ,plainFileName.toStdString().c_str());
+//        QString privkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PrivKey_"+choosePubkey->currentText();
+//        rsa.Decrypt(privkeyFileName.toStdString().c_str()
+//                    ,cipherFileName.toStdString().c_str()
+//                    ,plainFileName.toStdString().c_str());
+        lwe.load("my_"+choosePubkey->currentText()+".pk"
+                 ,"my_"+choosePubkey->currentText()+".sk");
+        lwe.decryptFile(plainFileName,cipherFileName);
     }
     QMessageBox::information(this,"message","success");
 }

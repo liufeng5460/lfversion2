@@ -94,7 +94,7 @@ void MyLWE::load(const QString &pkFileName, const QString &skFileName)
    }
    else
    {
-       qDebug()<<"Can not open "<<skFile.fileName();
+       qDebug()<<"Can not open "<<skFile.fileName()<<" in MyLWE::load function!";
    }
 
 
@@ -192,6 +192,8 @@ void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
         }
     }
     message = QByteArray(tmp);
+    qDebug()<<"message length in LWE::Encrypt: "+message.length();
+
 }
 
 void MyLWE::encryptFile(const QString &messageFileName, const QString &cipherFileName)
@@ -204,6 +206,26 @@ void MyLWE::encryptFile(const QString &messageFileName, const QString &cipherFil
     QByteArray cipher;
     encrypt(message, cipher);
     cipherFile.write(cipher);
+    messageFile.close();
+    cipherFile.close();
+}
+
+void MyLWE::decryptFile(const QString &messageFileName, const QString &cipherFileName)
+{
+
+    QFile cipherFile(cipherFileName);
+    cipherFile.open(QIODevice::ReadOnly);
+    auto cipher = cipherFile.readAll();
+    QByteArray message;
+    decrypt(cipher,message);
+
+
+    QFile messageFile(messageFileName);
+
+    messageFile.open(QIODevice::WriteOnly);
+    messageFile.write(message);
+
+
     messageFile.close();
     cipherFile.close();
 }

@@ -97,7 +97,7 @@ void EncryptFileWindow::initComponents()
 
     choosePKLabel = new QLabel(tr("选择LWE密钥"));
     choosePubkey = new QComboBox();
-    QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/pubkey");
+    QFile pubkeyFile(QApplication::applicationDirPath()+"/Key/mykey");
     pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
     QTextStream pubkeyStream(&pubkeyFile);
     while(true)
@@ -154,6 +154,7 @@ void EncryptFileWindow::encryptFile()
 {
     QString plainFileName = showChooseFile->toPlainText();
     if(plainFileName.isEmpty()) return;
+
     QString cipherFileName = outputFileName;
     if(useAES->isChecked())
     {
@@ -161,7 +162,7 @@ void EncryptFileWindow::encryptFile()
     }
     else if(useLWE->isChecked())
     {
-        QString pubkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PubKey_"+choosePubkey->currentText();
+       // QString pubkeyFileName = QApplication::applicationDirPath()+"/Key/RSA/PubKey_"+choosePubkey->currentText();
         lwe.load("my_"+choosePubkey->currentText()+".pk"
                  ,"my_"+choosePubkey->currentText()+".sk");
         lwe.encryptFile(plainFileName,cipherFileName);

@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     netaction.cpp \
     status.cpp \
     ui-inputusernamedialog.cpp \
-    mylwe.cpp
+    mylwe.cpp \
+    mybliss.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     netaction.h \
     status.h \
     ui-inputusernamedialog.h \
-    mylwe.h
+    mylwe.h \
+    mybliss.h
 
 FORMS    +=
 
@@ -50,19 +52,26 @@ CONFIG += c++11
 RESOURCES += \
     icon.qrc
 
-LIBS+=-L/home/ydu/code/qt/lfversion2/lfversion-2/lib -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -lcryptopp -lLWEEnc -lBlissSig -lntl -lssl -lmpfr
-INCLUDEPATH += /home/ydu/code/qt/lfversion2/lfversion-2/include
+LIBS+=-L/home/ydu/code/qt/lfversion2/lfversion-2/lib
+LIBS+=-L/usr/lib/
+LIBS+=-L/usr/lib/x86_64-linux-gnu
+
+
+
+LIBS += -lcryptopp
+LIBS += -lLWEEnc
+LIBS += -lBliss
+LIBS += -lssl
+LIBS += -lmpfr
+LIBS += -lgmpxx
+LIBS += -lgmp
+LIBS += -lcrypto
+LIBS += -lntl
+LIBS += -lEntropy
+
 INCLUDEPATH += /usr/include/
+INCLUDEPATH += /usr/include/Entropy
+INCLUDEPATH += /usr/include/LWE
+INCLUDEPATH += /usr/include/Bliss
 INCLUDEPATH += /usr/include/NTL
 INCLUDEPATH += /usr/include/openssl
-INCLUDEPATH += /usr/local/include/
-INCLUDEPATH += /home/ydu/code/qt/lfversion2/lfversion-2/include
-
-LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lmpfr
-LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lgmpxx
-LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lgmp
-LIBS +=-L/usr/lib/x86_64-linux-gnu/ -lcrypto
-LIBS +=-L/usr/lib/ -lntl
-
-
-INCLUDEPATH += /usr/include/cryptopp /usr/include/LWE /usr/include/BlissSig /usr/include/openssl

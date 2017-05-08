@@ -190,6 +190,23 @@ void util::deleteCerti(QString& name, bool self)
     }
 }
 
-
-
-
+QString util::arrayToString(long *a, int length, QString sep, bool newLine)
+{
+    if(a==nullptr) return "";
+    QByteArray result;
+    QTextStream out(&result,QIODevice::WriteOnly);
+    for(int i=0; i<length; i++)
+    {
+        out<<a[i];
+        if(!sep.isEmpty())
+        {
+            out<<sep;
+        }
+    }
+    if(newLine)
+    {
+        out<<"\n";
+    }
+    out.flush();
+    return QString(result);
+}

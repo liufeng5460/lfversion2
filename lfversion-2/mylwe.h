@@ -15,6 +15,7 @@ public:
     void load(const QString& pkFileName, const QString& skFileName);
     void encrypt(const QByteArray& message,QByteArray& cipher);
     void encryptFile(const QString& messageFileName, const QString& cipherFileName);
+    void decryptFile(const QString& messageFileName, const QString& cipherFileName);
     void decrypt(QByteArray& cipher,QByteArray& message);
 
     uint16_t *pk1,*pk2,*sk;

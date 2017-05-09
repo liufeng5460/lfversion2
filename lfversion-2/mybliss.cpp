@@ -1,5 +1,5 @@
 #include "mybliss.h"
-
+#include "status.h"
 #include <QTextStream>
 #include <QByteArray>
 #include <QFile>
@@ -108,14 +108,14 @@ QString MyBliss::skToString()
 
 void MyBliss::save(const QString &pkFileName, const QString &skFileName)
 {
-    QFile pkFile(pkFileName);
+    QFile pkFile(Status::BlissDir+pkFileName);
     pkFile.open(QIODevice::WriteOnly);
     QTextStream out(&pkFile);
     out<<pkToString();
     pkFile.close();
 
 
-    QFile skFile(skFileName);
+    QFile skFile(Status::BlissDir+skFileName);
     skFile.open(QIODevice::WriteOnly);
     out.setDevice(&skFile);
     out<<skToString();

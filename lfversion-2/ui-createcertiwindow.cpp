@@ -1,7 +1,7 @@
 
 #include "ui-createcertiwindow.h"
 #include "util.h"
-#include "mylwe.h"
+#include "mybliss.h"
 #include "status.h"
 
 #include <QGridLayout>
@@ -46,11 +46,11 @@ CreateCertiWindow::CreateCertiWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(submitBtn,4,1);
 
 
-    connect(submitBtn,SIGNAL(clicked()),this,SLOT(genKey()));
+    connect(submitBtn,SIGNAL(clicked()),this,SLOT(genCerti()));
 
 }
 
-void CreateCertiWindow::genKey(){
+void CreateCertiWindow::genCerti(){
 
     QString purpose=purposeEdit->text();
      if(util::contains(purpose,"mykey")){
@@ -61,11 +61,17 @@ void CreateCertiWindow::genKey(){
      QString skFileName="my_"+purpose+".sk";
      QString pkFileName="my_"+purpose+".pk";
 
+
     //MyRSA rsa;
     //rsa.GenerateRSAKey(2048, privFilename, pubFilename);
-    MyLWE lwe;
-    lwe.generateKey();
-    lwe.save(pkFileName,skFileName);
+
+    //MyLWE lwe;
+//    lwe.generateKey();
+//    lwe.save(pkFileName,skFileName);
+
+     MyBliss bliss;
+     bliss.generateKey();
+     bliss.save(pkFileName,skFileName);
 
     QString pubkeyInfo= purposeEdit->text().toUtf8()
             +";" +mailEdit->text().toUtf8()
@@ -78,13 +84,10 @@ void CreateCertiWindow::genKey(){
 
     // create certi file starts!
     QFile certiFile(Status::certiDir+"my_"+purposeEdit->text()+".cer") ;
-    certiFile.open(QIODevice::ReadWrite|QIODevice::Append|QIODevice::Text);
+    certiFile.open(QIODevice::WriteOnly|QIODevice::Text);
     QTextStream certiStream(&certiFile);
     certiStream<<Status::username+";"+pubkeyInfo<<"\n";
-    for(int i=0; i<LWE_M; i++)
-    {
-        certiStream<<lwe.pk1[i]<<" "<<lwe.pk2[i]<<"\n";
-    }
+    certiStream<<bliss.pkToString();
     certiFile.close();
     // create certi file end!
 

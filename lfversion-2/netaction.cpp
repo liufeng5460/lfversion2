@@ -1,6 +1,8 @@
 #include "netaction.h"
 #include "util.h"
 #include "status.h"
+#include "mybliss.h"
+
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileInfo>
@@ -161,63 +163,23 @@ void NetAction::useBData()
     QMessageBox::information(Status::mainWindow,"info","just received a new file");
 }
 
-void NetAction::sendMessage(QByteArray& dataBlock,const QHostAddress& ip, quint16 port)
-{
-    QTcpSocket* clientSocket = new QTcpSocket;
-    clientSocket->connectToHost(ip,port);
-    clientSocket->write(dataBlock);
-    clientSocket->disconnectFromHost();
-}
 
-void NetAction::sendFile(const QString &fileName, const QHostAddress &ip, quint16 port)
-{
-    qDebug()<<"In NetAction:: sendFile";
-
-     int messageType = 1;
-     QFile readFile(fileName);
-     readFile.open(QIODevice::ReadOnly);
-
-     QByteArray dataBlock;
-     QDataStream out(&dataBlock,QIODevice::WriteOnly);
-     out.setVersion(QDataStream::Qt_5_0);
-
-   //  QString fileContent(readFile.readAll());
-     QString fileContent(readFile.readAll());
-     int contentBytes = fileContent.toUtf8().size();
-    // int contentBytes = fileContent.size();
-
-
-
-     QFileInfo fileInfo(fileName);
-     QString realFileName = fileInfo.fileName();
-     qDebug()<<realFileName;
-     int fileNameBytes = realFileName.toUtf8().size();
-
-     dataBlock.resize(sizeof(int)*4+contentBytes);
-
-     out<<(int)(sizeof(int)*3+fileNameBytes+contentBytes);  // total size exclude self
-     out<<messageType;
-
-     out<<fileNameBytes;
-     out<<realFileName;
-
-     out<<contentBytes;
-      out<<fileContent;
-     //dataBlock.append(fileContent);
-
-     QMessageBox::information(nullptr, tr("file content"),fileContent);
-     sendMessage(dataBlock,ip);
-
-     qDebug()<<"Out NetAction:: sendFile";
-
-}
-
-void NetAction::sendBFile(const QString &fileName,const QHostAddress &ip, quint16 port)
+void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16 port)
 {
   //  qDebug()<<"In NetAction:: sendBFile";
     QTcpSocket* clientSocket = new QTcpSocket;
     clientSocket->connectToHost(ip,port);
-    clientSocket->waitForConnected();
+    if(clientSocket->waitForConnected(5000) == false)
+    {
+        QMessageBox::information(nullptr,tr("文件发送"),tr("无法连接到对方，请稍后重试。"));
+        return ;
+    }
+
+    if(auth(clientSocket,ip) == false)
+    {
+        clientSocket->disconnectFromHost();
+        QMessageBox::critical(nullptr,tr("文件发送"), tr("文件发送失败！\n原因：无法确认对方的真实身份"));
+    }
 
     quint32 totalSize= 0;
     QFile readFile(fileName);
@@ -236,16 +198,37 @@ void NetAction::sendBFile(const QString &fileName,const QHostAddress &ip, quint1
     totalSize += fileNameLength+fileContentLength+sizeof(quint32)*2;
 
     out<<totalSize;
-
     out<<fileNameLength;
     out.writeRawData(realFileName.toUtf8(),fileNameLength);
     out<<fileContentLength;
     out.writeRawData(fileContent.constData(),fileContent.length());
+    /*
+     *  Message Structure
+     *
+     *  uint32 totalSize
+     *  uint32 fileNameLength
+     *  QByteArray realFileName
+     *  uint32 fileContentLength
+     *  const char* fileContent
+     *
+     */
 
 
-    QMessageBox::information(nullptr, tr("file sended"),fileName);
+
+    QMessageBox::information(nullptr,tr("文件发送"), tr("文件发送成功！\n")+fileName);
 
     clientSocket->disconnectFromHost();
    //  qDebug()<<"Out NetAction:: sendBFile";
 
+}
+
+bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
+{
+    bool result = false;
+    QDataStream netStream(socket);
+
+
+
+
+    return result;
 }

@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     auto BlissTest= []{
         MyBliss bliss;
         bliss.generateKey();
-       // bliss.save("/home/ydu/bliss.pk","/home/ydu/bliss.sk");
+       // bliss.save("bliss","sbliss");
         QString message = "nihao";
         auto sig = bliss.sign(message);
         //sig->indicesC[0]=3;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         delete sig;
         qDebug()<<"BlissTest exit";
     };
-    BlissTest();
+   // BlissTest();
     return a.exec();
 }
 

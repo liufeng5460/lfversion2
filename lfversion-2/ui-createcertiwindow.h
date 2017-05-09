@@ -28,7 +28,7 @@ signals:
 
 private slots:
     void updateCertiInfo(QString );
-    void genKey();
+    void genCerti();
 };
 
 #endif // CREATECERTIWINDOW_H

@@ -13,8 +13,8 @@ MyBliss::MyBliss()
 
 MyBliss::~MyBliss()
 {
-    if(pk!=nullptr) delete pk;
-    if(sk!=nullptr) delete sk;
+    delete pk;
+    delete sk;
 }
 
 void MyBliss::generateKey()
@@ -146,3 +146,37 @@ bool MyBliss::verify(QString message, signature4io* sig)
     return BlissVerifyM(pk,sig,message.toStdString());
 }
 
+pubkey4io* MyBliss::getPubkey(const QString &filePath)
+{
+    pubkey4io* pk = new pubkey4io;
+
+    QFile certiFile(Status::certiDir+"my_"+filePath+".cer");
+    certiFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    QTextStream fin(&certiFile);
+    fin.readLine();
+
+    //       for    long a1[2*BlissN-1];
+        for(int i=0; i<2*BlissN-1; i++)
+        {
+            fin>>pk->a1[i];
+        }
+
+
+    //       for    long a2;
+        fin>>pk->a2;
+
+    //       long offset;
+        fin>>pk->offset;
+
+    //       long modulus;
+        fin>>pk->modulus;
+
+    //       long a_fft[BlissN];
+        for(int i=0; i<BlissN; i++)
+        {
+            fin>>pk->a_fft[i];
+        }
+
+    certiFile.close();
+    return pk;
+}

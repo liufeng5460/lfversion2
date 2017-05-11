@@ -8,7 +8,7 @@
 //#include "netserver.h"
 #include <QApplication>
 #include <QDir>
-#include<iostream>
+#include <iostream>
 #include <QDebug>
 #include <cstdint>
 #include <LWEEnc.h>

@@ -16,14 +16,12 @@ public:
     void load(const QString& pkFileName, const QString& skFileName);
     signature4io*  sign(QString message);
     bool verify(QString message,signature4io* sig );
-   QString pkToString();
-   QString skToString();
+    QString pkToString();
+    QString skToString();
+    static pubkey4io* getPubkey(const QString& filePath);
 
 
 
-
-
-private:
     pubkey4io* pk;
     seckey4io* sk;
 

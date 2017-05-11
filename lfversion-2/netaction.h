@@ -10,11 +10,14 @@ class NetAction : public QObject
     Q_OBJECT
 public:
     explicit NetAction(QObject *parent = 0,quint16 _port=5460);
+
+    //sended use static function
     static void sendFile(const QString& fileName,const QHostAddress& ip, quint16 port=5460);
     static bool auth(QTcpSocket* clientSocket ,const QHostAddress& ip, quint16 port=5460);
-    void useBData();
+
+    // receiver use non-static function
     void useData();
-    void useData2();
+    bool authed();
 
 
 public slots:

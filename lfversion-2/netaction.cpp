@@ -2,6 +2,7 @@
 #include "util.h"
 #include "status.h"
 #include "mybliss.h"
+#include "mylwe.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -19,7 +20,6 @@ NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port
 
        // QMessageBox::information(nullptr, tr("server notice"),
          //                        tr("server is running at port: %1").arg(port));
-
 
     Status::listening = true;
     Status::port = port;
@@ -42,6 +42,10 @@ void NetAction::newConn()
 
 void NetAction::doRead()
 {
+    if(authed() == false)
+    {
+        return;
+    }
 //    qDebug()<<"Do read start\n";
     if(totalBytes == 0)
     {
@@ -64,70 +68,11 @@ void NetAction::doRead()
 
     totalBytes = 0;
 
-    useBData();
-}
-
-
-void NetAction::useData2()
-{
-    QDataStream in(&cache, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_5_0);
-    int messageLength;
-    in>>messageLength;
-    QString message;
-    in>>message;
-    QMessageBox::information(nullptr,tr("Message received")
-                                 ,tr("The message is:\n%1\n%2")
-                                 .arg(messageLength)
-                                 .arg(message));
-
-    util::writeMessageToFile(message,"Tmp/tmp.txt");
-    cache.clear();
+    useData();
 }
 
 
 void NetAction::useData()
-{
-    QDataStream in(&cache, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_5_0);
-    int messageType;
-    in>>messageType;
-    if(messageType == 1)
-    {
-
-
-        //char* fileContent = new char[messageLength];
-        //in.readRawData(fileContent,messageLength);
-
-        int fileNameBytes;
-        in>>fileNameBytes;
-
-
-        QString fileName;
-        in>>fileName;
-
-
-        int messageLength;
-        in>>messageLength;
-
-        QString message;
-        in>>message;
-
-       // QString message(fileContent);
-
-        QMessageBox::information(nullptr,tr("Message received")
-                                 ,tr("The message is:\n%1\n%2\n%3")
-                                 .arg(messageType)
-                                 .arg(messageLength)
-                                 .arg(message));
-        util::writeMessageToFile(message,"Tmp/"+fileName);
-    }
-   // cache.clear();
-}
-
-
-// in effect
-void NetAction::useBData()
 {
     //QDataStream in(&cache, QIODevice::ReadOnly);
     //n.setVersion(QDataStream::Qt_5_0);
@@ -179,6 +124,7 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
     {
         clientSocket->disconnectFromHost();
         QMessageBox::critical(nullptr,tr("文件发送"), tr("文件发送失败！\n原因：无法确认对方的真实身份"));
+        return;
     }
 
     quint32 totalSize= 0;
@@ -226,9 +172,109 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 {
     bool result = false;
     QDataStream netStream(socket);
+    netStream.setVersion(QDataStream::Qt_5_0);
+
+    // send miu
+    unsigned char* miu = new unsigned char[SHA512_DIGEST_LENGTH];
+    Challenge(miu);
+    for(int i=0;i<SHA512_DIGEST_LENGTH; i++)
+    {
+        netStream<<miu[i];
+    }
 
 
+    // receive sig and lwe.pk
+    signature4io* sig = new signature4io;
+    while(socket->bytesAvailable()<sizeof(signature4io))
+    {
+        socket->waitForReadyRead();
+    }
 
+    for(int i=0 ;i<BlissN;i++)
+    {
+        netStream>>(qint64)sig->z1[i]
+                 >>sig->z2[i]
+                 >>sig->z1High[i]
+                 >>sig->z1Low[i]
+                 >>sig->z2Carry[i];
+    }
 
+    while(socket->bytesAvailable()<sizeof(uint16_t)*LWE_M*2)
+    {
+        socket->waitForReadyRead();
+    }
+    MyLWE lwe;
+    for(int i=0; i<LWE_M; i++)
+    {
+        netStream>>lwe.pk1[i]
+                 >>lwe.pk2[i];
+    }
+
+    pubkey4io blissPk = MyBliss.getPubkey("byebye");
+    result = Decision(blissPk,sig,lwe.pk1,lwe.pk2, miu);
+
+    delete blissPk;
+    delete sig;
+    delete[] miu;
     return result;
+}
+
+bool NetAction::authed()
+{
+    QDataStream netStream(socket);
+    netStream.setVersion(QDataStream::Qt_5_0);
+
+    // get miu
+    while(socket->bytesAvailable()<sizeof(unsigned char)*SHA512_DIGEST_LENGTH)
+    {
+        socket->waitForReadyRead();
+    }
+    unsigned char* miu = new unsigned char[SHA512_DIGEST_LENGTH];
+    for(int i=0; i<SHA512_DIGEST_LENGTH; i++)
+    {
+        netStream>>miu[i];
+    }
+
+    // compute answer
+    MyBliss bliss;
+    bliss.load("byebye","byebye");
+    signature4io* sig = new signature4io;
+    MyLWE lwe;
+    lwe.generateKey();
+    Answer(bliss.pk,bliss.sk,sig,lwe.pk1,lwe.pk2,miu);
+
+    // send sig
+    for(int i=0 ;i<BlissN;i++)
+    {
+        netStream<<sig->z1[i]
+                 <<sig->z2[i]
+                 <<sig->z1High[i]
+                 <<sig->z1Low[i]
+                 <<sig->z2Carry[i];
+    }
+    for(int i=0 ;i<kappa; i++)
+    {
+        netStream<<sig->indicesC[i];
+    }
+
+    for(int i=0; i<LWE_M; i++)
+    {
+        netStream<<lwe.pk1[i]
+                 <<lwe.pk2[i];
+    }
+
+
+    // get result
+    while(socket->bytesAvailable() <sizeof(int))
+    {
+        socket->waitForReadyRead();
+    }
+    netStream>>result;
+
+
+    delete sig;
+    delete[] miu;
+
+    if(result == 1) return true;
+    return false;
 }

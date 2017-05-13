@@ -170,7 +170,9 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
 
 bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 {
+
     bool result = false;
+    /*
     QDataStream netStream(socket);
     netStream.setVersion(QDataStream::Qt_5_0);
 
@@ -190,9 +192,10 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
         socket->waitForReadyRead();
     }
 
+    long long temp;
     for(int i=0 ;i<BlissN;i++)
     {
-        netStream>>(qint64)sig->z1[i]
+        netStream>>sig->z1[i]
                  >>sig->z2[i]
                  >>sig->z1High[i]
                  >>sig->z1Low[i]
@@ -215,12 +218,15 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 
     delete blissPk;
     delete sig;
-    delete[] miu;
-    return result;
+    delete[] miu; */
+    return true;
+//    return result;
+
 }
 
 bool NetAction::authed()
 {
+    /*
     QDataStream netStream(socket);
     netStream.setVersion(QDataStream::Qt_5_0);
 
@@ -275,6 +281,8 @@ bool NetAction::authed()
     delete sig;
     delete[] miu;
 
-    if(result == 1) return true;
-    return false;
+    if(result == 1) return true; */
+//    return false;
+    return true;
+
 }

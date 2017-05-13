@@ -37,36 +37,24 @@ void NetAction::newConn()
     qDebug()<<"New Conn";
     socket = server->nextPendingConnection();
     connect(socket, SIGNAL(disconnected()),socket, SLOT(deleteLater()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(doRead()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(startRead()));
 }
 
 void NetAction::doRead()
 {
+
     if(authed() == false)
     {
         return;
     }
-//    qDebug()<<"Do read start\n";
-    if(totalBytes == 0)
-    {
-        if(socket->bytesAvailable()<sizeof(int)) return;
-        QDataStream in(socket);
-        in.setVersion(QDataStream::Qt_5_0);
-        in>>totalBytes;
-       // cache.resize(totalBytes);
-    }
-//    qDebug()<<"cache size = "<<totalBytes<<"\n";
-    if(socket->bytesAvailable() < totalBytes)
-    {
-//        qDebug()<<"bytesAvailable: "<<socket->bytesAvailable()<<" < totalBytes: "<<totalBytes<<"\n";
 
-        return;
-    }
+    if(!waitData(sizeof(int))) return;
+    QDataStream in(socket);
+    in.setVersion(QDataStream::Qt_5_0);
+    in>>totalBytes;
 
+    if(!waitData(totalBytes)) return;
     cache = socket->readAll();
-//    qDebug()<<"read all";
-
-    totalBytes = 0;
 
     useData();
 }
@@ -105,7 +93,7 @@ void NetAction::useData()
     out.writeRawData(fileContentArray.constData(),fileContentArray.length());
 
     outputFile.close();
-    QMessageBox::information(Status::mainWindow,"info","just received a new file");
+    QMessageBox::information(Status::mainWindow,"文件传输","接受到一个新文件");
 }
 
 
@@ -172,7 +160,7 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 {
 
     bool result = false;
-    /*
+
     QDataStream netStream(socket);
     netStream.setVersion(QDataStream::Qt_5_0);
 
@@ -184,6 +172,8 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
         netStream<<miu[i];
     }
 
+
+    /*
 
     // receive sig and lwe.pk
     signature4io* sig = new signature4io;
@@ -217,8 +207,9 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
     result = Decision(blissPk,sig,lwe.pk1,lwe.pk2, miu);
 
     delete blissPk;
-    delete sig;
-    delete[] miu; */
+    delete sig;         */
+    debug("In auth:",miu);
+    delete[] miu;
     return true;
 //    return result;
 
@@ -226,21 +217,22 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 
 bool NetAction::authed()
 {
-    /*
+
     QDataStream netStream(socket);
     netStream.setVersion(QDataStream::Qt_5_0);
 
     // get miu
-    while(socket->bytesAvailable()<sizeof(unsigned char)*SHA512_DIGEST_LENGTH)
-    {
-        socket->waitForReadyRead();
-    }
+    if(!waitData(sizeof(unsigned char)*SHA512_DIGEST_LENGTH)) return false;
     unsigned char* miu = new unsigned char[SHA512_DIGEST_LENGTH];
     for(int i=0; i<SHA512_DIGEST_LENGTH; i++)
     {
         netStream>>miu[i];
     }
 
+
+
+
+    /*
     // compute answer
     MyBliss bliss;
     bliss.load("byebye","byebye");
@@ -279,10 +271,38 @@ bool NetAction::authed()
 
 
     delete sig;
-    delete[] miu;
 
     if(result == 1) return true; */
 //    return false;
+
+    debug("In authed",miu);
+    delete[] miu;
     return true;
 
+}
+bool  NetAction::waitData(quint32 size)
+{
+    if(socket->bytesAvailable() < size)
+    {
+        if(socket->waitForReadyRead() == false)
+        {
+            QMessageBox::critical(nullptr,"文件传输","文件传输失败：\n持续超过30秒无法获取数据，请检查网络状况后重试");
+            return false;
+            // this->thread()->exit(0);
+        }
+    }
+    return true;
+}
+
+void NetAction::startRead()
+{
+    disconnect(socket, SIGNAL(readyRead()), this, SLOT(startRead()));
+   // QtConcurrent::run(this,&NetAction::doRead);
+    doRead();
+}
+
+void NetAction::debug(const char *info,unsigned char* miu )
+{
+    qDebug(info);
+    qDebug("some : %d %d %d %d",miu[0],miu[1],miu[SHA512_DIGEST_LENGTH-2],miu[SHA512_DIGEST_LENGTH-1]);
 }

@@ -134,15 +134,15 @@ void util::deleteOnelineInFile(int RowNum, QString filename)
 
 void util::deleteCerti(QString& name, bool self)
 {
-    // remove lwe key files
-    QDir lweDir(Status::LWEDir);
-    QStringList fileNames = lweDir.entryList();
+    // remove bliss key files
+    QDir  blissDir(Status::BlissDir);
+    QStringList fileNames = blissDir.entryList();
     for(QString fileName : fileNames)
     {
         if(fileName.contains(name))
         {
          //   qDebug()<<fileName;
-            lweDir.remove(fileName);
+            blissDir.remove(fileName);
         }
 
     }

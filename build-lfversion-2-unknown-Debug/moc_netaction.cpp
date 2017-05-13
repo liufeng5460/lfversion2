@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_NetAction_t {
     QByteArrayData data[4];
-    char stringdata0[26];
+    char stringdata0[29];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,10 +32,10 @@ static const qt_meta_stringdata_NetAction_t qt_meta_stringdata_NetAction = {
 QT_MOC_LITERAL(0, 0, 9), // "NetAction"
 QT_MOC_LITERAL(1, 10, 7), // "newConn"
 QT_MOC_LITERAL(2, 18, 0), // ""
-QT_MOC_LITERAL(3, 19, 6) // "doRead"
+QT_MOC_LITERAL(3, 19, 9) // "startRead"
 
     },
-    "NetAction\0newConn\0\0doRead"
+    "NetAction\0newConn\0\0startRead"
 };
 #undef QT_MOC_LITERAL
 
@@ -70,7 +70,7 @@ void NetAction::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->newConn(); break;
-        case 1: _t->doRead(); break;
+        case 1: _t->startRead(); break;
         default: ;
         }
     }

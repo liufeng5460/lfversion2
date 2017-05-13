@@ -1,4 +1,4 @@
-
+#include "netaction.h"
 #include "status.h"
 #include "util.h"
 #include "ui-inputusernamedialog.h"
@@ -44,6 +44,7 @@ QString Status::aesDir("");
      updatePaths();
      checkDirs();
      config();
+     new NetAction;
 
  }
 

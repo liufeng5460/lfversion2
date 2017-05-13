@@ -192,60 +192,19 @@ void ShowWidgetUI::addCerti()
 
 void ShowWidgetUI::deleteSelfCerti()
 {
+    QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
+    if (message.exec()==QMessageBox::No){
+        return;
+    }
+
+    // delete info in mykey
     QString name = model01->item(tableView01->currentIndex().row(),0)->text();
     util::deleteCerti(name);
+
+
+    // delete info in ui table
     int currentRow = tableView01->currentIndex().row();
-    /*
-    QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
-    if (message.exec()==QMessageBox::No){
-        return;
-    }
-
-
-    QString workingDir = QCoreApplication::applicationDirPath() + "/";
-    QString pubkeyroot=workingDir  + (model01->data(model01->index(currentRow,4))).toString();
-    QString privkeyroot= workingDir+ (model01->data(model01->index(currentRow,5))).toString();
-    QString certiRoot = workingDir+"Key/Certi/"+model01->data(model01->index(currentRow,0)).toString()+".cer";
-
-    QFile::remove(pubkeyroot);
-    QFile::remove(privkeyroot);
-    QFile::remove(certiRoot);
-
-     //   fileOperation.deleteOnelineInFile(currentRow,QString(QCoreApplication::applicationDirPath()+"/Key/mykey"));
-
-        QList<QString> lines;
-        QFile pubkeyFile(workingDir+"Key/mykey");
-        pubkeyFile.open(QIODevice::ReadOnly|QIODevice::Text);
-        QTextStream pubkeyStream(&pubkeyFile);
-        QString line;
-        while(!pubkeyStream.atEnd())
-        {
-            line = pubkeyStream.readLine().trimmed();
-            if(line=="") continue;
-            if(line.startsWith(model01->data(model01->index(currentRow,0)).toString()))
-            {
-                //qDebug()<<model01->data(model01->index(currentRow,0)).toString();
-                continue;
-            }
-            lines.append(line);
-        }
-        pubkeyFile.close();
-
-        pubkeyFile.open(QIODevice::WriteOnly|QIODevice::Text);
-        for(int i=0; i<lines.length();i++)
-        {
-            pubkeyStream<<lines[i]<<"\n";
-        }
-        pubkeyFile.close();
-*/
-
-    QMessageBox message(QMessageBox::Warning,"警告","删除证书的动作不可撤销，是否要删除该证书？",QMessageBox::Yes|QMessageBox::No,NULL);
-    if (message.exec()==QMessageBox::No){
-        return;
-    }
-      tableView01->model()->removeRow(currentRow);
-
-      // delete info in mykey
+    tableView01->model()->removeRow(currentRow);
 
 
 }

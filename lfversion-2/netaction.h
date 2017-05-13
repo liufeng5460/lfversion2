@@ -22,8 +22,12 @@ public:
 
 public slots:
     void newConn();
-    void doRead();
+    void startRead();
 private:
+
+    bool waitData(quint32 size);
+    void doRead();
+    static void debug(const char* info, unsigned char *miu);
 
     QByteArray cache;
     quint16 port;

@@ -1,6 +1,7 @@
 
 #include "ui-showwidget.h"
 #include "util.h"
+#include "status.h"
 
 #include <QVBoxLayout>
 #include <QStack>
@@ -160,18 +161,21 @@ void ShowWidgetUI::addCerti()
 
     QString metaData = stream.readLine();
     QStringList itemList = metaData.split(";");
-    QString pubKey = stream.readLine();
-
+    QString pubKey;
+    while(!stream.atEnd())
+    {
+        pubKey+=stream.readLine()+"\n";
+    }
 
 
     // create pubkey file
 
-    QString pubFileName="Key/RSA/PubKey_"+itemList[0]+"_"+itemList[1];
-    util::writeMessageToFile(pubKey,pubFileName);
+    QString pubFileName=itemList[0]+"_"+itemList[1]+".pk";
+    util::writeMessageToFile(pubKey,Status::BlissDir+pubFileName,false);
 
     // create local certification file
-    QString localCertiFileName = "Key/Certi/"+itemList[0]+"_"+itemList[1]+".cer";
-    util::writeMessageToFile(metaData+"\n"+pubKey,localCertiFileName);
+    QString localCertiFileName =itemList[0]+"_"+itemList[1]+".cer";
+    util::writeMessageToFile(metaData+"\n"+pubKey,Status::certiDir+localCertiFileName,false);
 
     // update table view
 

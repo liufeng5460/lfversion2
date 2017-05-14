@@ -8,6 +8,10 @@
 #include <QMessageBox>
 #include <QFileInfo>
 
+#define PRINT_DEBUG_INFO(ARG1) \
+    qDebug("In %s", ARG1);\
+    qDebug("for miu first 2 and last 2: %d %d %d %d",miu[0],miu[1],miu[SHA512_DIGEST_LENGTH-2],miu[SHA512_DIGEST_LENGTH-1]);
+
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
     server = new QTcpServer;
@@ -35,9 +39,9 @@ void NetAction::newConn()
 {
     //QMessageBox::information(nullptr,"reveiving file","Receiving file...\nPlease wait");
     qDebug()<<"New Conn";
-    socket = server->nextPendingConnection();
-    connect(socket, SIGNAL(disconnected()),socket, SLOT(deleteLater()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(startRead()));
+    serverSocket = server->nextPendingConnection();
+    connect(serverSocket, SIGNAL(disconnected()),serverSocket, SLOT(deleteLater()));
+    connect(serverSocket, SIGNAL(readyRead()), this, SLOT(startRead()));
 }
 
 void NetAction::doRead()
@@ -48,13 +52,13 @@ void NetAction::doRead()
         return;
     }
 
-    if(!waitData(sizeof(int))) return;
-    QDataStream in(socket);
+    if(!waitData(sizeof(int), serverSocket)) return;
+    QDataStream in(serverSocket);
     in.setVersion(QDataStream::Qt_5_0);
     in>>totalBytes;
 
-    if(!waitData(totalBytes)) return;
-    cache = socket->readAll();
+    if(!waitData(totalBytes,serverSocket)) return;
+    cache = serverSocket->readAll();
 
     useData();
 }
@@ -171,31 +175,35 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
     {
         netStream<<miu[i];
     }
+    socket->flush();
 
-
-    /*
+//    PRINT_DEBUG_INFO("auth")
 
     // receive sig and lwe.pk
     signature4io* sig = new signature4io;
-    while(socket->bytesAvailable()<sizeof(signature4io))
-    {
-        socket->waitForReadyRead();
-    }
+    if(!waitData(sizeof(signature4io),socket)) return false;
 
     long long temp;
     for(int i=0 ;i<BlissN;i++)
     {
-        netStream>>sig->z1[i]
-                 >>sig->z2[i]
-                 >>sig->z1High[i]
-                 >>sig->z1Low[i]
-                 >>sig->z2Carry[i];
+        netStream>>temp;
+        sig->z1[i] = static_cast<long>(temp);
+        netStream>>temp;
+        sig->z2[i] = static_cast<long>(temp);
+        netStream>>temp;
+        sig->z1High[i] = static_cast<long>(temp);
+        netStream>>temp;
+        sig->z1Low[i] =  static_cast<long>(temp);
+        netStream>>temp;
+        sig->z2Carry[i] = static_cast<long>(temp);
+    }
+    for(int i=0 ;i<kappa; i++)
+    {
+        netStream>>temp;
+        sig->indicesC[i] = static_cast<long>(temp);
     }
 
-    while(socket->bytesAvailable()<sizeof(uint16_t)*LWE_M*2)
-    {
-        socket->waitForReadyRead();
-    }
+    if(!waitData(sizeof(uint16_t)*static_cast<quint32>(LWE_M*2),socket)) return false;
     MyLWE lwe;
     for(int i=0; i<LWE_M; i++)
     {
@@ -203,39 +211,44 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
                  >>lwe.pk2[i];
     }
 
-    pubkey4io blissPk = MyBliss.getPubkey("byebye");
+
+    pubkey4io* blissPk = MyBliss::getPubkey(Status::certiDir+"my_deleteTest.cer",true);
     result = Decision(blissPk,sig,lwe.pk1,lwe.pk2, miu);
 
-    delete blissPk;
-    delete sig;         */
-    debug("In auth:",miu);
-    delete[] miu;
-    return true;
-//    return result;
+    // send result;
+    netStream<<result;
+    socket->flush();
 
+    delete blissPk;
+    delete sig;
+    delete[] miu;
+
+//    qDebug()<<"In auth: result is "<<result;
+
+//    return result;
+    return true;
 }
 
 bool NetAction::authed()
 {
 
-    QDataStream netStream(socket);
+    QDataStream netStream(serverSocket);
     netStream.setVersion(QDataStream::Qt_5_0);
 
     // get miu
-    if(!waitData(sizeof(unsigned char)*SHA512_DIGEST_LENGTH)) return false;
+    if(!waitData(sizeof(unsigned char)*SHA512_DIGEST_LENGTH, serverSocket)) return false;
     unsigned char* miu = new unsigned char[SHA512_DIGEST_LENGTH];
     for(int i=0; i<SHA512_DIGEST_LENGTH; i++)
     {
         netStream>>miu[i];
     }
 
+//    PRINT_DEBUG_INFO("authed")
 
 
-
-    /*
     // compute answer
     MyBliss bliss;
-    bliss.load("byebye","byebye");
+    bliss.load("my_deleteTest.pk","my_deleteTest.sk");
     signature4io* sig = new signature4io;
     MyLWE lwe;
     lwe.generateKey();
@@ -244,43 +257,37 @@ bool NetAction::authed()
     // send sig
     for(int i=0 ;i<BlissN;i++)
     {
-        netStream<<sig->z1[i]
-                 <<sig->z2[i]
-                 <<sig->z1High[i]
-                 <<sig->z1Low[i]
-                 <<sig->z2Carry[i];
+        netStream<<static_cast<qint64>(sig->z1[i])
+                 <<static_cast<qint64>(sig->z2[i])
+                 <<static_cast<qint64>(sig->z1High[i])
+                 <<static_cast<qint64>(sig->z1Low[i])
+                 <<static_cast<qint64>(sig->z2Carry[i]);
     }
     for(int i=0 ;i<kappa; i++)
     {
-        netStream<<sig->indicesC[i];
+        netStream<<static_cast<qint64>(sig->indicesC[i]);
     }
+    serverSocket->flush();
 
+    // send pk
     for(int i=0; i<LWE_M; i++)
     {
         netStream<<lwe.pk1[i]
                  <<lwe.pk2[i];
     }
+    serverSocket->flush();
 
-
+    bool result;
     // get result
-    while(socket->bytesAvailable() <sizeof(int))
-    {
-        socket->waitForReadyRead();
-    }
+    if(!waitData(sizeof(int), serverSocket)) return false;
     netStream>>result;
 
 
     delete sig;
-
-    if(result == 1) return true; */
-//    return false;
-
-    debug("In authed",miu);
     delete[] miu;
-    return true;
-
+    return result;
 }
-bool  NetAction::waitData(quint32 size)
+bool NetAction::waitData(quint32 size,QTcpSocket* socket)
 {
     if(socket->bytesAvailable() < size)
     {
@@ -296,13 +303,7 @@ bool  NetAction::waitData(quint32 size)
 
 void NetAction::startRead()
 {
-    disconnect(socket, SIGNAL(readyRead()), this, SLOT(startRead()));
+    disconnect(serverSocket, SIGNAL(readyRead()), this, SLOT(startRead()));
    // QtConcurrent::run(this,&NetAction::doRead);
     doRead();
-}
-
-void NetAction::debug(const char *info,unsigned char* miu )
-{
-    qDebug(info);
-    qDebug("some : %d %d %d %d",miu[0],miu[1],miu[SHA512_DIGEST_LENGTH-2],miu[SHA512_DIGEST_LENGTH-1]);
 }

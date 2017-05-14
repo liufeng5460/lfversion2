@@ -107,8 +107,13 @@ void MyLWE::load(const QString &pkFileName, const QString &skFileName)
    // test();
 
 }
+void MyLWE::encrypt(const QByteArray &message, QByteArray &cipher)
+{
+    encryptMessage(pk1,pk2,message,cipher);
+}
 
-void MyLWE::encrypt(const QByteArray& message, QByteArray& cipher)
+
+void MyLWE::encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message, QByteArray& cipher)
 {
     if(message.size() > 64)
     {
@@ -154,7 +159,7 @@ void MyLWE::encrypt(const QByteArray& message, QByteArray& cipher)
     }
 }
 
-void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
+void MyLWE::decrypt(QByteArray &message, QByteArray &cipher)
 {
     QDataStream in(cipher);
     LWE_t c1,c2;
@@ -164,10 +169,6 @@ void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
     }
     LWE_t m;
     LWEDec(sk,c1,c2,m);
-    for(int i=0 ; i<8; i++)
-    {
-        qDebug()<<m[i];
-    }
     auto setBit = [](char& c,int i,int value)
     {
         if(value == 1)
@@ -191,8 +192,8 @@ void MyLWE::decrypt(QByteArray &cipher, QByteArray &message)
             setBit(tmp[i],j,m[k++]);
         }
     }
-    message = QByteArray(tmp);
-    qDebug()<<"message length in LWE::Encrypt: "+message.length();
+    cipher = QByteArray(tmp);
+//    qDebug()<<"message length in LWE::Encrypt: "+cipher.length();
 
 }
 
@@ -218,14 +219,9 @@ void MyLWE::decryptFile(const QString &messageFileName, const QString &cipherFil
     auto cipher = cipherFile.readAll();
     QByteArray message;
     decrypt(cipher,message);
-
-
     QFile messageFile(messageFileName);
-
     messageFile.open(QIODevice::WriteOnly);
     messageFile.write(message);
-
-
     messageFile.close();
     cipherFile.close();
 }

@@ -22,10 +22,6 @@ void MyBliss::generateKey()
     BlissKeyGen(pk,sk);
 }
 
-void MyBliss::fromString(QString &pkString, QString &skString)
-{
-
-}
 
 QString MyBliss::pkToString()
 {
@@ -65,7 +61,7 @@ QString MyBliss::pkToString()
 
 QString MyBliss::skToString()
 {
-    if(pk==nullptr) return QString("");
+    if(sk==nullptr) return QString("");
     QByteArray result;
     QTextStream out(&result, QIODevice::WriteOnly);
 
@@ -124,9 +120,10 @@ void MyBliss::save(const QString &pkFileName, const QString &skFileName)
 
 }
 
-void MyBliss::load(const QString &pkFileName, const QString &skFileName)
+void MyBliss::load(const QString& pkFileName, const QString& skFileName)
 {
-
+    pk = getPubkey(Status::BlissDir+pkFileName);
+    sk = getSeckey(Status::BlissDir+skFileName);
 }
 
 signature4io* MyBliss::sign(QString message)
@@ -146,14 +143,17 @@ bool MyBliss::verify(QString message, signature4io* sig)
     return BlissVerifyM(pk,sig,message.toStdString());
 }
 
-pubkey4io* MyBliss::getPubkey(const QString &filePath)
+pubkey4io* MyBliss::getPubkey(const QString &filePath, bool byCerti)
 {
     pubkey4io* pk = new pubkey4io;
 
-    QFile certiFile(Status::certiDir+"my_"+filePath+".cer");
+    QFile certiFile(filePath);
     certiFile.open(QIODevice::ReadOnly|QIODevice::Text);
     QTextStream fin(&certiFile);
-    fin.readLine();
+    if(byCerti)
+    {
+        fin.readLine();
+    }
 
     //       for    long a1[2*BlissN-1];
         for(int i=0; i<2*BlissN-1; i++)
@@ -179,4 +179,47 @@ pubkey4io* MyBliss::getPubkey(const QString &filePath)
 
     certiFile.close();
     return pk;
+}
+
+seckey4io* MyBliss::getSeckey(const QString &filePath)
+{
+    seckey4io* sk = new seckey4io;
+
+    QFile skFile(filePath);
+    skFile.open(QIODevice::ReadOnly| QIODevice::Text);
+    QTextStream in(&skFile);
+
+    //    for long s1[BlissN];
+        for(int i=0;i<BlissN; i++)
+        {
+            in>>sk->s1[i];
+        }
+
+    //       long s2[BlissN];
+        for(int i=0; i<BlissN; i++)
+        {
+            in>>sk->s2[i];
+        }
+
+
+    //       unsigned char ls1[2*BlissN-1];
+        unsigned int temp;
+        for(int i=0; i<2*BlissN-1; i++)
+        {
+            in>>temp;
+            sk->ls1[i] = static_cast<unsigned char>(temp);
+        }
+
+    //       unsigned char ls2[2*BlissN-1];
+        for(int i=0; i<2*BlissN-1; i++)
+        {
+            in>>temp;
+            sk->ls2[i] = static_cast<unsigned char>(temp);
+        }
+
+    //       long offset;
+        in>>sk->offset;
+
+     skFile.close();
+     return sk;
 }

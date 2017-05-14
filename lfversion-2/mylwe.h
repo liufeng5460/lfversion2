@@ -16,7 +16,9 @@ public:
     void encrypt(const QByteArray& message,QByteArray& cipher);
     void encryptFile(const QString& messageFileName, const QString& cipherFileName);
     void decryptFile(const QString& messageFileName, const QString& cipherFileName);
-    void decrypt(QByteArray& cipher,QByteArray& message);
+    void decrypt(QByteArray& message,QByteArray& cipher);
+
+    static void encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message,QByteArray& cipher);
 
     uint16_t *pk1,*pk2,*sk;
 };

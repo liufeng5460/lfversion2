@@ -1,7 +1,0 @@
-create AES key: true
-create RSA key: true
-create certification: true
-import certification: true
-delete certification: true
-send text file: file;
-

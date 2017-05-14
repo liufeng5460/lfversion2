@@ -25,14 +25,14 @@ public slots:
     void startRead();
 private:
 
-    bool waitData(quint32 size);
+    static bool waitData(quint32 size,QTcpSocket* socket);
     void doRead();
-    static void debug(const char* info, unsigned char *miu);
+
 
     QByteArray cache;
     quint16 port;
     QTcpServer* server;
-    QTcpSocket* socket;
+    QTcpSocket* serverSocket;
     int totalBytes;
 };
 

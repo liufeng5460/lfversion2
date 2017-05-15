@@ -2,15 +2,17 @@
 #include "util.h"
 #include "status.h"
 #include "mybliss.h"
+#include "myaes.h"
 #include "mylwe.h"
 
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileInfo>
+#include <iostream>
+using std::cout;
+using std::endl;
 
-#define PRINT_DEBUG_INFO(ARG1) \
-    qDebug("In %s", ARG1);\
-    qDebug("for miu first 2 and last 2: %d %d %d %d",miu[0],miu[1],miu[SHA512_DIGEST_LENGTH-2],miu[SHA512_DIGEST_LENGTH-1]);
+MyAES NetAction::netAES();
 
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
@@ -112,7 +114,8 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
         return ;
     }
 
-    if(auth(clientSocket,ip) == false)
+    MyAES aes;
+    if(auth(clientSocket,ip,aes) == false)
     {
         clientSocket->disconnectFromHost();
         QMessageBox::critical(nullptr,tr("文件发送"), tr("文件发送失败！\n原因：无法确认对方的真实身份"));
@@ -124,7 +127,9 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
     readFile.open(QIODevice::ReadOnly);
     QByteArray fileContent = readFile.readAll();
 
-    QDataStream out(clientSocket);
+    QByteArray buffer;
+    //QDataStream out(clientSocket);
+    QDataStream out(buffer, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_0);
 
     QString realFileName = QFileInfo(readFile).fileName();
@@ -150,8 +155,6 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
      *  const char* fileContent
      *
      */
-
-
 
     QMessageBox::information(nullptr,tr("文件发送"), tr("文件发送成功！\n")+fileName);
 
@@ -219,6 +222,31 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
     netStream<<result;
     socket->flush();
 
+    if(result == true)
+    {
+        // generate aes
+        netAES.GenerateKey(16);
+        string key,iv;
+        netAES.getKey(key,iv);
+
+        cout<<"In client(key sended):\n"
+            <<key<<endl
+            <<iv<<endl;
+
+        // encrypt aes key and iv
+        QByteArray encryptedKey;
+        MyLWE::encryptMessage(lwe.pk1,lwe.pk2,QByteArray(key.c_str()),encryptedKey);
+        QByteArray encryptedIv;
+        MyLWE::encryptMessage(lwe.pk1,lwe.pk2,QByteArray(iv.c_str()),encryptedIv);
+
+        // send aes key and iv
+        netStream<<encryptedKey.size();
+        netStream.writeRawData(encryptedKey.constData(), encryptedKey.size());
+        netStream<<encryptedIv.size();
+        netStream.writeRawData(encryptedIv.constData(), encryptedIv.size());
+        socket->flush();
+    }
+
     delete blissPk;
     delete sig;
     delete[] miu;
@@ -281,6 +309,40 @@ bool NetAction::authed()
     // get result
     if(!waitData(sizeof(int), serverSocket)) return false;
     netStream>>result;
+
+    if(result == true)
+    {
+
+
+        int size;
+        // get aes key
+        if(!waitData(sizeof(int), serverSocket)) return false;
+        netStream>>size;
+        if(!waitData(static_cast<quint32>(size),serverSocket)) return false;
+        char* encryptedKeyBytes = new char[size];
+        netStream.readRawData(encryptedKeyBytes, size);
+        QByteArray encryptedKeyArray(encryptedKeyBytes,size);
+        QByteArray keyArray;
+        lwe.decrypt(keyArray,encryptedKeyArray);
+        string key = keyArray.toStdString();
+
+        // get aes iv
+        if(!waitData(sizeof(int), serverSocket)) return false;
+        netStream>>size;
+        if(!waitData(static_cast<quint32>(size),serverSocket)) return false;
+        char* encryptedIvBytes = new char[size];
+        netStream.readRawData(encryptedIvBytes, size);
+        QByteArray encryptedIvArray(encryptedIvBytes,size);
+        QByteArray ivArray;
+        lwe.decrypt(ivArray,encryptedIvArray);
+        string iv = ivArray.toStdString();
+
+        cout<<"In server(key receiver):\n"
+            <<key<<endl
+            <<iv<<endl;
+
+        netAES.setKey(key,iv);
+    }
 
 
     delete sig;

@@ -21,6 +21,12 @@ void MyAES::getKey()
    cout<<"Iv is"<<Iv<<endl;
 }
 
+void MyAES::getKey(string& key, string& iv)
+{
+    key = this->Key;
+    iv = this->Iv;
+}
+
 bool MyAES::GenerateKey(int length)
 {
     if(length!=16 && length!=24 && length!=32){

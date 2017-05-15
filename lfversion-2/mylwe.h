@@ -11,14 +11,18 @@ public:
     MyLWE();
     ~MyLWE();
     void generateKey();
+
     void save(const QString& pkFileName, const QString& skFileName);
     void load(const QString& pkFileName, const QString& skFileName);
+
     void encrypt(const QByteArray& message,QByteArray& cipher);
+      void decrypt(QByteArray& message,const QByteArray& cipher);
+
     void encryptFile(const QString& messageFileName, const QString& cipherFileName);
     void decryptFile(const QString& messageFileName, const QString& cipherFileName);
-    void decrypt(QByteArray& message,QByteArray& cipher);
 
-    static void encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message,QByteArray& cipher);
+
+    static void encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message, QByteArray& cipher);
 
     uint16_t *pk1,*pk2,*sk;
 };

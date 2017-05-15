@@ -1,6 +1,6 @@
 #ifndef NETACTION_H
 #define NETACTION_H
-
+#include "myaes.h"
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -26,6 +26,7 @@ public slots:
 private:
 
     static bool waitData(quint32 size,QTcpSocket* socket);
+    static MyAES netAES;
     void doRead();
 
 

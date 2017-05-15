@@ -18,6 +18,7 @@ using namespace std;
 class MyAES
 {
 private:
+    // key iv is HexEncode!
     string Key;
     string Iv;//轮秘钥常量
 public:
@@ -27,6 +28,7 @@ public:
 
     void setKey(string key,string iv);
     void getKey();//用于测试
+    void getKey(string& key, string& iv);
 
     //使用密钥加密明文返回密文
     string Encrypt(const string &plainText);

@@ -107,13 +107,13 @@ void MyLWE::load(const QString &pkFileName, const QString &skFileName)
    // test();
 
 }
-void MyLWE::encrypt(const QByteArray &message, QByteArray &cipher)
+void MyLWE::encrypt(const QByteArray &message,QByteArray &cipher)
 {
     encryptMessage(pk1,pk2,message,cipher);
 }
 
 
-void MyLWE::encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message, QByteArray& cipher)
+void MyLWE::encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message,  QByteArray& cipher)
 {
     if(message.size() > 64)
     {
@@ -159,7 +159,7 @@ void MyLWE::encryptMessage(uint16_t*pk1, uint16_t* pk2,const QByteArray& message
     }
 }
 
-void MyLWE::decrypt(QByteArray &message, QByteArray &cipher)
+void MyLWE::decrypt(QByteArray &message,const  QByteArray &cipher)
 {
     QDataStream in(cipher);
     LWE_t c1,c2;
@@ -192,7 +192,7 @@ void MyLWE::decrypt(QByteArray &message, QByteArray &cipher)
             setBit(tmp[i],j,m[k++]);
         }
     }
-    cipher = QByteArray(tmp);
+    message = QByteArray(tmp);
 //    qDebug()<<"message length in LWE::Encrypt: "+cipher.length();
 
 }

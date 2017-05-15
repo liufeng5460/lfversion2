@@ -17,6 +17,7 @@ public:
 
     // receiver use non-static function
     void useData();
+    void useCipherData();
     bool authed();
 
 
@@ -30,11 +31,13 @@ private:
     void doRead();
 
 
+
+
     QByteArray cache;
     quint16 port;
     QTcpServer* server;
     QTcpSocket* serverSocket;
-    int totalBytes;
+    quint32 totalBytes;
 };
 
 #endif // NETACTION_H

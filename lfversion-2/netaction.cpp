@@ -12,7 +12,7 @@
 using std::cout;
 using std::endl;
 
-MyAES NetAction::netAES();
+MyAES NetAction::netAES = MyAES();
 
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
@@ -54,17 +54,65 @@ void NetAction::doRead()
         return;
     }
 
-    if(!waitData(sizeof(int), serverSocket)) return;
+    if(!waitData(sizeof(totalBytes), serverSocket)) return;
     QDataStream in(serverSocket);
     in.setVersion(QDataStream::Qt_5_0);
     in>>totalBytes;
 
+    cout<<"In reveicer:\n"
+       <<"totalBytes: "<<totalBytes
+      <<endl;
     if(!waitData(totalBytes,serverSocket)) return;
-    cache = serverSocket->readAll();
+    cache = serverSocket->read(totalBytes);
+    cout<<"cache size: "<<cache.size()<<endl;
 
-    useData();
+//    useData();
+    useCipherData();
 }
 
+void NetAction::useCipherData()
+{
+    string cipherString = cache.toStdString();
+    cout<<"In reveicer:\n"
+       <<"cipherString length: "<<cipherString.length()
+      <<endl;
+
+    string plainString = netAES.Decrypt(cipherString);
+
+    QByteArray buffer = QByteArray::fromHex(QByteArray(plainString.c_str()));
+    QDataStream in(&buffer,QIODevice::ReadOnly);
+    in.setVersion(QDataStream::Qt_5_0);
+
+
+    quint32 totalSize;
+    in>>totalSize;
+
+    quint32 fileNameLength;
+    in>>fileNameLength;
+    char* fileNameBuffer = new char[fileNameLength+1];
+    in.readRawData(fileNameBuffer,fileNameLength);
+    fileNameBuffer[fileNameLength] = '\0';
+    QString fileName(fileNameBuffer);
+
+
+    quint32 fileContentLength;
+    in>>fileContentLength;
+    char* fileContentBuffer = new char[fileContentLength];
+    in.readRawData(fileContentBuffer,fileContentLength);
+    QByteArray fileContentArray(fileContentBuffer,fileContentLength);
+
+
+    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/"+fileName.trimmed();
+    QFile outputFile(outputFileName);
+    outputFile.open(QIODevice::WriteOnly);
+
+    QDataStream out(&outputFile);
+
+    out.writeRawData(fileContentArray.constData(),fileContentArray.length());
+
+    outputFile.close();
+    QMessageBox::information(Status::mainWindow,"文件传输","接受到一个新文件");
+}
 
 void NetAction::useData()
 {
@@ -115,7 +163,7 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
     }
 
     MyAES aes;
-    if(auth(clientSocket,ip,aes) == false)
+    if(auth(clientSocket,ip) == false)
     {
         clientSocket->disconnectFromHost();
         QMessageBox::critical(nullptr,tr("文件发送"), tr("文件发送失败！\n原因：无法确认对方的真实身份"));
@@ -129,7 +177,7 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
 
     QByteArray buffer;
     //QDataStream out(clientSocket);
-    QDataStream out(buffer, QIODevice::WriteOnly);
+    QDataStream out(&buffer, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_0);
 
     QString realFileName = QFileInfo(readFile).fileName();
@@ -155,6 +203,17 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
      *  const char* fileContent
      *
      */
+
+     QString bufferString(buffer.toHex());
+     string cipherBufferString = netAES.Encrypt(bufferString.toStdString());
+     out.setDevice(clientSocket);
+     out<<static_cast<int>(cipherBufferString.length());
+     out.writeRawData(cipherBufferString.c_str(), cipherBufferString.length());
+     cout<<"In sender:\n"
+        <<"cipher string length: "<<cipherBufferString.length()
+       <<endl;
+     clientSocket->flush();
+
 
     QMessageBox::information(nullptr,tr("文件发送"), tr("文件发送成功！\n")+fileName);
 
@@ -351,7 +410,7 @@ bool NetAction::authed()
 }
 bool NetAction::waitData(quint32 size,QTcpSocket* socket)
 {
-    if(socket->bytesAvailable() < size)
+    while(socket->bytesAvailable() < size)
     {
         if(socket->waitForReadyRead() == false)
         {

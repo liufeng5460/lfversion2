@@ -3,11 +3,13 @@
 #include "util.h"
 #include "ui-inputusernamedialog.h"
 
+
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
+#include <thread>
 
 #define DEBUG 0
 
@@ -16,7 +18,7 @@
 QString Status::appName("集成加密软件");
 
 // user info
-QString Status::username("");
+QString Status::username;
 
 // main window pointer
 ShowWidgetUI* Status::showWidget(nullptr);
@@ -39,6 +41,9 @@ QString Status::aesDir("");
  QString Status::profile("");
  QString Status::logDir("");
 
+
+
+
  void Status::init()
  {
      updatePaths();
@@ -51,6 +56,11 @@ QString Status::aesDir("");
 
  void Status::config()
  {
+
+     /* config items
+      * username
+      */
+
      QFile profile(Status::profile);
      if(profile.exists())
      {

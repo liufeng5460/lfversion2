@@ -1,8 +1,8 @@
 #ifndef MYBLISS_H
 #define MYBLISS_H
 
-#include<Bliss.h>
-#include<QString>
+#include <Bliss.h>
+#include <QString>
 
 class MyBliss
 {

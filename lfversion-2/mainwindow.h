@@ -31,7 +31,7 @@ private:
     QAction *importCertiAction;                     	//文件菜单项
     QAction *newCertiAction;
     QAction *newAesKeyAction;
-   // QAction *digitalSignature;
+    QAction *digitalSignature;
    // QAction *authentication;
    // QAction *changePortAction;
 
@@ -44,12 +44,13 @@ private:
     QAction *exitAction;
 
 private slots:
-    void createCerti();
     void selectCerti();
-    void createKey();
-    void encrytFile();
-    void decrytFile();
-    void sendFile();
+    void openCreateCertiWindow();
+    void openCreateKeyWindow();
+    void openEncrytFileWindow();
+    void openDecrytFileWindow();
+    void openSendFileWindow();
+    void openDigitalSigWindow();
 };
 
 #endif // MAINWINDOW_H

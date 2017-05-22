@@ -10,6 +10,7 @@
 #include "ui-decryptfilewindow.h"
 #include "ui-sendfilewindow.h"
 #include "ui/digitalsig.h"
+#include "ui/aboutdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -61,6 +62,16 @@ MainWindow::MainWindow(QWidget *parent) :
     fileTransAction->setStatusTip(tr("验证某个文件的数字签名\n或者对文件进行签名"));
     connect(digitalSigAction, SIGNAL(triggered()),this,SLOT(openDigitalSigWindow()));
 
+    fileTransRecordAction = new QAction(tr("文件传输历史记录"),this);
+    fileTransRecordAction->setStatusTip(tr("查看已发送和接受的文件"));
+
+    aboutAction = new QAction(tr("关于"),this);
+    aboutAction->setStatusTip(tr("查看关于作者和版权的信息"));
+    connect(aboutAction,SIGNAL(triggered(bool)),this,SLOT(openAboutDialog()));
+
+    setupAction = new QAction(tr("设置"),this);
+    setupAction->setStatusTip(tr("进行个性化设置"));
+
     exitAction =new QAction(tr("退出"),this);
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("退出程序"));
@@ -83,9 +94,16 @@ MainWindow::MainWindow(QWidget *parent) :
     menu->addAction(encryptAction);
     menu->addAction(decryptAction);
     menu->addAction(fileTransAction);
+    menu->addAction(digitalSigAction);
+    menu->addSeparator();
+    menu->addAction(fileTransRecordAction);
 
 
-    menu = menuBar()->addMenu(tr("Setup"));
+    menu = menuBar()->addMenu(tr("系统"));
+    menu->addAction(aboutAction);
+    menu->addSeparator();
+    menu->addAction(setupAction);
+
 
     //create tool bar
     toolBar =addToolBar("tool");
@@ -110,9 +128,6 @@ MainWindow::MainWindow(QWidget *parent) :
     Status::showWidget = showWidget;
     Status::mainWindow = this;
 
-   // updateStatusBar("0");
-
-
 }
 
 MainWindow::~MainWindow()
@@ -120,22 +135,10 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::updateStatusBar(QString port)
-{
-    QString portInfo = tr("正在监听端口: ")+port;
-    if(portInfoLabel == nullptr){
-        portInfoLabel = new QLabel(portInfo);
-        statusBar()->addWidget(portInfoLabel);
-    }else{
-        statusBar()->removeWidget(portInfoLabel);
-        delete portInfoLabel;
-        portInfoLabel = new QLabel(portInfo);
-        statusBar()->addWidget(portInfoLabel);
-        statusBar()->show();
-    }
-}
 
-void MainWindow::openCreateCertiWindow(){
+
+void MainWindow::openCreateCertiWindow()
+{
     util::dialogSetup(new CreateCertiWindow);
 }
 
@@ -167,4 +170,9 @@ void MainWindow::openSendFileWindow()
 void MainWindow::openDigitalSigWindow()
 {
     util::dialogSetup(new DigitalSigWindow);
+}
+
+void MainWindow::openAboutDialog()
+{
+    util::dialogSetup(new AboutDialog);
 }

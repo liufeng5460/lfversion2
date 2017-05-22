@@ -19,7 +19,6 @@ public:
 private:
 
     QLabel* portInfoLabel = nullptr;
-    void updateStatusBar(QString port);
 
     ShowWidgetUI *showWidget;
 
@@ -36,12 +35,17 @@ private:
    // QAction *changePortAction;
 
     QAction *fileTransAction;
+    QAction *fileTransRecordAction;
 
     QAction *encryptAction;
     QAction *decryptAction;
 
 
     QAction *exitAction;
+
+    // under system menu
+    QAction *aboutAction;
+    QAction *setupAction;
 
 private slots:
     void selectCerti();
@@ -51,6 +55,7 @@ private slots:
     void openDecrytFileWindow();
     void openSendFileWindow();
     void openDigitalSigWindow();
+    void openAboutDialog();
 };
 
 #endif // MAINWINDOW_H

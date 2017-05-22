@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     ui-inputusernamedialog.cpp \
     mylwe.cpp \
     mybliss.cpp \
-    ui/digitalsig.cpp
+    ui/digitalsig.cpp \
+    ui/aboutdialog.cpp \
+    ui/ui/setupdialog.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -45,7 +47,9 @@ HEADERS  += mainwindow.h \
     ui-inputusernamedialog.h \
     mylwe.h \
     mybliss.h \
-    ui/digitalsig.h
+    ui/digitalsig.h \
+    ui/aboutdialog.h \
+    ui/ui/setupdialog.h
 
 FORMS    +=
 

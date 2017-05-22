@@ -21,11 +21,11 @@ public:
     MyRSA();
     ~MyRSA();
 
-    string MD5(const char * message);
-    string MD5File(const char * filename);
+    static string MD5(const char * message);
+    static string MD5File(const char * filename);
 
-    string Sha512(const char* message);//SHA1、SHA256、SHA224、SHA512、SHA384都可以使用，此处使用的是SHA512
-    string Sha512File(const char* filename);
+    static string Sha512(const char* message);//SHA1、SHA256、SHA224、SHA512、SHA384都可以使用，此处使用的是SHA512
+    static string Sha512File(const char* filename);
 
     void GenerateRSAKey(unsigned int keyLength, const char *privFilename,
             const char *pubFilename);//输入公私钥的文件名和长度，自动生成公私钥

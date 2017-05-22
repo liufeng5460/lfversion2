@@ -9,6 +9,7 @@
 #include "ui-encryptfilewindow.h"
 #include "ui-decryptfilewindow.h"
 #include "ui-sendfilewindow.h"
+#include "ui/digitalsig.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -56,9 +57,9 @@ MainWindow::MainWindow(QWidget *parent) :
     fileTransAction->setStatusTip(tr("给他人发送文件"));
     connect(fileTransAction, SIGNAL(triggered()),this,SLOT(openSendFileWindow()));
 
-    digitalSignature =new QAction(QIcon(":/image/identity"),tr("数字签名"),this);
+    digitalSigAction =new QAction(QIcon(":/image/identity"),tr("数字签名"),this);
     fileTransAction->setStatusTip(tr("验证某个文件的数字签名\n或者对文件进行签名"));
-    connect(fileTransAction, SIGNAL(triggered()),this,SLOT(openDigitalSigWindow()));
+    connect(digitalSigAction, SIGNAL(triggered()),this,SLOT(openDigitalSigWindow()));
 
     exitAction =new QAction(tr("退出"),this);
     exitAction->setShortcut(tr("Ctrl+Q"));
@@ -94,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //zone02 =addToolBar("Tool");
     toolBar->addAction(encryptAction);
     toolBar->addAction(decryptAction);
-    toolBar->addAction(digitalSignature);
+    toolBar->addAction(digitalSigAction);
     //  toolBar->addAction(authentication);
     toolBar->addAction(fileTransAction);
 
@@ -165,5 +166,5 @@ void MainWindow::openSendFileWindow()
 
 void MainWindow::openDigitalSigWindow()
 {
-
+    util::dialogSetup(new DigitalSigWindow);
 }

@@ -31,7 +31,7 @@ private:
     QAction *importCertiAction;                     	//文件菜单项
     QAction *newCertiAction;
     QAction *newAesKeyAction;
-    QAction *digitalSignature;
+    QAction *digitalSigAction;
    // QAction *authentication;
    // QAction *changePortAction;
 

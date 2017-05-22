@@ -61,14 +61,6 @@ void CreateCertiWindow::genCerti(){
      QString skFileName="my_"+purpose+".sk";
      QString pkFileName="my_"+purpose+".pk";
 
-
-    //MyRSA rsa;
-    //rsa.GenerateRSAKey(2048, privFilename, pubFilename);
-
-    //MyLWE lwe;
-//    lwe.generateKey();
-//    lwe.save(pkFileName,skFileName);
-
      MyBliss bliss;
      bliss.generateKey();
      bliss.save(pkFileName,skFileName);

@@ -9,7 +9,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
-#include <thread>
 
 #define DEBUG 0
 
@@ -38,9 +37,14 @@ QString Status::aesDir("");
  QString Status::LWEDir("");
  QString Status::BlissDir("");
  QString Status::certiDir("");
- QString Status::profile("");
- QString Status::logDir("");
 
+ QString Status::logDir("");
+ QString Status::keyDir;
+
+ // file info
+  QString Status::profile;
+ QString Status::selfCertiInfo;
+ QString Status::othersCertiInfo;
 
 
 
@@ -49,8 +53,7 @@ QString Status::aesDir("");
      updatePaths();
      checkDirs();
      config();
-     new NetAction;
-
+    new NetAction;
  }
 
 
@@ -75,6 +78,7 @@ QString Status::aesDir("");
          util::dialogSetup(new InputUsernameDialog);
      }
  }
+
  void Status::checkDirs()
  {
      //检查文件夹是否存在，不存在则创建
@@ -102,24 +106,26 @@ QString Status::aesDir("");
 
 void Status::updatePaths(QString appDir)
 {
-    if(appDir.isEmpty())
-    {
-        appDir = QApplication::applicationDirPath();
-    }
+
+    appDir = QApplication::applicationDirPath();
 
     // setup directories
-    workingDir = appDir+"/";
-    tmpDir = workingDir+"/Tmp/";
-    aesDir = workingDir+"/Key/AES/";
-    rsaDir = workingDir+"/Key/RSA/";
-    LWEDir = workingDir+"/Key/LWE/";
+    workingDir = appDir +"/";
+    tmpDir = workingDir +"/Tmp/";
+    logDir = workingDir +"/Log/";
+    keyDir = workingDir +"/Key/";
+    aesDir = workingDir +"/Key/AES/";
+    rsaDir = workingDir +"/Key/RSA/";
+    LWEDir = workingDir +"/Key/LWE/";
     BlissDir = workingDir+"/Key/Bliss/";
     certiDir = workingDir+"/Key/Certi/";
-    logDir = workingDir+"/Log/";
+
 
 
     // setup files
     profile = workingDir+"/Config/profile";
+    selfCertiInfo = keyDir+"mykey";
+    othersCertiInfo = keyDir+"pubkey";
 
 #if DEBUG
     qDebug()<<workingDir;

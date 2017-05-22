@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QComboBox>
 class SendFileWindow : public QWidget
 {
     Q_OBJECT
@@ -17,10 +18,12 @@ public slots:
     void selectFile();
     void doSend();
 private:
+    QLabel* nameLabel;
     QLabel* ipAddressLabel;
     QLabel* portLabel;
     QLabel* fileLabel;
 
+    QComboBox* nameCombo;
     QLineEdit* ipAddressEdit;
     QLineEdit* portEdit;
     QLineEdit* fileEdit;

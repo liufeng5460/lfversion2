@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDebug>
 
+
 MyBliss::MyBliss()
 {
     pk = new pubkey4io;
@@ -222,4 +223,104 @@ seckey4io* MyBliss::getSeckey(const QString &filePath)
 
      skFile.close();
      return sk;
+}
+
+bool MyBliss::sigFile(const QString &certiName, const QString &srcFilePath, const QString &dstFilePath)
+{
+    MyBliss bliss;
+    bliss.load("my_"+certiName+".pk","my_"+certiName+".sk");
+    auto sig = new signature4io;
+    BlissSigF(bliss.pk, bliss.sk,sig,srcFilePath.toStdString());
+//    qDebug("after BlissSigF call");
+
+    QFile dstFile(dstFilePath);
+    dstFile.open(QIODevice::WriteOnly);
+
+    dstFile.write(sigToString(sig).toUtf8());
+    dstFile.write("\n");
+
+    dstFile.close();
+
+    delete sig;
+    return true;
+}
+
+QString MyBliss::sigToString(signature4io *sig)
+{
+    if(sig == nullptr)
+    {
+        qDebug()<<"In MyBliss::sigToString: sig is nullptr";
+        return "";
+    }
+    QByteArray buffer;
+    QTextStream out(&buffer,QIODevice::WriteOnly);
+    for(int i=0; i<BlissN; i++)
+    {
+        out<<sig->z1[i]<<" "
+           <<sig->z2[i]<<" "
+           <<sig->z1High[i]<<" "
+           <<sig->z1Low[i]<<" "
+           <<sig->z2Carry[i]<<" ";
+    }
+    for(int i=0; i<kappa; i++)
+    {
+        out<<sig->indicesC[i]<<" ";
+    }
+    QString temp(buffer);
+//    qDebug()<<temp;
+    return temp;
+}
+
+signature4io* MyBliss::getSigFromString(const QString &sigString)
+{
+    signature4io* sig = new signature4io;
+    QByteArray buffer(sigString.toUtf8());
+    QTextStream in(&buffer, QIODevice::ReadOnly);
+    long long temp;
+    for(int i=0; i<BlissN;i++)
+    {
+        in>>temp;
+        sig->z1[i] = static_cast<long>(temp);
+        in>>temp;
+        sig->z2[i] = static_cast<long>(temp);
+        in>>temp;
+        sig->z1High[i] = static_cast<long>(temp);
+        in>>temp;
+        sig->z1Low[i] = static_cast<long>(temp);
+        in>>temp;
+        sig->z2Carry[i] = static_cast<long>(temp);
+    }
+    for(int i=0; i<kappa;i++)
+    {
+        in>>temp;
+        sig->indicesC[i] = static_cast<long>(temp);
+    }
+    return sig;
+}
+
+bool MyBliss::verifyFile(const QString &certiName, const QString &srcFilePath, const QString &sigFilePath)
+{
+    auto sig = new signature4io;
+
+    QFile signFile(sigFilePath);
+    signFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    sig = getSigFromString(QString(signFile.readAll()).trimmed());
+    signFile.close();
+
+    QString certiFileName;
+    if(certiName.contains("_"))
+    {
+        certiFileName = certiName+".cer";
+    }
+    else
+    {
+        certiFileName = "my_"+certiName+".cer";
+    }
+    pubkey4io* pk = getPubkey(Status::certiDir+certiFileName,true);
+
+    bool result = BlissVerifyF(pk,sig,srcFilePath.toStdString());
+    delete sig;
+    delete pk;
+    return result;
+
 }

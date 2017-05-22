@@ -33,9 +33,8 @@ extern string cipherText;
 extern string plainText;
 
 //path info
-
-extern QString profile;
 extern QString workingDir;
+extern QString keyDir;
 extern QString tmpDir;
 extern QString aesDir;
 extern QString rsaDir;
@@ -43,6 +42,11 @@ extern QString LWEDir;
 extern QString BlissDir;
 extern QString certiDir;
 extern QString logDir;
+
+// file info
+extern QString profile;
+extern QString selfCertiInfo;
+extern QString othersCertiInfo;
 
 }
 

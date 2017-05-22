@@ -10,11 +10,14 @@
 SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 {
 
-    setWindowTitle(tr("发送文件"));
+    this->setWindowTitle(tr("发送文件"));
+
+    nameLabel = new QLabel(tr("姓名: "));
     ipAddressLabel = new QLabel(tr("IP地址: "));
     portLabel = new QLabel(tr("端口号: "));
     fileLabel = new QLabel(tr("文件名: "));
 
+    nameCombo = new QComboBox;
     ipAddressEdit =  new QLineEdit;
     portEdit = new QLineEdit;
     fileEdit = new QLineEdit;
@@ -26,18 +29,23 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
     QGridLayout* inputLayout = new QGridLayout;
     inputLayout->setMargin(10);
     inputLayout->setSpacing(10);
+    int i=0;
+    inputLayout->addWidget(nameLabel,i,0);
+    inputLayout->addWidget(nameCombo,i++,1);
 
-    inputLayout->addWidget(ipAddressLabel,0,0);
-    inputLayout->addWidget(ipAddressEdit,0,1);
-    inputLayout->addWidget(portLabel,1,0);
-    inputLayout->addWidget(portEdit,1,1);
-    inputLayout->addWidget(fileLabel,2,0);
-    inputLayout->addWidget(fileEdit,2,1);
-    inputLayout->addWidget(selectFileButton,2,2);
+    inputLayout->addWidget(ipAddressLabel,i,0);
+    inputLayout->addWidget(ipAddressEdit,i++,1);
+
+    inputLayout->addWidget(portLabel,i,0);
+    inputLayout->addWidget(portEdit,i++,1);
+
+    inputLayout->addWidget(fileLabel,i,0);
+    inputLayout->addWidget(fileEdit,i,1);
+    inputLayout->addWidget(selectFileButton,i++,2);
 
     QHBoxLayout* buttonLayout = new QHBoxLayout;
     buttonLayout->setSpacing(20);
-    buttonLayout->setMargin(10);
+    buttonLayout->setMargin(20);
     buttonLayout->addWidget(testButton);
     buttonLayout->addWidget(sendButton);
 

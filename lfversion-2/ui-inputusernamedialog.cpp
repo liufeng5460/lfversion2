@@ -56,7 +56,7 @@ void InputUsernameDialog::onOkButtonClicked()
     profile.open(QIODevice::WriteOnly|QIODevice::Text);
     QTextStream out(&profile);
     QString username = inputEdit->text();
-  //  out<<"username:"<<username;
+    out<<"username:"<<username;
     profile.close();
     this->close();
     Status::mainWindow->setWindowTitle(Status::appName+"--当前用户: "+username);

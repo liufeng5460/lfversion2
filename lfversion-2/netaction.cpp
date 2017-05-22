@@ -14,6 +14,7 @@ using std::endl;
 
 MyAES NetAction::netAES = MyAES();
 bool NetAction::doAuth = true;
+QString NetAction::peerName;
 
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
@@ -156,7 +157,7 @@ void NetAction::useData()
 }
 
 
-void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16 port)
+bool NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16 port)
 {
   //  qDebug()<<"In NetAction:: sendBFile";
     QTcpSocket* clientSocket = new QTcpSocket;
@@ -164,7 +165,7 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
     if(clientSocket->waitForConnected(5000) == false)
     {
         QMessageBox::information(nullptr,tr("文件发送"),tr("无法连接到对方，请稍后重试。"));
-        return ;
+        return false;
     }
 
     MyAES aes;
@@ -172,7 +173,7 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
     {
         clientSocket->disconnectFromHost();
         QMessageBox::critical(nullptr,tr("文件发送"), tr("文件发送失败！\n原因：无法确认对方的真实身份"));
-        return;
+        return false;
     }
 
     quint32 totalSize= 0;
@@ -224,8 +225,16 @@ void NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
 
     clientSocket->disconnectFromHost();
    //  qDebug()<<"Out NetAction:: sendBFile";
+    return true;
 
 }
+
+bool NetAction::sendFile(const QString &peerName, const QString &fileName, const QHostAddress &ip, quint16 port)
+{
+    NetAction::peerName = peerName;
+    return sendFile(fileName,ip,port);
+}
+
 
 bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
 {
@@ -279,7 +288,7 @@ bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
     }
 
 
-    pubkey4io* blissPk = MyBliss::getPubkey(Status::certiDir+"my_deleteTest.cer",true);
+    pubkey4io* blissPk = MyBliss::getPubkey(Status::certiDir+peerName+"_sendFile.cer",true);
     result = Decision(blissPk,sig,lwe.pk1,lwe.pk2, miu);
 
     // send result;
@@ -340,7 +349,7 @@ bool NetAction::authed()
 
     // compute answer
     MyBliss bliss;
-    bliss.load("my_deleteTest.pk","my_deleteTest.sk");
+    bliss.load("my_sendFile.pk","my_sendFile.sk");
     signature4io* sig = new signature4io;
     MyLWE lwe;
     lwe.generateKey();

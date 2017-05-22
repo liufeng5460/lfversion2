@@ -50,6 +50,8 @@ QString Status::aesDir("");
  QString Status::selfCertiInfo;
  QString Status::othersCertiInfo;
 QString Status::contact;
+QString Status::sendFileRecord;
+QString Status::receiveFileRecord;
 
 
  void Status::init()
@@ -90,6 +92,7 @@ QString Status::contact;
         contactFile.write(QString("username,ip\n").toStdString().c_str());
         contactFile.close();
     }
+
  }
 
  void Status::checkDirs()
@@ -140,15 +143,6 @@ void Status::updatePaths(QString appDir)
     selfCertiInfo = keyDir+"mykey";
     othersCertiInfo = keyDir+"pubkey";
     contact = configDir+"contact";
-
-#if DEBUG
-    qDebug()<<workingDir;
-    qDebug()<<tmpDir;
-    qDebug()<<aesDir;
-    qDebug()<<rsaDir;
-    qDebug()<<certiDir;
-    qDebug()<<profile;
-    qDebug()<<logDir;
-#endif
-
+    sendFileRecord = logDir+"SendFileRecord";
+    receiveFileRecord = logDir+"ReceiveFileRecord";
 }

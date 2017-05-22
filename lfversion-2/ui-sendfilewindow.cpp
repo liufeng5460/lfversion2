@@ -84,8 +84,12 @@ void SendFileWindow::doSend()
 {
     QString ip = ipAddressCombo->currentText().trimmed();
     int port = portEdit->text().trimmed().toInt();
-    NetAction::sendFile(fileEdit->text(),QHostAddress(ip),port);
-    util::appendIp(nameCombo->currentText(), ipAddressCombo->currentText());
+    bool success = NetAction::sendFile(nameCombo->currentText(),fileEdit->text(),QHostAddress(ip),port);
+    if(success)
+    {
+        util::appendIp(nameCombo->currentText(), ipAddressCombo->currentText());
+        util::appendSendFileRecord(nameCombo->currentText(),ip,fileEdit->text());
+    }
 }
 
 void SendFileWindow::updateIpList(int index)

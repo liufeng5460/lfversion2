@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
+#include <QDateTime>
 
 
 void util::centerize(QWidget* window)
@@ -280,6 +281,44 @@ void util::getContact(QStringList &nameList, QStringList &ipList)
             ip = line.right(line.size()-firstSep-1);
             ipList.append(ip);
         }
+        else
+        {
+            nameList.append(line);
+        }
     }
     contactFile.close();
+}
+
+void util::appendSendFileRecord(const QString &name, const QString &ip, const QString &filePath)
+{
+    QFile theFile(Status::sendFileRecord);
+    if(theFile.exists())
+    {
+        theFile.open(QIODevice::Append | QIODevice::Text);
+    }
+    else
+    {
+        theFile.open(QIODevice::WriteOnly |QIODevice::Text);
+    }
+    QString record;
+    record = name+","+ip+","+filePath+","+QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
+    theFile.write(record.toStdString().c_str());
+    theFile.close();
+}
+
+void appendSendFileRecord(const QString& name, const QString& ip, const QString& filePath)
+{
+    QFile theFile(Status::receiveFileRecord);
+    if(theFile.exists())
+    {
+        theFile.open(QIODevice::Append | QIODevice::Text);
+    }
+    else
+    {
+        theFile.open(QIODevice::WriteOnly |QIODevice::Text);
+    }
+    QString record;
+    record = name+","+ip+","+filePath+","+QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
+    theFile.write(record.toStdString().c_str());
+    theFile.close();
 }

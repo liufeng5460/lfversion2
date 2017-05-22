@@ -52,6 +52,8 @@ extern QString profile;
 extern QString selfCertiInfo;
 extern QString othersCertiInfo;
 extern QString contact;
+extern QString sendFileRecord;
+extern QString receiveFileRecord;
 
 
 }

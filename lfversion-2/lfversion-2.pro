@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     mybliss.cpp \
     ui/digitalsig.cpp \
     ui/aboutdialog.cpp \
-    ui/setupdialog.cpp
+    ui/setupdialog.cpp \
+    ui/filerecordwindow.cpp
 
 HEADERS  += mainwindow.h \
     util.h \
@@ -49,7 +50,8 @@ HEADERS  += mainwindow.h \
     mybliss.h \
     ui/digitalsig.h \
     ui/aboutdialog.h \
-    ui/setupdialog.h
+    ui/setupdialog.h \
+    ui/filerecordwindow.h
 
 FORMS    +=
 

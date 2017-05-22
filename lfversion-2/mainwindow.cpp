@@ -11,6 +11,7 @@
 #include "ui-sendfilewindow.h"
 #include "ui/digitalsig.h"
 #include "ui/aboutdialog.h"
+#include "ui/setupdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -71,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setupAction = new QAction(tr("设置"),this);
     setupAction->setStatusTip(tr("进行个性化设置"));
+    connect(setupAction,SIGNAL(triggered(bool)),this,SLOT(openSetupDialog()));
 
     exitAction =new QAction(tr("退出"),this);
     exitAction->setShortcut(tr("Ctrl+Q"));
@@ -175,4 +177,9 @@ void MainWindow::openDigitalSigWindow()
 void MainWindow::openAboutDialog()
 {
     util::dialogSetup(new AboutDialog);
+}
+
+void MainWindow::openSetupDialog()
+{
+    util::dialogSetup(new SetupDialog);
 }

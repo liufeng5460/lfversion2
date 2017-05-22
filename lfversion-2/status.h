@@ -5,6 +5,7 @@
 
 #include "ui-showwidget.h"
 #include "mainwindow.h"
+#include "netaction.h"
 #include <string>
 
 using namespace std;
@@ -25,6 +26,7 @@ extern QString username;
 // main window pointer
 extern MainWindow* mainWindow;
 extern ShowWidgetUI* showWidget;
+extern NetAction* server;
 
 // network info
 extern bool listening;
@@ -43,6 +45,7 @@ extern QString BlissDir;
 extern QString certiDir;
 extern QString logDir;
 extern QString configDir;
+extern QString fileDir;
 
 // file info
 extern QString profile;

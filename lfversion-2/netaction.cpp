@@ -13,6 +13,7 @@ using std::cout;
 using std::endl;
 
 MyAES NetAction::netAES = MyAES();
+bool NetAction::doAuth = true;
 
 NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
 {
@@ -36,6 +37,10 @@ NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port
 
 }
 
+NetAction::~NetAction()
+{
+    server->close();
+}
 
 void NetAction::newConn()
 {
@@ -102,7 +107,7 @@ void NetAction::useCipherData()
     QByteArray fileContentArray(fileContentBuffer,fileContentLength);
 
 
-    QString outputFileName = QApplication::applicationDirPath()+"/Tmp/"+fileName.trimmed();
+    QString outputFileName = Status::fileDir+fileName.trimmed();
     QFile outputFile(outputFileName);
     outputFile.open(QIODevice::WriteOnly);
 

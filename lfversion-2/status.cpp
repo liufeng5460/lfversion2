@@ -1,6 +1,7 @@
 #include "netaction.h"
 #include "status.h"
 #include "util.h"
+
 #include "ui-inputusernamedialog.h"
 
 
@@ -19,9 +20,10 @@ QString Status::appName("集成加密软件");
 // user info
 QString Status::username;
 
-// main window pointer
+// object pointer
 ShowWidgetUI* Status::showWidget(nullptr);
 MainWindow* Status::mainWindow(nullptr);
+NetAction* Status::server;
 
 // web info
 bool  Status::listening(false);
@@ -41,6 +43,7 @@ QString Status::aesDir("");
  QString Status::logDir("");
  QString Status::keyDir;
  QString Status::configDir;
+ QString Status::fileDir;
 
  // file info
   QString Status::profile;
@@ -54,7 +57,7 @@ QString Status::contact;
      updatePaths();
      checkDirs();
      config();
-    new NetAction;
+      server = new NetAction;
  }
 
 
@@ -130,7 +133,7 @@ void Status::updatePaths(QString appDir)
     BlissDir = workingDir+"/Key/Bliss/";
     certiDir = workingDir+"/Key/Certi/";
     configDir = workingDir+"/Config/";
-
+    fileDir = tmpDir;
 
     // setup files
     profile = configDir+"profile";

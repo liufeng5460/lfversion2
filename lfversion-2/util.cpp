@@ -210,3 +210,76 @@ QString util::arrayToString(long *a, int length, QString sep, bool newLine)
     out.flush();
     return QString(result);
 }
+
+void  util::addContact(const QString &name, const QString &ip)
+{
+    QFile contactFile(Status::contact);
+    contactFile.open(QIODevice::Append | QIODevice::Text);
+    QString message = name;
+    if(!ip.isEmpty())
+    {
+        message += ","+ip;
+    }
+    message+="\n";
+    contactFile.write(message.toStdString().c_str());
+
+    contactFile.close();
+}
+
+void util::appendIp(const QString &name, const QString &ip)
+{
+    QFile contactFile(Status::contact);
+    contactFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream in(&contactFile);
+    QStringList recordsList;
+    QString metaData= in.readLine();
+    while(!in.atEnd())
+    {
+        recordsList.append(in.readLine());
+    }
+    contactFile.close();
+
+    for(int i=0;i<recordsList.size(); i++)
+    {
+        if(name == recordsList[i])
+        {
+            if(!recordsList[i].contains(ip))
+            {
+                recordsList[i]+=","+ip;
+            }
+        }
+    }
+
+    contactFile.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&contactFile);
+    out<<metaData<<"\n";
+    for(QString record: recordsList)
+    {
+        out<<record<<"\n";
+    }
+    contactFile.close();
+}
+
+void util::getContact(QStringList &nameList, QStringList &ipList)
+{
+    QFile contactFile(Status::contact);
+    contactFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    QTextStream in(&contactFile);
+    in.readLine();
+    QString line;
+    QString name;
+    QString ip;
+    while(!in.atEnd())
+    {
+        line = in.readLine();
+        int firstSep = line.indexOf(",");
+        if(firstSep != -1)
+        {
+            name = line.left(firstSep);
+            nameList.append(name);
+            ip = line.right(line.size()-firstSep-1);
+            ipList.append(ip);
+        }
+    }
+    contactFile.close();
+}

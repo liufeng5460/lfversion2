@@ -42,11 +42,14 @@ extern QString LWEDir;
 extern QString BlissDir;
 extern QString certiDir;
 extern QString logDir;
+extern QString configDir;
 
 // file info
 extern QString profile;
 extern QString selfCertiInfo;
 extern QString othersCertiInfo;
+extern QString contact;
+
 
 }
 

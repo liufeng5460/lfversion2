@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QFile>
+#include <QStringList>
 namespace util{
 
 void centerize(QWidget* window);
@@ -16,6 +17,11 @@ void writeMessageToFile(QString message, QString fileName,bool currentDir = true
 void appendMessageToFile(QString message, QString fileName, bool newLine = true, bool currentDir = true);
 void deleteCerti(QString& name, bool self = true);
 QString arrayToString(long* a,int length, QString sep=" ", bool newLine = true);
+
+// for config/contact file
+void addContact(const QString& name, const QString& ip="");
+void appendIp(const QString& name, const QString& ip);
+void getContact(QStringList& nameList,QStringList& ipList);
 }
 
 

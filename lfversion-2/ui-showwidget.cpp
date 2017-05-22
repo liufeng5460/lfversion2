@@ -192,6 +192,9 @@ void ShowWidgetUI::addCerti()
     QString totalMetaData = metaData+";"+pubFileName;
     util::appendMessageToFile(totalMetaData,"Key/pubkey");
     cerFile->close();
+
+    // add contact
+    util::addContact(itemList[0]);
 }
 
 void ShowWidgetUI::deleteSelfCerti()

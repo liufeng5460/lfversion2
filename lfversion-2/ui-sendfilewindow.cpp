@@ -1,6 +1,7 @@
 
 #include "ui-sendfilewindow.h"
 #include "netaction.h"
+#include "util.h"
 
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -18,7 +19,7 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
     fileLabel = new QLabel(tr("文件名: "));
 
     nameCombo = new QComboBox;
-    ipAddressEdit =  new QLineEdit;
+    ipAddressCombo =  new QComboBox;
     portEdit = new QLineEdit;
     fileEdit = new QLineEdit;
 
@@ -34,7 +35,7 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
     inputLayout->addWidget(nameCombo,i++,1);
 
     inputLayout->addWidget(ipAddressLabel,i,0);
-    inputLayout->addWidget(ipAddressEdit,i++,1);
+    inputLayout->addWidget(ipAddressCombo,i++,1);
 
     inputLayout->addWidget(portLabel,i,0);
     inputLayout->addWidget(portEdit,i++,1);
@@ -53,10 +54,23 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addLayout(inputLayout);
     mainLayout->addLayout(buttonLayout);
 
+
+    ipAddressCombo->setEditable(true);
+//    ipAddressCombo->setText(tr("127.0.0.1"));
+    portEdit->setText(tr("5460"));
+
+    // get name list
+    util::getContact(nameList,ipList);
+    for(QString name: nameList)
+    {
+        nameCombo->addItem(name);
+    }
+    updateIpList(0);
+
     connect(selectFileButton, SIGNAL(clicked(bool)), this,SLOT(selectFile()));
     connect(sendButton,SIGNAL(clicked(bool)),this,SLOT(doSend()));
-    ipAddressEdit->setText(tr("127.0.0.1"));
-    portEdit->setText(tr("5460"));
+    connect(nameCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(updateIpList(int)));
+
 }
 
 void SendFileWindow::selectFile()
@@ -68,8 +82,23 @@ void SendFileWindow::selectFile()
 
 void SendFileWindow::doSend()
 {
-    QString ip = ipAddressEdit->text().trimmed();
+    QString ip = ipAddressCombo->currentText().trimmed();
     int port = portEdit->text().trimmed().toInt();
     NetAction::sendFile(fileEdit->text(),QHostAddress(ip),port);
+    util::appendIp(nameCombo->currentText(), ipAddressCombo->currentText());
 }
 
+void SendFileWindow::updateIpList(int index)
+{
+    if(index < ipList.size())
+    {
+        ipAddressCombo->clear();
+        ipAddressCombo->addItem("127.0.0.1");
+        QString ips = ipList.at(index);
+        QStringList ipListTemp = ips.split(",");
+        for(QString ip : ipListTemp)
+        {
+            ipAddressCombo->addItem(ip);
+        }
+    }
+}

@@ -40,12 +40,13 @@ QString Status::aesDir("");
 
  QString Status::logDir("");
  QString Status::keyDir;
+ QString Status::configDir;
 
  // file info
   QString Status::profile;
  QString Status::selfCertiInfo;
  QString Status::othersCertiInfo;
-
+QString Status::contact;
 
 
  void Status::init()
@@ -77,6 +78,15 @@ QString Status::aesDir("");
      {
          util::dialogSetup(new InputUsernameDialog);
      }
+
+     // for contact file
+    QFile contactFile(contact);
+    if(!contactFile.exists())
+    {
+        contactFile.open(QIODevice::WriteOnly|QIODevice::Text);
+        contactFile.write(QString("username,ip\n").toStdString().c_str());
+        contactFile.close();
+    }
  }
 
  void Status::checkDirs()
@@ -119,13 +129,14 @@ void Status::updatePaths(QString appDir)
     LWEDir = workingDir +"/Key/LWE/";
     BlissDir = workingDir+"/Key/Bliss/";
     certiDir = workingDir+"/Key/Certi/";
-
+    configDir = workingDir+"/Config/";
 
 
     // setup files
-    profile = workingDir+"/Config/profile";
+    profile = configDir+"profile";
     selfCertiInfo = keyDir+"mykey";
     othersCertiInfo = keyDir+"pubkey";
+    contact = configDir+"contact";
 
 #if DEBUG
     qDebug()<<workingDir;

@@ -17,6 +17,7 @@ signals:
 public slots:
     void selectFile();
     void doSend();
+    void updateIpList(int index);
 private:
     QLabel* nameLabel;
     QLabel* ipAddressLabel;
@@ -24,7 +25,7 @@ private:
     QLabel* fileLabel;
 
     QComboBox* nameCombo;
-    QLineEdit* ipAddressEdit;
+    QComboBox* ipAddressCombo;
     QLineEdit* portEdit;
     QLineEdit* fileEdit;
 
@@ -32,6 +33,7 @@ private:
     QPushButton* testButton;
     QPushButton* sendButton;
 
+    QStringList nameList,ipList;
 
     QString fileName;
 };

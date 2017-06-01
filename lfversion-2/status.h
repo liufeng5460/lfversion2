@@ -7,6 +7,7 @@
 #include "mainwindow.h"
 #include "netaction.h"
 #include <string>
+#include <map>
 
 using namespace std;
 namespace Status {
@@ -22,6 +23,7 @@ extern QString appName;
 
 // user info
 extern QString username;
+extern map<QString, QString> userInfo;
 
 // main window pointer
 extern MainWindow* mainWindow;
@@ -33,6 +35,7 @@ extern bool listening;
 extern quint16 port;
 extern string cipherText;
 extern string plainText;
+extern int waitTime;
 
 //path info
 extern QString workingDir;

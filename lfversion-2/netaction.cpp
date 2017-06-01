@@ -426,9 +426,9 @@ bool NetAction::waitData(quint32 size,QTcpSocket* socket)
 {
     while(socket->bytesAvailable() < size)
     {
-        if(socket->waitForReadyRead() == false)
+        if(socket->waitForReadyRead(Status::waitTime) == false)
         {
-            QMessageBox::critical(nullptr,"文件传输","文件传输失败：\n持续超过30秒无法获取数据，请检查网络状况后重试");
+            QMessageBox::critical(nullptr,"文件传输","文件传输失败：\n持续超过"+QString::number(Status::waitTime/1000)+"秒无法获取数据，请检查网络状况后重试");
             return false;
             // this->thread()->exit(0);
         }

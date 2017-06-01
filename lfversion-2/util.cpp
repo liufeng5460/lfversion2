@@ -301,12 +301,15 @@ void util::appendSendFileRecord(const QString &name, const QString &ip, const QS
         theFile.open(QIODevice::WriteOnly |QIODevice::Text);
     }
     QString record;
-    record = name+","+ip+","+filePath+","+QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
+    record +=filePath   +","
+            +name       +","
+            +ip         +","
+            +QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
     theFile.write(record.toStdString().c_str());
     theFile.close();
 }
 
-void appendSendFileRecord(const QString& name, const QString& ip, const QString& filePath)
+void util::appendReceiveFileRecord(const QString& name, const QString& ip, const QString& filePath)
 {
     QFile theFile(Status::receiveFileRecord);
     if(theFile.exists())
@@ -318,7 +321,10 @@ void appendSendFileRecord(const QString& name, const QString& ip, const QString&
         theFile.open(QIODevice::WriteOnly |QIODevice::Text);
     }
     QString record;
-    record = name+","+ip+","+filePath+","+QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
+    record += filePath +","
+            + name      +","
+            + ip        +","
+            + QDateTime::currentDateTime().toString("yyyy-M-d H:m:s")+"\n";
     theFile.write(record.toStdString().c_str());
     theFile.close();
 }

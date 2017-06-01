@@ -256,18 +256,20 @@ QString MyBliss::sigToString(signature4io *sig)
     QTextStream out(&buffer,QIODevice::WriteOnly);
     for(int i=0; i<BlissN; i++)
     {
-        out<<sig->z1[i]<<" "
-           <<sig->z2[i]<<" "
-           <<sig->z1High[i]<<" "
-           <<sig->z1Low[i]<<" "
-           <<sig->z2Carry[i]<<" ";
+        out<<sig->z1[i]<<"\n"
+           <<sig->z2[i]<<"\n"
+           <<sig->z1High[i]<<"\n"
+           <<sig->z1Low[i]<<"\n"
+           <<sig->z2Carry[i]<<"\n";
     }
     for(int i=0; i<kappa; i++)
     {
-        out<<sig->indicesC[i]<<" ";
+        out<<sig->indicesC[i]<<"\n";
     }
+    out.flush();
     QString temp(buffer);
 //    qDebug()<<temp;
+    qDebug()<<temp;
     return temp;
 }
 
@@ -304,7 +306,10 @@ bool MyBliss::verifyFile(const QString &certiName, const QString &srcFilePath, c
 
     QFile signFile(sigFilePath);
     signFile.open(QIODevice::ReadOnly|QIODevice::Text);
-    sig = getSigFromString(QString(signFile.readAll()).trimmed());
+    QString sigString = QString(signFile.readAll());
+    sig = getSigFromString(QString(sigString));
+    qDebug("%ld %ld %ld", sig->z1[0],sig->z2[0],sig->indicesC[kappa-1]);
+
     signFile.close();
 
     QString certiFileName;
@@ -317,7 +322,7 @@ bool MyBliss::verifyFile(const QString &certiName, const QString &srcFilePath, c
         certiFileName = "my_"+certiName+".cer";
     }
     pubkey4io* pk = getPubkey(Status::certiDir+certiFileName,true);
-
+    qDebug("%ld %ld %ld",pk->a2,pk->offset,pk->modulus);
     bool result = BlissVerifyF(pk,sig,srcFilePath.toStdString());
     delete sig;
     delete pk;

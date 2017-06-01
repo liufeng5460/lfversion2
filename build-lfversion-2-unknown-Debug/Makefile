@@ -66,7 +66,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		../lfversion-2/mybliss.cpp \
 		../lfversion-2/ui/digitalsig.cpp \
 		../lfversion-2/ui/aboutdialog.cpp \
-		../lfversion-2/ui/setupdialog.cpp qrc_icon.cpp \
+		../lfversion-2/ui/setupdialog.cpp \
+		../lfversion-2/ui/filerecordwindow.cpp qrc_icon.cpp \
 		moc_mainwindow.cpp \
 		moc_ui-showwidget.cpp \
 		moc_ui-createcertiwindow.cpp \
@@ -78,7 +79,8 @@ SOURCES       = ../lfversion-2/main.cpp \
 		moc_ui-inputusernamedialog.cpp \
 		moc_digitalsig.cpp \
 		moc_aboutdialog.cpp \
-		moc_setupdialog.cpp
+		moc_setupdialog.cpp \
+		moc_filerecordwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		ui-showwidget.o \
@@ -98,6 +100,7 @@ OBJECTS       = main.o \
 		digitalsig.o \
 		aboutdialog.o \
 		setupdialog.o \
+		filerecordwindow.o \
 		qrc_icon.o \
 		moc_mainwindow.o \
 		moc_ui-showwidget.o \
@@ -110,7 +113,8 @@ OBJECTS       = main.o \
 		moc_ui-inputusernamedialog.o \
 		moc_digitalsig.o \
 		moc_aboutdialog.o \
-		moc_setupdialog.o
+		moc_setupdialog.o \
+		moc_filerecordwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -194,7 +198,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/mybliss.h \
 		../lfversion-2/ui/digitalsig.h \
 		../lfversion-2/ui/aboutdialog.h \
-		../lfversion-2/ui/setupdialog.h ../lfversion-2/main.cpp \
+		../lfversion-2/ui/setupdialog.h \
+		../lfversion-2/ui/filerecordwindow.h ../lfversion-2/main.cpp \
 		../lfversion-2/mainwindow.cpp \
 		../lfversion-2/ui-showwidget.cpp \
 		../lfversion-2/ui-createcertiwindow.cpp \
@@ -212,7 +217,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../lfversion-2/mybliss.cpp \
 		../lfversion-2/ui/digitalsig.cpp \
 		../lfversion-2/ui/aboutdialog.cpp \
-		../lfversion-2/ui/setupdialog.cpp
+		../lfversion-2/ui/setupdialog.cpp \
+		../lfversion-2/ui/filerecordwindow.cpp
 QMAKE_TARGET  = lfversion-2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lfversion-2
@@ -403,8 +409,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../lfversion-2/icon.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h ../lfversion-2/ui-inputusernamedialog.h ../lfversion-2/mylwe.h ../lfversion-2/mybliss.h ../lfversion-2/ui/digitalsig.h ../lfversion-2/ui/aboutdialog.h ../lfversion-2/ui/setupdialog.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/mylwe.cpp ../lfversion-2/mybliss.cpp ../lfversion-2/ui/digitalsig.cpp ../lfversion-2/ui/aboutdialog.cpp ../lfversion-2/ui/setupdialog.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/mainwindow.h ../lfversion-2/util.h ../lfversion-2/ui-showwidget.h ../lfversion-2/ui-createcertiwindow.h ../lfversion-2/ui-createkeywindow.h ../lfversion-2/ui-decryptfilewindow.h ../lfversion-2/ui-encryptfilewindow.h ../lfversion-2/myaes.h ../lfversion-2/myrsa.h ../lfversion-2/ui-sendfilewindow.h ../lfversion-2/netaction.h ../lfversion-2/status.h ../lfversion-2/ui-inputusernamedialog.h ../lfversion-2/mylwe.h ../lfversion-2/mybliss.h ../lfversion-2/ui/digitalsig.h ../lfversion-2/ui/aboutdialog.h ../lfversion-2/ui/setupdialog.h ../lfversion-2/ui/filerecordwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../lfversion-2/main.cpp ../lfversion-2/mainwindow.cpp ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-decryptfilewindow.cpp ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/util.cpp ../lfversion-2/myaes.cpp ../lfversion-2/myrsa.cpp ../lfversion-2/ui-sendfilewindow.cpp ../lfversion-2/netaction.cpp ../lfversion-2/status.cpp ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/mylwe.cpp ../lfversion-2/mybliss.cpp ../lfversion-2/ui/digitalsig.cpp ../lfversion-2/ui/aboutdialog.cpp ../lfversion-2/ui/setupdialog.cpp ../lfversion-2/ui/filerecordwindow.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -439,9 +445,9 @@ qrc_icon.cpp: ../lfversion-2/icon.qrc \
 		../lfversion-2/image/encrypt.jpg
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name icon ../lfversion-2/icon.qrc -o qrc_icon.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp moc_digitalsig.cpp moc_aboutdialog.cpp moc_setupdialog.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp moc_digitalsig.cpp moc_aboutdialog.cpp moc_setupdialog.cpp moc_filerecordwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp moc_digitalsig.cpp moc_aboutdialog.cpp moc_setupdialog.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_ui-showwidget.cpp moc_ui-createcertiwindow.cpp moc_ui-createkeywindow.cpp moc_ui-decryptfilewindow.cpp moc_ui-encryptfilewindow.cpp moc_ui-sendfilewindow.cpp moc_netaction.cpp moc_ui-inputusernamedialog.cpp moc_digitalsig.cpp moc_aboutdialog.cpp moc_setupdialog.cpp moc_filerecordwindow.cpp
 moc_mainwindow.cpp: ../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/Entropy -I/usr/include/LWE -I/usr/include/Bliss -I/usr/include/NTL -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/mainwindow.h -o moc_mainwindow.cpp
@@ -484,6 +490,9 @@ moc_aboutdialog.cpp: ../lfversion-2/ui/aboutdialog.h
 moc_setupdialog.cpp: ../lfversion-2/ui/setupdialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/Entropy -I/usr/include/LWE -I/usr/include/Bliss -I/usr/include/NTL -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui/setupdialog.h -o moc_setupdialog.cpp
 
+moc_filerecordwindow.cpp: ../lfversion-2/ui/filerecordwindow.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/ydu/code/qt/lfversion2/lfversion-2 -I/usr/include -I/usr/include/Entropy -I/usr/include/LWE -I/usr/include/Bliss -I/usr/include/NTL -I/usr/include/openssl -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../lfversion-2/ui/filerecordwindow.h -o moc_filerecordwindow.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all:
@@ -500,29 +509,35 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean
 
 main.o: ../lfversion-2/main.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/status.h
+		../lfversion-2/status.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lfversion-2/main.cpp
 
 mainwindow.o: ../lfversion-2/mainwindow.cpp ../lfversion-2/mainwindow.h \
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/util.h \
 		../lfversion-2/status.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h \
 		../lfversion-2/ui-createcertiwindow.h \
 		../lfversion-2/ui-createkeywindow.h \
 		../lfversion-2/ui-encryptfilewindow.h \
-		../lfversion-2/myaes.h \
 		../lfversion-2/mylwe.h \
 		../lfversion-2/ui-decryptfilewindow.h \
 		../lfversion-2/ui-sendfilewindow.h \
 		../lfversion-2/ui/digitalsig.h \
 		../lfversion-2/ui/aboutdialog.h \
-		../lfversion-2/ui/setupdialog.h
+		../lfversion-2/ui/setupdialog.h \
+		../lfversion-2/ui/filerecordwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../lfversion-2/mainwindow.cpp
 
 ui-showwidget.o: ../lfversion-2/ui-showwidget.cpp ../lfversion-2/ui-showwidget.h \
 		../lfversion-2/util.h \
 		../lfversion-2/status.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-showwidget.o ../lfversion-2/ui-showwidget.cpp
 
 ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/ui-createcertiwindow.h \
@@ -530,7 +545,9 @@ ui-createcertiwindow.o: ../lfversion-2/ui-createcertiwindow.cpp ../lfversion-2/u
 		../lfversion-2/mybliss.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-createcertiwindow.o ../lfversion-2/ui-createcertiwindow.cpp
 
 ui-createkeywindow.o: ../lfversion-2/ui-createkeywindow.cpp ../lfversion-2/ui-createkeywindow.h \
@@ -548,12 +565,15 @@ ui-encryptfilewindow.o: ../lfversion-2/ui-encryptfilewindow.cpp ../lfversion-2/u
 		../lfversion-2/mylwe.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-encryptfilewindow.o ../lfversion-2/ui-encryptfilewindow.cpp
 
 util.o: ../lfversion-2/util.cpp ../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h \
 		../lfversion-2/util.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o util.o ../lfversion-2/util.cpp
 
@@ -591,33 +611,49 @@ status.o: ../lfversion-2/status.cpp ../lfversion-2/netaction.h \
 ui-inputusernamedialog.o: ../lfversion-2/ui-inputusernamedialog.cpp ../lfversion-2/ui-inputusernamedialog.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ui-inputusernamedialog.o ../lfversion-2/ui-inputusernamedialog.cpp
 
 mylwe.o: ../lfversion-2/mylwe.cpp ../lfversion-2/mylwe.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mylwe.o ../lfversion-2/mylwe.cpp
 
 mybliss.o: ../lfversion-2/mybliss.cpp ../lfversion-2/mybliss.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
-		../lfversion-2/mainwindow.h
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mybliss.o ../lfversion-2/mybliss.cpp
 
 digitalsig.o: ../lfversion-2/ui/digitalsig.cpp ../lfversion-2/ui/digitalsig.h \
 		../lfversion-2/status.h \
 		../lfversion-2/ui-showwidget.h \
 		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h \
 		../lfversion-2/mybliss.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o digitalsig.o ../lfversion-2/ui/digitalsig.cpp
 
 aboutdialog.o: ../lfversion-2/ui/aboutdialog.cpp ../lfversion-2/ui/aboutdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o aboutdialog.o ../lfversion-2/ui/aboutdialog.cpp
 
-setupdialog.o: ../lfversion-2/ui/setupdialog.cpp ../lfversion-2/ui/setupdialog.h
+setupdialog.o: ../lfversion-2/ui/setupdialog.cpp ../lfversion-2/ui/setupdialog.h \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o setupdialog.o ../lfversion-2/ui/setupdialog.cpp
+
+filerecordwindow.o: ../lfversion-2/ui/filerecordwindow.cpp ../lfversion-2/ui/filerecordwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filerecordwindow.o ../lfversion-2/ui/filerecordwindow.cpp
 
 qrc_icon.o: qrc_icon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icon.o qrc_icon.cpp
@@ -657,6 +693,9 @@ moc_aboutdialog.o: moc_aboutdialog.cpp
 
 moc_setupdialog.o: moc_setupdialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_setupdialog.o moc_setupdialog.cpp
+
+moc_filerecordwindow.o: moc_filerecordwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_filerecordwindow.o moc_filerecordwindow.cpp
 
 ####### Install
 

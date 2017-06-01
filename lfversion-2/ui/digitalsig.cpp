@@ -99,14 +99,17 @@ DigitalSigWindow::DigitalSigWindow(QWidget *parent) : QWidget(parent)
 
     this->setLayout(mainLayout);
     qDebug("after set layout");
-
-     connect(srcFileButton1, SIGNAL(clicked(bool)),this,SLOT(selectSrcFile1()));
+*/
+    connect(srcFileButton1, SIGNAL(clicked(bool)),this,SLOT(selectSrcFile1()));
     connect(sigFileButton1,SIGNAL(clicked(bool)), this, SLOT(selectSigFile1()));
     connect(exeButton1, SIGNAL(clicked(bool)),this,SLOT(createSig()));
 
     connect(srcFileButton2, SIGNAL(clicked(bool)),this,SLOT(selectSrcFile2()));
+    connect(sigFileButton2,SIGNAL(clicked(bool)),this,SLOT(selectSigFile2()));
+    connect(exeButton2,SIGNAL(clicked(bool)),this,SLOT(verifySig()));
+
     qDebug("after connect");
-    */
+
 
 }
 
@@ -135,7 +138,7 @@ void DigitalSigWindow::initComponents()
     pickCertiBox2 = new QComboBox;
     exeButton2 = new QPushButton("验证");
 
-    /*
+
     // get certification name for sign ( own certi)
     QFile myCertiListFile(Status::selfCertiInfo);
     myCertiListFile.open(QIODevice::ReadOnly|QIODevice::Text);
@@ -158,12 +161,12 @@ void DigitalSigWindow::initComponents()
         pickCertiBox2->addItem(tmp.split(";")[0]+"_"+tmp.split(";")[1]);
     }
     othersCertiListFile.close();
-    */
+
 }
 
 void DigitalSigWindow::selectSrcFile1()
 {
-    /*
+
     QString srcFilePath = QFileDialog::getOpenFileName(this,"选择文件",QDir::homePath(),"All files(*)");
     srcFileEdit1->setText(srcFilePath);
     srcFileEdit1->setToolTip(srcFilePath);
@@ -180,30 +183,29 @@ void DigitalSigWindow::selectSrcFile1()
     }
     sigFileEdit1->setText(dstFilePath);
     sigFileEdit1->setToolTip(dstFilePath);
-*/
+
 }
 
 void DigitalSigWindow::selectSrcFile2()
 {
-    /*
+
     QString srcFilePath = QFileDialog::getOpenFileName(this,"选择文件",QDir::homePath(),"All files(*)");
     srcFileEdit2->setText(srcFilePath);
     srcFileEdit2->setToolTip(srcFilePath);
-    */
+
 }
 
 void DigitalSigWindow::selectSigFile1()
 {
-    /*
+
     QString dstFilePath = QFileDialog::getSaveFileName(this,"选择保存文件",QDir::homePath(),"Bliss Sig(.bls)");
     sigFileEdit1->setText(dstFilePath);
     sigFileEdit1->setToolTip(dstFilePath);
-    */
 }
 
 void DigitalSigWindow::createSig()
 {
-    /*
+
     bool success = MyBliss::sigFile(pickCertiBox1->currentText(),srcFileEdit1->text(),sigFileEdit1->text());
     if(success)
     {
@@ -213,13 +215,13 @@ void DigitalSigWindow::createSig()
     {
         QMessageBox::critical(nullptr,"数字签名","创建签名失败!");
     }
-    */
+
 }
 
 
 void DigitalSigWindow::verifySig()
 {
-    /*
+
     bool success = MyBliss::verifyFile(pickCertiBox2->currentText(),
                                        srcFileEdit2->text(),
                                        sigFileEdit2->text());
@@ -231,5 +233,13 @@ void DigitalSigWindow::verifySig()
     {
         QMessageBox::critical(nullptr,"数字签名","验证失败!");
     }
-    */
+
+}
+
+void DigitalSigWindow::selectSigFile2()
+{
+    QString dstFilePath = QFileDialog::getOpenFileName(this,"选择保存文件",QDir::homePath(),"Bliss Sig(*.bls)");
+    sigFileEdit2->setText(dstFilePath);
+    sigFileEdit2->setToolTip(dstFilePath);
+
 }

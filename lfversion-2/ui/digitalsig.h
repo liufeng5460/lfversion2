@@ -22,6 +22,7 @@ public slots:
     void selectSrcFile1();
     void selectSrcFile2();
     void selectSigFile1();
+    void selectSigFile2();
     void createSig();
     void verifySig();
 

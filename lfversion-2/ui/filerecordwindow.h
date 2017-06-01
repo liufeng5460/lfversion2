@@ -2,6 +2,8 @@
 #define FILERECORDWINDOW_H
 
 #include <QWidget>
+#include <QStandardItemModel>
+#include <QTableView>
 
 class FileRecordWindow : public QWidget
 {
@@ -12,6 +14,14 @@ public:
 signals:
 
 public slots:
+
+private:
+    QStandardItemModel *model01;
+    QStandardItemModel *model02;
+    QTableView *tableView01;
+    QTableView *tableView02;
+
+    void extractData();
 };
 
 #endif // FILERECORDWINDOW_H

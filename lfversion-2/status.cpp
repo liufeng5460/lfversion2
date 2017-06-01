@@ -11,6 +11,7 @@
 #include <QTextStream>
 #include <QDir>
 
+
 #define DEBUG 0
 
 
@@ -19,6 +20,7 @@ QString Status::appName("集成加密软件");
 
 // user info
 QString Status::username;
+map<QString,QString> Status::userInfo;
 
 // object pointer
 ShowWidgetUI* Status::showWidget(nullptr);
@@ -30,6 +32,7 @@ bool  Status::listening(false);
 quint16 Status::port(5460);
 string Status::plainText("");
 string Status::cipherText("");
+int Status::waitTime = 10000;
 
 // path info
  QString Status::workingDir("");
@@ -83,6 +86,8 @@ QString Status::receiveFileRecord;
      {
          util::dialogSetup(new InputUsernameDialog);
      }
+//     userInfo["username"] =
+
 
      // for contact file
     QFile contactFile(contact);

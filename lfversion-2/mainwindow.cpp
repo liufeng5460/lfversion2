@@ -12,7 +12,7 @@
 #include "ui/digitalsig.h"
 #include "ui/aboutdialog.h"
 #include "ui/setupdialog.h"
-
+#include "ui/filerecordwindow.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     fileTransRecordAction = new QAction(tr("文件传输历史记录"),this);
     fileTransRecordAction->setStatusTip(tr("查看已发送和接受的文件"));
+    connect(fileTransRecordAction,SIGNAL(triggered(bool)),this,SLOT(openFileRecordWindow()));
 
     aboutAction = new QAction(tr("关于"),this);
     aboutAction->setStatusTip(tr("查看关于作者和版权的信息"));
@@ -182,4 +183,9 @@ void MainWindow::openAboutDialog()
 void MainWindow::openSetupDialog()
 {
     util::dialogSetup(new SetupDialog);
+}
+
+void MainWindow::openFileRecordWindow()
+{
+    util::dialogSetup(new FileRecordWindow);
 }

@@ -57,6 +57,7 @@ private slots:
     void openDigitalSigWindow();
     void openAboutDialog();
     void openSetupDialog();
+    void openFileRecordWindow();
 };
 
 #endif // MAINWINDOW_H

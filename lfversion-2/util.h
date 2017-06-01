@@ -23,7 +23,7 @@ void addContact(const QString& name, const QString& ip="");
 void appendIp(const QString& name, const QString& ip);
 void getContact(QStringList& nameList,QStringList& ipList);
 
-// for log/sendfilerecord file
+// for log/filerecord file
 void appendSendFileRecord(const QString& name, const QString& ip, const QString& filePath);
 void appendReceiveFileRecord(const QString& name, const QString& ip, const QString& filePath);
 }

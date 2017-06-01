@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QRadioButton>
+
 class SendFileWindow : public QWidget
 {
     Q_OBJECT
@@ -30,11 +32,10 @@ private:
     QLineEdit* fileEdit;
 
     QPushButton* selectFileButton;
-    QPushButton* testButton;
     QPushButton* sendButton;
+    QRadioButton* authCheck;
 
     QStringList nameList,ipList;
-
     QString fileName;
 };
 

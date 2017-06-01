@@ -48,6 +48,7 @@ private:
     QAction *setupAction;
 
 private slots:
+
     void selectCerti();
     void openCreateCertiWindow();
     void openCreateKeyWindow();

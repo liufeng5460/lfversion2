@@ -19,7 +19,6 @@ private:
 
     QLineEdit*  nameEdit;
     QLineEdit* portEdit;
-    QRadioButton* authRadio;
     QPushButton* okButton;
     QPushButton* cancelButton;
 };

@@ -16,13 +16,13 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    if(Status::username.isEmpty())
+    if(Status::conf["username"].isEmpty())
     {
        this->setWindowTitle(Status::appName);
     }
     else
     {
-       this->setWindowTitle(Status::appName+"--当前用户: "+Status::username);
+       this->setWindowTitle(Status::appName+"--当前用户: "+Status::conf["username"]);
     }
     this->setWindowIcon(QIcon(":/image/Icon.jpg"));
     this->setMinimumSize(850,350);
@@ -131,6 +131,10 @@ MainWindow::MainWindow(QWidget *parent) :
     Status::showWidget = showWidget;
     Status::mainWindow = this;
 
+    // when app quits, write config info
+    connect(this,&MainWindow::destroyed, []{
+        util::writeConf();
+    });
 }
 
 MainWindow::~MainWindow()

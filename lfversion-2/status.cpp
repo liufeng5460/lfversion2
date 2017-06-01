@@ -19,8 +19,7 @@
 QString Status::appName("集成加密软件");
 
 // user info
-QString Status::username;
-map<QString,QString> Status::userInfo;
+map<QString,QString> Status::conf;
 
 // object pointer
 ShowWidgetUI* Status::showWidget(nullptr);
@@ -28,8 +27,6 @@ MainWindow* Status::mainWindow(nullptr);
 NetAction* Status::server;
 
 // web info
-bool  Status::listening(false);
-quint16 Status::port(5460);
 string Status::plainText("");
 string Status::cipherText("");
 int Status::waitTime = 10000;
@@ -70,23 +67,35 @@ QString Status::receiveFileRecord;
  {
 
      /* config items
-      * username
+      * user info
       */
 
-     QFile profile(Status::profile);
-     if(profile.exists())
+     QFile profileFile(Status::profile);
+     if(profileFile.exists())
      {
-         profile.open(QIODevice::ReadOnly|QIODevice::Text);
-         QTextStream in(&profile);
-         QStringList pairs =in.readLine().split(":");
-         Status::username = pairs.at(1);
-         profile.close();
+         profileFile.open(QIODevice::ReadOnly|QIODevice::Text);
+         QTextStream in(&profileFile);
+         while(!in.atEnd())
+         {
+            QString line = in.readLine();
+            if(line.isEmpty())
+            {
+                break;
+            }
+            QStringList pairs =line.split(":");
+            conf[pairs.at(0).trimmed()] = pairs.at(1).trimmed();
+         }
+         profileFile.close();
      }
      else
      {
          util::dialogSetup(new InputUsernameDialog);
      }
-//     userInfo["username"] =
+     if(conf["port"].isEmpty())
+     {
+         conf["port"] = "5460";
+     }
+
 
 
      // for contact file
@@ -131,7 +140,7 @@ void Status::updatePaths(QString appDir)
     appDir = QApplication::applicationDirPath();
 
     // setup directories
-    workingDir = appDir +"/";
+    workingDir = appDir;
     tmpDir = workingDir +"/Tmp/";
     logDir = workingDir +"/Log/";
     keyDir = workingDir +"/Key/";

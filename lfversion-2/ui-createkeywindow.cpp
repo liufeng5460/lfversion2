@@ -9,7 +9,7 @@ CreateKeyWindow::CreateKeyWindow(QWidget *parent) : QWidget(parent)
     this->setWindowTitle(tr("新建AES密钥"));
     nameLabel=new QLabel(tr("AES密钥名称："));
     nameEdit=new QLineEdit;
-    KeyLengthLabel=new QLabel(tr("AES密钥长度："));
+    KeyLengthLabel=new QLabel(tr("AES密钥长度(bytes)："));
     Lenth16=new QRadioButton(tr("16"));
     Lenth32=new QRadioButton(tr("32"));
     submitBtn=new QPushButton(tr("提交"));

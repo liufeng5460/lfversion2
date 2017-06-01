@@ -57,49 +57,7 @@ DigitalSigWindow::DigitalSigWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(mainWidget);
     this->setLayout(mainLayout);
 
-    /*
-    createSigGroup = new QGroupBox;
-    createSigGroup->setTitle("创建签名: ");
-    createSigGroup->setFlat(false);
-   createSigLayout = new QGridLayout;
-    createSigLayout->setSpacing(10);
-    createSigLayout->addWidget(srcFileLabel1,   0,0);
-    createSigLayout->addWidget(srcFileEdit1,    0,1,1,3);
-    createSigLayout->addWidget(srcFileButton1,  0,4);
-    createSigLayout->addWidget(sigFileLabel1,   1,0);
-    createSigLayout->addWidget(sigFileEdit1,    1,1,1,3);
-    createSigLayout->addWidget(sigFileButton1,  1,4);
-    createSigLayout->addWidget(pickCertiLabel1, 2,0);
-    createSigLayout->addWidget(pickCertiBox1,   2,1,1,3);
-    createSigLayout->addWidget(exeButton1,      3,4);
-    createSigGroup->setLayout(createSigLayout);
 
-
-    verifySigGroup = new QGroupBox("验证签名: ");
-    verifySigLayout = new QGridLayout;
-    verifySigLayout->setSpacing(10);
-
-    verifySigLayout->addWidget(srcFileLabel2,   0,0);
-    verifySigLayout->addWidget(srcFileEdit2,    0,1,1,3);
-    verifySigLayout->addWidget(srcFileButton2,  0,4);
-    verifySigLayout->addWidget(sigFileLabel2,   1,0);
-    verifySigLayout->addWidget(sigFileEdit2,    1,1,1,3);
-    verifySigLayout->addWidget(sigFileButton2,  1,4);
-    verifySigLayout->addWidget(pickCertiLabel2, 2,0);
-    verifySigLayout->addWidget(pickCertiBox2,   2,1,1,3);
-    verifySigLayout->addWidget(exeButton2,      3,4);
-    verifySigGroup->setLayout(verifySigLayout);
-
-    mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(createSigGroup);
-    mainLayout->addWidget(verifySigGroup);
-
-    mainLayout->setMargin(20);
-    mainLayout->setSpacing(20);
-
-    this->setLayout(mainLayout);
-    qDebug("after set layout");
-*/
     connect(srcFileButton1, SIGNAL(clicked(bool)),this,SLOT(selectSrcFile1()));
     connect(sigFileButton1,SIGNAL(clicked(bool)), this, SLOT(selectSigFile1()));
     connect(exeButton1, SIGNAL(clicked(bool)),this,SLOT(createSig()));
@@ -107,9 +65,6 @@ DigitalSigWindow::DigitalSigWindow(QWidget *parent) : QWidget(parent)
     connect(srcFileButton2, SIGNAL(clicked(bool)),this,SLOT(selectSrcFile2()));
     connect(sigFileButton2,SIGNAL(clicked(bool)),this,SLOT(selectSigFile2()));
     connect(exeButton2,SIGNAL(clicked(bool)),this,SLOT(verifySig()));
-
-    qDebug("after connect");
-
 
 }
 
@@ -188,10 +143,22 @@ void DigitalSigWindow::selectSrcFile1()
 
 void DigitalSigWindow::selectSrcFile2()
 {
-
     QString srcFilePath = QFileDialog::getOpenFileName(this,"选择文件",QDir::homePath(),"All files(*)");
     srcFileEdit2->setText(srcFilePath);
     srcFileEdit2->setToolTip(srcFilePath);
+
+    int dotIndex = srcFilePath.indexOf(".");
+    QString dstFilePath;
+    if(dotIndex == -1)
+    {
+        dstFilePath = srcFilePath+sigSuffix;
+    }
+    else
+    {
+        dstFilePath = srcFilePath.left(dotIndex)+sigSuffix;
+    }
+    sigFileEdit2->setText(dstFilePath);
+    sigFileEdit2->setToolTip(dstFilePath);
 
 }
 

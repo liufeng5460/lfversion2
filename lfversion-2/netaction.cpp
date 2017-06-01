@@ -16,8 +16,10 @@ MyAES NetAction::netAES = MyAES();
 bool NetAction::doAuth = true;
 QString NetAction::peerName;
 
-NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port)
+NetAction::NetAction(QObject *parent) : QObject(parent)
 {
+
+    port = Status::conf["port"].toInt();
     server = new QTcpServer;
     if(!server->listen(QHostAddress::Any,port))
     {
@@ -29,8 +31,7 @@ NetAction::NetAction(QObject *parent,quint16 _port) : QObject(parent),port(_port
        // QMessageBox::information(nullptr, tr("server notice"),
          //                        tr("server is running at port: %1").arg(port));
 
-    Status::listening = true;
-    Status::port = port;
+    Status::conf["listenning"] = "true";
     cache="";
     totalBytes = 0;
 
@@ -52,9 +53,32 @@ void NetAction::newConn()
     connect(serverSocket, SIGNAL(readyRead()), this, SLOT(startRead()));
 }
 
+void NetAction::doReadPlain()
+{
+    quint32 totalBytes;
+    QDataStream out(&cache,QIODevice::WriteOnly);
+    QDataStream in(serverSocket);
+    in.setVersion(QDataStream::Qt_5_0);
+    out.setVersion(QDataStream::Qt_5_0);
+
+    if(!waitData(sizeof(totalBytes), serverSocket)) return;
+    in>>totalBytes;
+
+    if(!waitData(totalBytes,serverSocket)) return;
+    cache = serverSocket->read(totalBytes);
+//    cout<<"cache size: "<<cache.size()<<endl;
+    useData();
+}
+
 void NetAction::doRead()
 {
-
+    char flag;
+    serverSocket->getChar(&flag);
+    if(flag == '0')
+    {
+        doReadPlain();
+        return;
+    }
     if(authed() == false)
     {
         return;
@@ -122,9 +146,15 @@ void NetAction::useCipherData()
 
 void NetAction::useData()
 {
-    //QDataStream in(&cache, QIODevice::ReadOnly);
-    //n.setVersion(QDataStream::Qt_5_0);
-    //QString fileName;
+    // use plain data
+    /*
+     *  cache structure
+     * quint32 fileNameLength
+     * char* fileName
+     * quint32 fileContentLength
+     * char* fileContent
+     *
+     */
 
     QDataStream in(&cache,QIODevice::ReadOnly);
     in.setVersion(QDataStream::Qt_5_0);
@@ -157,7 +187,7 @@ void NetAction::useData()
 }
 
 
-bool NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16 port)
+bool NetAction::sendFile(const QString &fileName,const QHostAddress &ip,int port,bool safe)
 {
   //  qDebug()<<"In NetAction:: sendBFile";
     QTcpSocket* clientSocket = new QTcpSocket;
@@ -167,6 +197,9 @@ bool NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
         QMessageBox::information(nullptr,tr("文件发送"),tr("无法连接到对方，请稍后重试。"));
         return false;
     }
+
+    clientSocket->write("1"); // tell receiver this is a safe transfer
+    clientSocket->flush();
 
     MyAES aes;
     if(auth(clientSocket,ip) == false)
@@ -229,14 +262,65 @@ bool NetAction::sendFile(const QString &fileName,const QHostAddress &ip, quint16
 
 }
 
-bool NetAction::sendFile(const QString &peerName, const QString &fileName, const QHostAddress &ip, quint16 port)
+bool NetAction::sendFile(const QString &peerName, const QString &fileName, const QHostAddress &ip, int port, bool safe)
 {
     NetAction::peerName = peerName;
-    return sendFile(fileName,ip,port);
+    if(safe)
+    {
+        return sendFile(fileName,ip,port);
+    }
+    else
+    {
+        return sendFilePlain(fileName,ip,port);
+    }
 }
 
+bool NetAction::sendFilePlain(const QString &fileName, const QHostAddress &ip,int port)
+{
 
-bool NetAction::auth(QTcpSocket* socket,const QHostAddress &ip, quint16 port)
+    QTcpSocket* clientSocket = new QTcpSocket;
+    clientSocket->connectToHost(ip,port);
+    if(clientSocket->waitForConnected(5000) == false)
+    {
+        QMessageBox::information(nullptr,tr("文件发送"),tr("无法连接到对方，请稍后重试。"));
+        return false;
+    }
+
+    clientSocket->write("0"); // tell receiver this is a plain transfer
+    clientSocket->flush();
+
+    quint32 totalSize= 0;
+    QFile readFile(fileName);
+    readFile.open(QIODevice::ReadOnly);
+    QByteArray fileContent = readFile.readAll();
+
+    QDataStream out(clientSocket);
+//    QDataStream out(&buffer, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_0);
+
+    QString realFileName = QFileInfo(readFile).fileName();
+
+
+    quint32 fileNameLength = realFileName.toUtf8().length();
+    quint32 fileContentLength = fileContent.length();
+
+    totalSize += fileNameLength+fileContentLength+sizeof(quint32)*2;
+
+    out<<totalSize;
+    out<<fileNameLength;
+    out.writeRawData(realFileName.toUtf8(),fileNameLength);
+    out<<fileContentLength;
+    out.writeRawData(fileContent.constData(),fileContent.length());
+
+    clientSocket->flush();
+    QMessageBox::information(nullptr,tr("文件发送"), tr("文件发送成功！\n")+fileName);
+
+    clientSocket->disconnectFromHost();
+    return true;
+
+}
+
+bool NetAction::auth(QTcpSocket* socket, const QHostAddress &ip)
 {
 
     bool result = false;

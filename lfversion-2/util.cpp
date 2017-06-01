@@ -328,3 +328,22 @@ void util::appendReceiveFileRecord(const QString& name, const QString& ip, const
     theFile.write(record.toStdString().c_str());
     theFile.close();
 }
+
+void util::writeConf()
+{
+    QFile profile(Status::profile);
+//    qDebug()<<Status::profile;
+    profile.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&profile);
+
+    for(auto it = Status::conf.begin(); it!=Status::conf.end(); it++)
+    {
+        if(it->first == "listenning") continue;
+        out<<it->first
+          <<":"
+         <<it->second
+        <<"\n";
+    }
+
+    profile.close();
+}

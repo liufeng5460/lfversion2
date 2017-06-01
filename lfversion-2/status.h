@@ -21,9 +21,13 @@ void updatePaths(QString appDir="");
 // about info
 extern QString appName;
 
-// user info
-extern QString username;
-extern map<QString, QString> userInfo;
+/* config info
+ * username
+ * port
+ *
+ *
+ */
+extern map<QString, QString> conf;
 
 // main window pointer
 extern MainWindow* mainWindow;
@@ -31,8 +35,6 @@ extern ShowWidgetUI* showWidget;
 extern NetAction* server;
 
 // network info
-extern bool listening;
-extern quint16 port;
 extern string cipherText;
 extern string plainText;
 extern int waitTime;

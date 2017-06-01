@@ -6,7 +6,7 @@
 #include <QMessageBox>
 SetupDialog::SetupDialog(QWidget *parent):QWidget(parent)
 {
-    this->setWindowTitle(tr("系统设置"));
+    this->setWindowTitle(tr("设置"));
     initComponents();
     // layout
     QTabWidget* mainWidget = new QTabWidget;
@@ -26,8 +26,8 @@ SetupDialog::SetupDialog(QWidget *parent):QWidget(parent)
     int j=0;
     tab2Layout->addWidget(new QLabel(tr("接收端口: ")), j,0);
     tab2Layout->addWidget(portEdit,j++,1);
-    tab2Layout->addWidget(new QLabel(tr("发送前认证对方身份: ")),j,0);
-    tab2Layout->addWidget(authRadio,j++,1);
+//    tab2Layout->addWidget(new QLabel(tr("发送前认证对方身份: ")),j,0);
+//    tab2Layout->addWidget(authRadio,j++,1);
     tab2->setLayout(tab2Layout);
     mainWidget->addTab(tab2,tr("文件传输"));
 
@@ -60,9 +60,8 @@ void SetupDialog::initComponents()
     nameEdit = new QLineEdit;
 
     portEdit = new QLineEdit;
-    portEdit->setPlaceholderText(tr("当前端口")+QString::number(Status::port));
-    authRadio = new QRadioButton;
-    authRadio->setChecked(true);
+    portEdit->setPlaceholderText(tr("当前端口: ")+Status::conf["port"]);
+
 
     okButton = new QPushButton(tr("修改"));
     cancelButton = new QPushButton(tr("取消"));
@@ -74,19 +73,19 @@ void SetupDialog::applySetup()
     // for server port
     if(!portEdit->text().isEmpty())
     {
+        QString port = portEdit->text();
         bool isNumber;
-        int port = portEdit->text().toInt(&isNumber);
-        if(isNumber)
+        port.toInt(&isNumber);
+        if(isNumber && port != Status::conf["port"] )
         {
-            if(port != Status::port)
-            {
-                delete Status::server;
-                Status::server = new NetAction(nullptr,port);
-            }
+              Status::conf["port"] = port;
+              delete Status::server;
+              Status::server = new NetAction;
         }
         else
         {
             QMessageBox::critical(this,"系统设置","修改失败\n端口号格式错误");
+            portEdit->setFocus();
             return;
         }
     }
@@ -94,8 +93,8 @@ void SetupDialog::applySetup()
     // for username
     if(! nameEdit->text().isEmpty())
     {
-        Status::username = nameEdit->text();
-        Status::mainWindow->setWindowTitle(Status::appName+"--当前用户: "+Status::username);
+        Status::conf["username"] = nameEdit->text();
+        Status::mainWindow->setWindowTitle(Status::appName+"--当前用户: "+Status::conf["username"]);
     }
 
     // complete

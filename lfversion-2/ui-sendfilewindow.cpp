@@ -8,6 +8,7 @@
 #include <QHBoxLayout>
 #include <QFileDialog>
 #include <QHostAddress>
+#include <QMessageBox>
 SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 {
 
@@ -25,7 +26,9 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 
     selectFileButton = new QPushButton(tr("选择文件"));
     sendButton = new QPushButton(tr("发送"));
-    testButton =  new QPushButton(tr("测试"));
+    authCheck = new QRadioButton(tr("使用安全信道"));
+    authCheck->setChecked(true);
+
 
     QGridLayout* inputLayout = new QGridLayout;
     inputLayout->setMargin(10);
@@ -46,8 +49,9 @@ SendFileWindow::SendFileWindow(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout* buttonLayout = new QHBoxLayout;
     buttonLayout->setSpacing(20);
-    buttonLayout->setMargin(20);
-    buttonLayout->addWidget(testButton);
+    buttonLayout->setMargin(10);
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(authCheck);
     buttonLayout->addWidget(sendButton);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
@@ -82,9 +86,24 @@ void SendFileWindow::selectFile()
 
 void SendFileWindow::doSend()
 {
+    if(portEdit->text().isEmpty() || fileEdit->text().isEmpty()) return;
+
     QString ip = ipAddressCombo->currentText().trimmed();
-    int port = portEdit->text().trimmed().toInt();
-    bool success = NetAction::sendFile(nameCombo->currentText(),fileEdit->text(),QHostAddress(ip),port);
+    bool isNo;
+    int port = portEdit->text().trimmed().toInt(&isNo);
+    if(isNo == false)
+    {
+        QMessageBox::critical(nullptr,"输入错误","端口号取值为 0-65535");
+        portEdit->setFocus();
+        return;
+    }
+    bool safe = authCheck->isChecked();
+    bool success = NetAction::sendFile(
+                nameCombo->currentText(),
+                fileEdit->text(),
+                QHostAddress(ip),
+                port,
+                safe);
     if(success)
     {
         util::appendIp(nameCombo->currentText(), ipAddressCombo->currentText());

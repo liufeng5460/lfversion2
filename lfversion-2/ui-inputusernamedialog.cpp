@@ -60,5 +60,5 @@ void InputUsernameDialog::onOkButtonClicked()
     profile.close();
     this->close();
     Status::mainWindow->setWindowTitle(Status::appName+"--当前用户: "+username);
-    Status::username = username;
+    Status::conf["username"] = username;
 }

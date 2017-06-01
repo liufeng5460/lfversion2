@@ -22,6 +22,7 @@ QString arrayToString(long* a,int length, QString sep=" ", bool newLine = true);
 void addContact(const QString& name, const QString& ip="");
 void appendIp(const QString& name, const QString& ip);
 void getContact(QStringList& nameList,QStringList& ipList);
+void writeConf();
 
 // for log/filerecord file
 void appendSendFileRecord(const QString& name, const QString& ip, const QString& filePath);

@@ -78,7 +78,7 @@ void CreateCertiWindow::genCerti(){
     QFile certiFile(Status::certiDir+"my_"+purposeEdit->text()+".cer") ;
     certiFile.open(QIODevice::WriteOnly|QIODevice::Text);
     QTextStream certiStream(&certiFile);
-    certiStream<<Status::username+";"+pubkeyInfo<<"\n";
+    certiStream<<Status::conf["username"]+";"+pubkeyInfo<<"\n";
     certiStream<<bliss.pkToString();
     certiFile.close();
     // create certi file end!

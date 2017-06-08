@@ -652,7 +652,12 @@ setupdialog.o: ../lfversion-2/ui/setupdialog.cpp ../lfversion-2/ui/setupdialog.h
 		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o setupdialog.o ../lfversion-2/ui/setupdialog.cpp
 
-filerecordwindow.o: ../lfversion-2/ui/filerecordwindow.cpp ../lfversion-2/ui/filerecordwindow.h
+filerecordwindow.o: ../lfversion-2/ui/filerecordwindow.cpp ../lfversion-2/ui/filerecordwindow.h \
+		../lfversion-2/status.h \
+		../lfversion-2/ui-showwidget.h \
+		../lfversion-2/mainwindow.h \
+		../lfversion-2/netaction.h \
+		../lfversion-2/myaes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filerecordwindow.o ../lfversion-2/ui/filerecordwindow.cpp
 
 qrc_icon.o: qrc_icon.cpp 

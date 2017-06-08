@@ -8,6 +8,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.addLibraryPath("./Lib");
+
     Status::init();
     MainWindow w;
     w.show();

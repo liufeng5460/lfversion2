@@ -6,7 +6,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent)
 
     // init components
     purpose = new QLabel(tr("本软件主要用于科学研究"));
-    name = new QLabel(tr("作者:\t\t×××"));
+    name = new QLabel(tr("作者:\t\t杜育松"));
     institution = new QLabel(tr("机构:\t\t中山大学"));
     address = new QLabel(tr("地址:\t\t广州市番禺区大学城"));
     contact  = new QLabel(tr("联系方式:\tliufeng5460@163.com"));

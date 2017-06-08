@@ -31,10 +31,10 @@ DecryptFileWindow::DecryptFileWindow(QWidget *parent) : QWidget(parent)
     auto chooseKeyLayout = new QGridLayout;
     chooseKeyLayout->addWidget(chooseKeyLabel,0,0);
     chooseKeyLayout->addWidget(chooseKey,0,1);
-    chooseKeyLayout->addWidget(chooseLWEKeyLabel,1,0);
-    chooseKeyLayout->addWidget(choosePubkey,1,1);
-    chooseKeyLayout->addWidget(useAES,0,2);
-    chooseKeyLayout->addWidget(useLWE,1,2);
+//    chooseKeyLayout->addWidget(chooseLWEKeyLabel,1,0);
+//    chooseKeyLayout->addWidget(choosePubkey,1,1);
+//    chooseKeyLayout->addWidget(useAES,0,2);
+//    chooseKeyLayout->addWidget(useLWE,1,2);
     tempLayout->addLayout(chooseKeyLayout);
     tempLayout->addWidget(mainWidget);
     this->setLayout(tempLayout);

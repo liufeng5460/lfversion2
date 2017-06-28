@@ -4,7 +4,6 @@
 
 #include "ui-inputusernamedialog.h"
 
-
 #include <QApplication>
 #include <QDebug>
 #include <QFile>

@@ -183,33 +183,3 @@ void MyAES::SaveKey(const char * KeyFilename){
     sink.Put((byte const*) Key.data(), Key.size());
     sink.Put((byte const*) Iv.data(), Iv.size());
 }
-// int main() {
-
-//     MyAES aes;
-//     aes.GenerateKey(16);//生成16 byte AES秘钥
-//     aes.SaveKey("key.txt");
-//     aes.LoadKey("key.txt");
-//     string plainText = "Hello World!";
-
-//     string cipher = aes.Encrypt(plainText);
-//     cout << "The cipher is : " << cipher << endl;
-
-//     string recover = aes.Decrypt(cipher);
-//     cout << "The recover is : " << recover << endl;
-
-//     cout << "=====================" << endl;
-//       // 加解密文件，既可以使用相对路径也可以绝对路径
-//     string inFilename = "Test";//用于测试的文件，此处使用相对路径，绝对路径也可以
-//     string outFilename = "aesEncrypt";
-//     string recoverFilename = "aesRecover";
-
-//     if(aes.EncryptFile(inFilename, outFilename)){
-//     cout << "*__*" << endl << "Encrypt succeed!" << endl;
-//     if(aes.DecryptFile(outFilename, recoverFilename)){
-//     cout << "*__*" << endl << "Recover succeed!" << endl;
-//     } else
-//     cout << ")__(" << endl << "Recover failed!" << endl;
-//     } else
-//     cout << ")__(" << endl << "Encrypt failed!" << endl;
-//     return 0;
-// }

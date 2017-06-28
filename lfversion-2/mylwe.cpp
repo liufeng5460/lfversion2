@@ -21,12 +21,6 @@ MyLWE::~MyLWE()
 void MyLWE::generateKey()
 {
     LWEKeyGen(pk1,pk2,sk);
-//    auto test = [&]{
-//        for(int i=0; i<LWE_M; i++){
-//            qDebug()<<sk[i];
-//        }
-//    };
-    //test();
 }
 
 void MyLWE::save(const QString & pkFileName, const QString & skFileName)
